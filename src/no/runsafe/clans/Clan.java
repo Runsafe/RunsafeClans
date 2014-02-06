@@ -26,6 +26,16 @@ public class Clan
 		return leader;
 	}
 
+	public List<String> getMembers()
+	{
+		return members;
+	}
+
+	public int getMemberCount()
+	{
+		return members.size();
+	}
+
 	public void addMember(String playerName)
 	{
 		members.add(playerName);
