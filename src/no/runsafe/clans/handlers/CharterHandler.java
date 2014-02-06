@@ -17,6 +17,7 @@ public class CharterHandler
 		charter.addLore("§7Clan: " + clanName); // Append the clan name.
 		charter.addLore("§7Leader: " + player.getName()); // Append the clan leader.
 		charter.addLore("§fRight-click to sign the clan charter!"); // Add some info.
+		addCharterSign(charter, player.getName()); // Sign the charter.
 
 		player.give(charter); // Give the player the charter.
 	}
