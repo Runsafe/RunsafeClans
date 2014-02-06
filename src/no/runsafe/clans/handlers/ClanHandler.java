@@ -53,6 +53,17 @@ public class ClanHandler implements IConfigurationChanged
 		return playerClanIndex.containsKey(playerName);
 	}
 
+	public Clan getPlayerClan(String playerName)
+	{
+		return playerClanIndex.containsKey(playerName) ? clans.get(playerClanIndex.get(playerName)) : null;
+	}
+
+	public boolean playerIsClanLeader(String playerName)
+	{
+		Clan playerClan = getPlayerClan(playerName);
+		return playerClan != null && playerClan.getLeader().equals(playerName);
+	}
+
 	@Override
 	public void OnConfigurationChanged(IConfiguration config)
 	{
