@@ -106,7 +106,7 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider
 	{
 		Map<String, String> data = new HashMap<String, String>(1);
 		Clan playerClan = getPlayerClan(player.getName());
-		data.put("clan", playerClan == null ? "None" : playerClan.getId());
+		data.put("runsafe.clans.clan", playerClan == null ? "None" : playerClan.getId());
 		return data;
 	}
 
