@@ -3,9 +3,9 @@ package no.runsafe.clans.database;
 import no.runsafe.framework.api.database.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ClanMemberRepository extends Repository
 {
@@ -16,7 +16,7 @@ public class ClanMemberRepository extends Repository
 
 	public Map<String, List<String>> getClanRosters()
 	{
-		Map<String, List<String>> rosters = new HashMap<String, List<String>>(0);
+		Map<String, List<String>> rosters = new ConcurrentHashMap<String, List<String>>(0);
 		for (IRow row : database.query("SELECT `clanID`, `member` FROM `clan_members`"))
 		{
 			String clanName = row.String("clanID");

@@ -7,9 +7,9 @@ import no.runsafe.framework.api.IConfiguration;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.api.log.IConsole;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
 public class ClanHandler implements IConfigurationChanged
@@ -87,8 +87,8 @@ public class ClanHandler implements IConfigurationChanged
 		console.logInformation("Loaded %s clans with %s members.", clans.size(), memberCount);
 	}
 
-	private Map<String, Clan> clans = new HashMap<String, Clan>(0);
-	private Map<String, String> playerClanIndex = new HashMap<String, String>(0);
+	private Map<String, Clan> clans = new ConcurrentHashMap<String, Clan>(0);
+	private Map<String, String> playerClanIndex = new ConcurrentHashMap<String, String>(0);
 	private final IConsole console;
 	private final ClanRepository clanRepository;
 	private final ClanMemberRepository memberRepository;
