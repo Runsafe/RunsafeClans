@@ -5,14 +5,17 @@ import no.runsafe.clans.database.ClanMemberRepository;
 import no.runsafe.clans.database.ClanRepository;
 import no.runsafe.framework.api.IConfiguration;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
+import no.runsafe.framework.api.hook.IPlayerDataProvider;
 import no.runsafe.framework.api.log.IConsole;
+import no.runsafe.framework.api.player.IPlayer;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
-public class ClanHandler implements IConfigurationChanged
+public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider
 {
 	public ClanHandler(IConsole console, ClanRepository clanRepository, ClanMemberRepository memberRepository)
 	{
@@ -96,6 +99,15 @@ public class ClanHandler implements IConfigurationChanged
 
 		// Output some statistics from our clan loading.
 		console.logInformation("Loaded %s clans with %s members.", clans.size(), memberCount);
+	}
+
+	@Override
+	public Map<String, String> GetPlayerData(IPlayer player)
+	{
+		Map<String, String> data = new HashMap<String, String>(1);
+		Clan playerClan = getPlayerClan(player.getName());
+		data.put("clan", playerClan == null ? "None" : playerClan.getId());
+		return data;
 	}
 
 	private Map<String, Clan> clans = new ConcurrentHashMap<String, Clan>(0);
