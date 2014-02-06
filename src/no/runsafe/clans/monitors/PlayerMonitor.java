@@ -52,19 +52,18 @@ public class PlayerMonitor implements IPlayerRightClick
 
 			List<String> charterSigns = charterHandler.getCharterSigns(usingItem);
 
+			if (charterSigns.contains(playerName))
+			{
+				player.sendColouredMessage("&cYou have already signed this charter.");
+				player.closeInventory();
+				return false;
+			}
+
 			// If we have less than 2 signs on the charter, we should sign it!
 			if (charterSigns.size() < 2)
 			{
-				// Check the player has not already signed this charter.
-				if (charterSigns.contains(playerName))
-				{
-					player.sendColouredMessage("&cYou have already signed this charter.");
-				}
-				else
-				{
-					charterHandler.addCharterSign(usingItem, playerName);
-					player.sendColouredMessage("&aYou have signed the charter!");
-				}
+				charterHandler.addCharterSign(usingItem, playerName);
+				player.sendColouredMessage("&aYou have signed the charter!");
 			}
 			else
 			{
