@@ -24,6 +24,14 @@ public class PlayerMonitor implements IPlayerRightClick
 		// Check we are holding a charter.
 		if (usingItem != null && usingItem.is(Item.Special.Crafted.WrittenBook) && charterHandler.itemIsCharter(usingItem))
 		{
+			String playerName = player.getName(); // Name of the player using the book.
+			if (clanHandler.playerIsInClan(playerName))
+			{
+				player.sendColouredMessage("&cYou are already in a clan, you cannot sign this.");
+				player.closeInventory();
+				return false;
+			}
+
 			String clanName = charterHandler.getClanName(usingItem); // Grab the clan name from the book.
 
 			// Check we have been given a valid clan name.
@@ -43,7 +51,6 @@ public class PlayerMonitor implements IPlayerRightClick
 			}
 
 			List<String> charterSigns = charterHandler.getCharterSigns(usingItem);
-			String playerName = player.getName();
 
 			// If we have less than 2 signs on the charter, we should sign it!
 			if (charterSigns.size() < 2)
@@ -72,7 +79,6 @@ public class PlayerMonitor implements IPlayerRightClick
 					}
 				}
 
-				//usingItem.remove(1); // Remove one from their inventory.
 				player.sendColouredMessage(String.format("&aThe clan '%s' has been formed!", clanName)); // Inform the user they are part of the clan.
 				clanHandler.createClan(clanName, charterHandler.getLeaderName(usingItem)); // Forge the clan!
 
@@ -82,7 +88,6 @@ public class PlayerMonitor implements IPlayerRightClick
 						clanHandler.addClanMember(clanName, signedPlayer);
 
 				clanHandler.addClanMember(clanName, player.getName()); // Add the signing player to the clan.
-
 			}
 			player.closeInventory();
 			return false;
