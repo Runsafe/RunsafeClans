@@ -2,6 +2,7 @@ package no.runsafe.clans.database;
 
 import no.runsafe.framework.api.database.*;
 import no.runsafe.framework.api.player.IPlayer;
+import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +50,11 @@ public class ClanMemberRepository extends Repository
 		database.execute("DELETE FROM `clan_members` WHERE `clanID` = ?", clanID);
 	}
 
+	public DateTime getClanMemberJoinDate(IPlayer player)
+	{
+		return database.queryDateTime("SELECT `joined` FROM `clan_members` WHERE `member` = ?", player.getName());
+	}
+
 	@Override
 	public String getTableName()
 	{
@@ -67,6 +73,8 @@ public class ClanMemberRepository extends Repository
 				"PRIMARY KEY (`clanID`, `member`)" +
 			")"
 		);
+
+		update.addQueries("ALTER TABLE `clan_members` ADD COLUMN `joined` DATETIME NOT NULL AFTER `member`;");
 
 		return update;
 	}

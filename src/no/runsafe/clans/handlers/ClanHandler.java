@@ -8,6 +8,10 @@ import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.api.hook.IPlayerDataProvider;
 import no.runsafe.framework.api.log.IConsole;
 import no.runsafe.framework.api.player.IPlayer;
+import org.joda.time.DateTime;
+import org.joda.time.Period;
+import org.joda.time.PeriodType;
+import org.joda.time.format.PeriodFormat;
 
 import java.util.HashMap;
 import java.util.List;
@@ -107,7 +111,17 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider
 		Map<String, String> data = new HashMap<String, String>(1);
 		Clan playerClan = getPlayerClan(player.getName());
 		data.put("runsafe.clans.clan", playerClan == null ? "None" : playerClan.getId());
+		data.put("runsafe.clans.joined", formatTime(memberRepository.getClanMemberJoinDate(player)));
 		return data;
+	}
+
+	private String formatTime(DateTime time)
+	{
+		if (time == null)
+			return "null";
+
+		Period period = new Period(time, DateTime.now(), output_format);
+		return PeriodFormat.getDefault().print(period);
 	}
 
 	private Map<String, Clan> clans = new ConcurrentHashMap<String, Clan>(0);
@@ -116,4 +130,5 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider
 	private final ClanRepository clanRepository;
 	private final ClanMemberRepository memberRepository;
 	private final Pattern clanNamePattern = Pattern.compile("^[A-Z]{3}$");
+	private final PeriodType output_format = PeriodType.standard().withMillisRemoved().withSecondsRemoved();
 }
