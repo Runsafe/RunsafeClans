@@ -72,7 +72,7 @@ public class PlayerMonitor implements IPlayerRightClick
 					}
 				}
 
-				usingItem.remove(1); // Remove one from their inventory.
+				//usingItem.remove(1); // Remove one from their inventory.
 				player.sendColouredMessage(String.format("&aThe clan '%s' has been formed!", clanName)); // Inform the user they are part of the clan.
 				clanHandler.createClan(clanName, charterHandler.getLeaderName(usingItem)); // Forge the clan!
 
