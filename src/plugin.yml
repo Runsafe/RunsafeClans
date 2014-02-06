@@ -1,10 +1,11 @@
 name: RunsafeClans
 main: no.runsafe.clans.RunsafeClans
 version: 1.0.@BUILD@
-authors: []
-depend: []
-description:
+author: Kruithne
+description: Adds clan support!
 commands:
-  something:
-    description:
-    aliases: []
+  clan:
+    description: Clan related commands.
+  clanchat:
+    description: Allows you to talk in clan chat.
+    aliases: [c]

@@ -1,26 +1,44 @@
 package no.runsafe.clans;
 
-import no.runsafe.framework.RunsafePlugin;
+import no.runsafe.clans.commands.CreateClan;
+import no.runsafe.clans.database.ClanMemberRepository;
+import no.runsafe.clans.database.ClanRepository;
+import no.runsafe.clans.handlers.CharterHandler;
+import no.runsafe.clans.handlers.ClanHandler;
+import no.runsafe.clans.monitors.PlayerMonitor;
+import no.runsafe.framework.RunsafeConfigurablePlugin;
+import no.runsafe.framework.api.command.Command;
+import no.runsafe.framework.features.Commands;
+import no.runsafe.framework.features.Database;
+import no.runsafe.framework.features.Events;
+import no.runsafe.framework.features.FrameworkHooks;
 
-public class RunsafeClans extends RunsafePlugin
-//public class RunsafeClans extends RunsafeConfigurablePlugin
+public class RunsafeClans extends RunsafeConfigurablePlugin
 {
-//	public static IDebug Debugger = null;
-
 	@Override
 	protected void pluginSetup()
 	{
-//		Debugger = getComponent(IDebug.class);
-
 		// Framework features
-//		addComponent(Commands.class);
-//		addComponent(Database.class);
-//		addComponent(Events.class);
-//		addComponent(FrameworkHooks.class);
-//		addComponent(LUAScripts.class);
-//		addComponent(UniverseRegistration.class);
+		addComponent(Commands.class);
+		addComponent(Database.class);
+		addComponent(Events.class);
+		addComponent(FrameworkHooks.class);
 
 		// Plugin components
-//		addComponent(SomeComponent.class);
+
+		// Database
+		addComponent(ClanRepository.class);
+		addComponent(ClanMemberRepository.class);
+
+		// Handlers/Monitors
+		addComponent(CharterHandler.class);
+		addComponent(ClanHandler.class);
+		addComponent(PlayerMonitor.class);
+
+		// Commands
+		Command clans = new Command("clan", "Clan related commands", null);
+		addComponent(clans);
+
+		clans.addSubCommand(getInstance(CreateClan.class));
 	}
 }
