@@ -36,7 +36,7 @@ public class ClanInfo extends PlayerAsyncCommand
 
 	private String formatLine(String key, Object value)
 	{
-		return "\n- &6" + key + ": &4" + value + "&r";
+		return "\n- &6" + key + ": &r" + value;
 	}
 
 	private final ClanHandler clanHandler;
