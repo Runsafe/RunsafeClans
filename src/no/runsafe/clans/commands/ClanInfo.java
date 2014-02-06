@@ -7,6 +7,7 @@ import no.runsafe.framework.api.command.argument.IArgumentList;
 import no.runsafe.framework.api.command.argument.RequiredArgument;
 import no.runsafe.framework.api.command.player.PlayerAsyncCommand;
 import no.runsafe.framework.api.player.IPlayer;
+import org.apache.commons.lang.StringUtils;
 
 public class ClanInfo extends PlayerAsyncCommand
 {
@@ -29,7 +30,7 @@ public class ClanInfo extends PlayerAsyncCommand
 
 		info.append(formatLine("Name", clanName));
 		info.append(formatLine("Leader", clan.getLeader()));
-		info.append(formatLine("Members", clan.getMemberCount()));
+		info.append(formatLine("Members", "(" + clan.getMemberCount() + ") " + StringUtils.join(clan.getMembers(), ", ")));
 
 		return info.toString();
 	}
