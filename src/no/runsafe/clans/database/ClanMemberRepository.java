@@ -1,6 +1,7 @@
 package no.runsafe.clans.database;
 
 import no.runsafe.framework.api.database.*;
+import no.runsafe.framework.api.player.IPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,9 +34,9 @@ public class ClanMemberRepository extends Repository
 		database.execute("INSERT INTO `clan_members` (`clanID`, `member`) VALUES(?, ?)", clanID, playerName);
 	}
 
-	public void removeClanMember(String playerName)
+	public void removeClanMember(IPlayer player)
 	{
-		removeClanMemberByName(playerName);
+		removeClanMemberByName(player.getName());
 	}
 
 	public void removeClanMemberByName(String playerName)
