@@ -30,6 +30,7 @@ public class PlayerMonitor implements IPlayerRightClick
 			if (!clanHandler.isValidClanName(clanName))
 			{
 				player.sendColouredMessage(String.format("&c'%s' is not a valid clan tag. A clan tag must be three characters using characters A-Z.", clanName));
+				player.closeInventory();
 				return false;
 			}
 
@@ -37,6 +38,7 @@ public class PlayerMonitor implements IPlayerRightClick
 			if (clanHandler.clanExists(clanName))
 			{
 				player.sendColouredMessage(String.format("&cA clan named '%s' already exists.", clanName));
+				player.closeInventory();
 				return false;
 			}
 
@@ -80,6 +82,7 @@ public class PlayerMonitor implements IPlayerRightClick
 						clanHandler.addClanMember(clanName, signedPlayer);
 
 			}
+			player.closeInventory();
 			return false;
 		}
 		return true;
