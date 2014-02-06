@@ -43,12 +43,11 @@ public class PlayerMonitor implements IPlayerRightClick
 			}
 
 			List<String> charterSigns = charterHandler.getCharterSigns(usingItem);
+			String playerName = player.getName();
 
 			// If we have less than 2 signs on the charter, we should sign it!
 			if (charterSigns.size() < 2)
 			{
-				String playerName = player.getName();
-
 				// Check the player has not already signed this charter.
 				if (charterSigns.contains(playerName))
 				{
@@ -68,6 +67,7 @@ public class PlayerMonitor implements IPlayerRightClick
 					if (clanHandler.playerIsInClan(signedPlayer))
 					{
 						player.sendColouredMessage("&cOne or more of the signatures on this charter are invalid, get more!");
+						player.closeInventory();
 						return false;
 					}
 				}
@@ -80,6 +80,8 @@ public class PlayerMonitor implements IPlayerRightClick
 				for (String signedPlayer : charterSigns)
 					if (!clanHandler.playerIsInClan(signedPlayer))
 						clanHandler.addClanMember(clanName, signedPlayer);
+
+				clanHandler.addClanMember(clanName, player.getName()); // Add the signing player to the clan.
 
 			}
 			player.closeInventory();
