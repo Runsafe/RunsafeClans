@@ -1,7 +1,6 @@
 package no.runsafe.clans.database;
 
 import no.runsafe.framework.api.database.*;
-import no.runsafe.framework.api.player.IPlayer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
