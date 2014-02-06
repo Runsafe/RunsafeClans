@@ -32,7 +32,7 @@ public class ClanMemberRepository extends Repository
 
 	public void addClanMember(String clanID, String playerName)
 	{
-		database.execute("INSERT INTO `clan_members` (`clanID`, `member`) VALUES(?, ?)", clanID, playerName);
+		database.execute("INSERT INTO `clan_members` (`clanID`, `member`, `joined`) VALUES(?, ?, NOW())", clanID, playerName);
 	}
 
 	public void removeClanMember(IPlayer player)
