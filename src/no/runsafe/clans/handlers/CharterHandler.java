@@ -29,12 +29,12 @@ public class CharterHandler
 
 	public String getClanName(RunsafeMeta charter)
 	{
-		return getCharterValue(charter.getLore(), 1);
+		return getCharterValue(charter.getLore(), 0);
 	}
 
 	public String getLeaderName(RunsafeMeta charter)
 	{
-		return getCharterValue(charter.getLore(), 2);
+		return getCharterValue(charter.getLore(), 1);
 	}
 
 	private String getCharterValue(List<String> values, int index)
