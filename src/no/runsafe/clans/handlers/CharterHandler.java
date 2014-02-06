@@ -12,7 +12,7 @@ public class CharterHandler
 {
 	public void givePlayerCharter(IPlayer player, String clanName)
 	{
-		RunsafeMeta charter = Item.Miscellaneous.BookAndQuill.getItem(); // Create a book item.
+		RunsafeMeta charter = Item.Miscellaneous.Book.getItem(); // Create a book item.
 		charter.setDisplayName("Leather-bound Charter"); // Give the item a name.
 		charter.addLore("§7Clan: " + clanName); // Append the clan name.
 		charter.addLore("§7Leader: " + player.getName()); // Append the clan leader.

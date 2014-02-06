@@ -22,7 +22,7 @@ public class PlayerMonitor implements IPlayerRightClick
 	public boolean OnPlayerRightClick(IPlayer player, RunsafeMeta usingItem, IBlock targetBlock)
 	{
 		// Check we are holding a charter.
-		if (usingItem != null && usingItem.is(Item.Miscellaneous.BookAndQuill) && charterHandler.itemIsCharter(usingItem))
+		if (usingItem != null && usingItem.is(Item.Miscellaneous.Book) && charterHandler.itemIsCharter(usingItem))
 		{
 			String clanName = charterHandler.getClanName(usingItem); // Grab the clan name from the book.
 
