@@ -6,8 +6,7 @@ import no.runsafe.framework.api.command.argument.IArgumentList;
 import no.runsafe.framework.api.command.player.PlayerAsyncCommand;
 import no.runsafe.framework.api.player.IPlayer;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.List;
 
 public class ClanRankings extends PlayerAsyncCommand
 {
@@ -21,13 +20,13 @@ public class ClanRankings extends PlayerAsyncCommand
 	public String OnAsyncExecute(IPlayer executor, IArgumentList parameters)
 	{
 		StringBuilder data = new StringBuilder("Current Top Clan Rankings");
-		LinkedHashMap<String, Integer> roster = rankingHandler.getRankingRoster();
+		List<String> roster = rankingHandler.getRankingRoster();
 
 		int current = 1;
-		for (Map.Entry<String, Integer> node : roster.entrySet())
+		for (String clan : roster)
 		{
 			if (current == 4) break;
-			data.append(formatLine(current, node.getKey()));
+			data.append(formatLine(current, clan));
 			current += 1;
 		}
 
