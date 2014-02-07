@@ -331,6 +331,26 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 			sendMessageToClan(playerClan.getId(), player.getPrettyName() + "&7: " + message);
 	}
 
+	public void addClanKill(String playerName)
+	{
+		Clan clan = getPlayerClan(playerName);
+		if (clan != null)
+		{
+			clan.addClanKills(1);
+			clanRepository.updateStatistic(clan.getId(), "clanKills", clan.getClanKills());
+		}
+	}
+
+	public void addClanDeath(String playerName)
+	{
+		Clan clan = getPlayerClan(playerName);
+		if (clan != null)
+		{
+			clan.addClanKills(1);
+			clanRepository.updateStatistic(clan.getId(), "clanDeaths", clan.getClanDeaths());
+		}
+	}
+
 	private Map<String, Clan> clans = new ConcurrentHashMap<String, Clan>(0);
 	private Map<String, String> playerClanIndex = new ConcurrentHashMap<String, String>(0);
 	private Map<String, List<String>> playerInvites = new ConcurrentHashMap<String, List<String>>(0);

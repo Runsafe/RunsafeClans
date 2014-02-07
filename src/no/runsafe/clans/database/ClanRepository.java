@@ -18,10 +18,13 @@ public class ClanRepository extends Repository
 	{
 		Map<String, Clan> clanList = new HashMap<String, Clan>(0);
 
-		for (IRow row : database.query("SELECT `clanID`, `leader`, `motd` FROM `clans`"))
+		for (IRow row : database.query("SELECT `clanID`, `leader`, `motd`, `clanKills`, `clanDeaths` FROM `clans`"))
 		{
 			String clanName = row.String("clanID");
-			clanList.put(clanName, new Clan(clanName, row.String("leader"), row.String("motd")));
+			Clan clan = new Clan(clanName, row.String("leader"), row.String("motd"));
+			clan.addClanKills(row.Integer("clanKills")); // Add in kills stat
+			clan.addClanDeaths(row.Integer("clanDeaths")); // Add in deaths stat
+			clanList.put(clanName, clan);
 		}
 		return clanList;
 	}
@@ -46,6 +49,11 @@ public class ClanRepository extends Repository
 		database.execute("INSERT INTO `clans` (`clanID`, `leader`, `created`, `motd`) VALUES(?, ?, NOW(), ?)", clan.getId(), clan.getLeader(), clan.getMotd());
 	}
 
+	public void updateStatistic(String clanID, String statistic, int value)
+	{
+		database.execute("UPDATE `clans` SET `" + statistic + "` = ? WHERE `clanID` = ?", value, clanID);
+	}
+
 	@Override
 	public String getTableName()
 	{
@@ -67,6 +75,10 @@ public class ClanRepository extends Repository
 		);
 
 		update.addQueries("ALTER TABLE `clans` ADD COLUMN `motd` VARCHAR(255) NOT NULL AFTER `created`;");
+
+		update.addQueries("ALTER TABLE `clans`" +
+				"ADD COLUMN `clanKills` INT NOT NULL DEFAULT '0' AFTER `motd`," +
+				"ADD COLUMN `clanDeaths` INT NOT NULL DEFAULT '0' AFTER `clanKills`;");
 
 		return update;
 	}

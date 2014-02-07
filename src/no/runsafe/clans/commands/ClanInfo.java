@@ -31,6 +31,8 @@ public class ClanInfo extends PlayerAsyncCommand
 		info.append(formatLine("Name", clanName));
 		info.append(formatLine("Leader", clan.getLeader()));
 		info.append(formatLine("Members", "(" + clan.getMemberCount() + ") " + StringUtils.join(clan.getMembers(), ", ")));
+		info.append(formatLine("Enemy Clan Kills", clan.getClanKills()));
+		info.append(formatLine("Enemy Clan Deaths", clan.getClanDeaths()));
 
 		return info.toString();
 	}

@@ -57,8 +57,30 @@ public class Clan
 		members.remove(playerName);
 	}
 
+	public void addClanKills(int amount)
+	{
+		clanKills += amount;
+	}
+
+	public void addClanDeaths(int amount)
+	{
+		clanDeaths += amount;
+	}
+
+	public int getClanKills()
+	{
+		return clanKills;
+	}
+
+	public int getClanDeaths()
+	{
+		return clanDeaths;
+	}
+
 	private final String id;
 	private String leader;
 	private String motd;
+	private int clanKills = 0;
+	private int clanDeaths = 0;
 	private final List<String> members = new ArrayList<String>(0);
 }
