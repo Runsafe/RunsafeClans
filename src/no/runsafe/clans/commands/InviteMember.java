@@ -1,5 +1,6 @@
 package no.runsafe.clans.commands;
 
+import no.runsafe.clans.Clan;
 import no.runsafe.clans.handlers.ClanHandler;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.command.argument.AnyPlayerRequired;
@@ -35,8 +36,12 @@ public class InviteMember extends PlayerAsyncCommand
 		if (clanHandler.playerIsInClan(targetPlayerName))
 			return "&cThat player is already in a clan.";
 
-		// ToDo: Implement clan inviting.
-		return "&aComing Soon.";
+		Clan clan = clanHandler.getPlayerClan(playerName); // Grab the players clan.
+		if (clanHandler.playerHasPendingInvite(clan.getId(), targetPlayerName))
+			return "&cThat player has already been invited to this clan.";
+
+		clanHandler.invitePlayerToClan(clan.getId(), targetPlayer); // Invite the player.
+		return "&aInvite sent!";
 	}
 
 	private final ClanHandler clanHandler;

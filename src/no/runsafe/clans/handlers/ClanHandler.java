@@ -1,31 +1,39 @@
 package no.runsafe.clans.handlers;
 
 import no.runsafe.clans.Clan;
+import no.runsafe.clans.database.ClanInviteRepository;
 import no.runsafe.clans.database.ClanMemberRepository;
 import no.runsafe.clans.database.ClanRepository;
 import no.runsafe.framework.api.IConfiguration;
+import no.runsafe.framework.api.IServer;
+import no.runsafe.framework.api.event.player.IPlayerJoinEvent;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.api.hook.IPlayerDataProvider;
 import no.runsafe.framework.api.log.IConsole;
 import no.runsafe.framework.api.player.IPlayer;
+import no.runsafe.framework.minecraft.event.player.RunsafePlayerJoinEvent;
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Period;
 import org.joda.time.PeriodType;
 import org.joda.time.format.PeriodFormat;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
-public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider
+public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, IPlayerJoinEvent
 {
-	public ClanHandler(IConsole console, ClanRepository clanRepository, ClanMemberRepository memberRepository)
+	public ClanHandler(IConsole console, IServer server, ClanRepository clanRepository, ClanMemberRepository memberRepository, ClanInviteRepository inviteRepository)
 	{
 		this.console = console;
+		this.server = server;
 		this.clanRepository = clanRepository;
 		this.memberRepository = memberRepository;
+		this.inviteRepository = inviteRepository;
 	}
 
 	public void createClan(String clanID, String playerLeader)
@@ -108,6 +116,21 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider
 
 		// Output some statistics from our clan loading.
 		console.logInformation("Loaded %s clans with %s members.", clans.size(), memberCount);
+
+		playerInvites = inviteRepository.getPendingInvites(); // Grab pending invites from the database.
+		for (Map.Entry<String, List<String>> inviteNode : playerInvites.entrySet())
+		{
+			String playerName = inviteNode.getKey(); // The name of the player who's been invited.
+
+			for (String clanName : inviteNode.getValue()) // Loop through all the invites and check they are valid.
+			{
+				if (!clanExists(clanName)) // Check the clan exists.
+				{
+					playerInvites.get(playerName).remove(clanName); // Remove non-existent clan invite.
+					console.logError("Purging invalid clan invite to %s from %s", playerName, clanName);
+				}
+			}
+		}
 	}
 
 	@Override
@@ -129,11 +152,83 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider
 		return PeriodFormat.getDefault().print(period);
 	}
 
+	@Override
+	public void OnPlayerJoinEvent(RunsafePlayerJoinEvent event)
+	{
+		IPlayer player = event.getPlayer(); // Grab the player.
+		String playerName = player.getName();
+
+		// Check if we have any pending invites.
+		if (playerInvites.containsKey(playerName))
+		{
+			List<String> invites = playerInvites.get(playerName);
+			player.sendColouredMessage("You have %s pending clan invite(s): %s", invites.size(), StringUtils.join(invites, ", "));
+			player.sendColouredMessage("Use \"/clan join <clanTag>\" to join one of them!");
+		}
+	}
+
+	public boolean playerHasPendingInvite(String clanID, String playerName)
+	{
+		return playerInvites.containsKey(playerName) && playerInvites.get(playerName).contains(clanID);
+	}
+
+	public void invitePlayerToClan(String clanID, IPlayer player)
+	{
+		String playerName = player.getName();
+		if (!playerInvites.containsKey(playerName))
+			playerInvites.put(playerName, new ArrayList<String>(1));
+
+		playerInvites.get(playerName).add(clanID); // Add clan invite to the player.
+
+		if (player.isOnline()) // If the player is online, inform them about the invite!
+			player.sendColouredMessage("&aYou have been invited to join the '%1$2s' clan. Use \"/clan join %1$2s\" to join!");
+	}
+
+	public void removeAllPendingInvites(String playerName)
+	{
+		playerInvites.remove(playerName); // Remove all pending invites.
+		inviteRepository.clearAllPendingInvites(playerName); // Persist the change in database.
+	}
+
+	public void acceptClanInvite(String clanID, IPlayer player)
+	{
+		String playerName = player.getName();
+
+		// Make sure the player has a pending invite we can accept.
+		if (playerHasPendingInvite(clanID, playerName))
+		{
+			removeAllPendingInvites(playerName); // Remove all pending invites.
+			addClanMember(clanID, playerName); // Add the member to the clan.
+			sendMessageToClan(clanID, playerName + " has joined the clan.");
+		}
+	}
+
+	public void sendMessageToClan(String clanID, String message)
+	{
+		Clan clan = getClan(clanID); // Grab the clan.
+
+		// Make sure said clan exists.
+		if (clan != null)
+		{
+			message = "&3[" + clan.getId() + "] " + message;
+			// Loop all clan members.
+			for (String playerName : clan.getMembers())
+			{
+				IPlayer player = server.getPlayerExact(playerName);
+				if (player != null && player.isOnline()) // Check player is valid and online.
+					player.sendColouredMessage(message); // Send the message to the player.
+			}
+		}
+	}
+
 	private Map<String, Clan> clans = new ConcurrentHashMap<String, Clan>(0);
 	private Map<String, String> playerClanIndex = new ConcurrentHashMap<String, String>(0);
+	private Map<String, List<String>> playerInvites = new ConcurrentHashMap<String, List<String>>(0);
 	private final IConsole console;
+	private final IServer server;
 	private final ClanRepository clanRepository;
 	private final ClanMemberRepository memberRepository;
+	private final ClanInviteRepository inviteRepository;
 	private final Pattern clanNamePattern = Pattern.compile("^[A-Z]{3}$");
 	private final PeriodType output_format = PeriodType.standard().withMillisRemoved().withSecondsRemoved();
 }

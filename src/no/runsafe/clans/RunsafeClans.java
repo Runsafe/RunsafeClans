@@ -3,6 +3,8 @@ package no.runsafe.clans;
 import no.runsafe.clans.commands.ClanInfo;
 import no.runsafe.clans.commands.CreateClan;
 import no.runsafe.clans.commands.InviteMember;
+import no.runsafe.clans.commands.JoinClan;
+import no.runsafe.clans.database.ClanInviteRepository;
 import no.runsafe.clans.database.ClanMemberRepository;
 import no.runsafe.clans.database.ClanRepository;
 import no.runsafe.clans.handlers.CharterHandler;
@@ -31,6 +33,7 @@ public class RunsafeClans extends RunsafeConfigurablePlugin
 		// Database
 		addComponent(ClanRepository.class);
 		addComponent(ClanMemberRepository.class);
+		addComponent(ClanInviteRepository.class);
 
 		// Handlers/Monitors
 		addComponent(CharterHandler.class);
@@ -44,5 +47,6 @@ public class RunsafeClans extends RunsafeConfigurablePlugin
 		clans.addSubCommand(getInstance(CreateClan.class));
 		clans.addSubCommand(getInstance(InviteMember.class));
 		clans.addSubCommand(getInstance(ClanInfo.class));
+		clans.addSubCommand(getInstance(JoinClan.class));
 	}
 }
