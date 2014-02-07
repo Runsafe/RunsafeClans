@@ -162,8 +162,8 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 		if (playerInvites.containsKey(playerName))
 		{
 			List<String> invites = playerInvites.get(playerName);
-			player.sendColouredMessage("You have %s pending clan invite(s): %s", invites.size(), StringUtils.join(invites, ", "));
-			player.sendColouredMessage("Use \"/clan join <clanTag>\" to join one of them!");
+			player.sendColouredMessage("&aYou have %s pending clan invite(s): %s", invites.size(), StringUtils.join(invites, ", "));
+			player.sendColouredMessage("&aUse \"/clan join <clanTag>\" to join one of them!");
 		}
 	}
 
