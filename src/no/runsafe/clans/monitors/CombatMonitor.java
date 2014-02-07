@@ -2,6 +2,7 @@ package no.runsafe.clans.monitors;
 
 import no.runsafe.clans.Clan;
 import no.runsafe.clans.events.BackstabberEvent;
+import no.runsafe.clans.events.MutinyEvent;
 import no.runsafe.clans.handlers.ClanHandler;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.IServer;
@@ -43,7 +44,14 @@ public class CombatMonitor implements IEntityDamageByEntityEvent, IPlayerDeathEv
 
 				if (clanHandler.playerIsInClan(killerName, deadPlayerClan.getId()))
 				{
-					new BackstabberEvent(server.getPlayerExact(killerName)).Fire();
+					IPlayer thePlayer = server.getPlayerExact(killerName);
+
+					if (thePlayer != null)
+					{
+						new BackstabberEvent(thePlayer).Fire();
+						if (clanHandler.playerIsClanLeader(deadPlayerName))
+							new MutinyEvent(thePlayer).Fire();
+					}
 				}
 				else
 				{
