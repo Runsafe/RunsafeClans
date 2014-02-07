@@ -12,7 +12,7 @@ public class SetMotd extends PlayerAsyncCommand
 {
 	public SetMotd(IScheduler scheduler, ClanHandler clanHandler)
 	{
-		super("setmotd", "Change the clan message of the day", "runsafe.clans.motd", scheduler, new TrailingArgument("motd"));
+		super("motd", "Change the clan message of the day", "runsafe.clans.motd", scheduler, new TrailingArgument("motd"));
 		this.clanHandler = clanHandler;
 	}
 
