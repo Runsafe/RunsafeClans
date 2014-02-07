@@ -30,7 +30,7 @@ public class LookupClan extends PlayerAsyncCommand
 
 		Clan clan = clanHandler.getPlayerClan(playerName);
 
-		return targetPlayer.getPrettyName() + "&f has been a member of " + clan + " for " + clanHandler.getPlayerJoinString(targetPlayer) + ".";
+		return targetPlayer.getPrettyName() + "&f has been a member of " + clan.getId() + " for " + clanHandler.getPlayerJoinString(targetPlayer) + ".";
 	}
 
 	private final ClanHandler clanHandler;
