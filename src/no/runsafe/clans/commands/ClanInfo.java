@@ -13,7 +13,7 @@ public class ClanInfo extends PlayerAsyncCommand
 {
 	public ClanInfo(IScheduler scheduler, ClanHandler clanHandler)
 	{
-		super("info", "Get information on another clan.", "runsafe.clans.info", scheduler, new RequiredArgument("clan"));
+		super("info", "Get information on another clan", "runsafe.clans.info", scheduler, new RequiredArgument("clan"));
 		this.clanHandler = clanHandler;
 	}
 
