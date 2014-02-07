@@ -18,12 +18,17 @@ public class ClanRepository extends Repository
 	{
 		Map<String, Clan> clanList = new HashMap<String, Clan>(0);
 
-		for (IRow row : database.query("SELECT `clanID`, `leader` FROM `clans`"))
+		for (IRow row : database.query("SELECT `clanID`, `leader`, `motd` FROM `clans`"))
 		{
 			String clanName = row.String("clanID");
-			clanList.put(clanName, new Clan(clanName, row.String("leader")));
+			clanList.put(clanName, new Clan(clanName, row.String("leader"), row.String("motd")));
 		}
 		return clanList;
+	}
+
+	public void updateMotd(String clanID, String motd)
+	{
+		database.execute("UPDATE `clans` SET `motd` = ? WHERE `clanID` = ?", motd, clanID);
 	}
 
 	public void deleteClan(String clanID)
@@ -38,7 +43,7 @@ public class ClanRepository extends Repository
 
 	public void persistClan(Clan clan)
 	{
-		database.execute("INSERT INTO `clans` (`clanID`, `leader`, `created`) VALUES(?, ?, NOW())", clan.getId(), clan.getLeader());
+		database.execute("INSERT INTO `clans` (`clanID`, `leader`, `created`, `motd`) VALUES(?, ?, NOW())", clan.getId(), clan.getLeader(), clan.getMotd());
 	}
 
 	@Override
@@ -60,6 +65,8 @@ public class ClanRepository extends Repository
 				"PRIMARY KEY (`clanID`)" +
 			")"
 		);
+
+		update.addQueries("ALTER TABLE `clans` ADD COLUMN `motd` VARCHAR(255) NOT NULL AFTER `created`;");
 
 		return update;
 	}

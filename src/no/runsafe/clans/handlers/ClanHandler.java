@@ -40,7 +40,7 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 	{
 		clanID = clanID.toUpperCase(); // Make sure the clan ID is upper-case.
 		if (clanExists(clanID)) return; // Be sure we don't have a clan with this name already.
-		Clan newClan = new Clan(clanID, playerLeader); // Create a new clan object.
+		Clan newClan = new Clan(clanID, playerLeader, "Welcome to " + clanID); // Create a new clan object.
 		clans.put(clanID, newClan); // Push the clan into the clan handler.
 		clanRepository.persistClan(newClan); // Persist the clan in the database.
 	}
@@ -203,6 +203,13 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 			player.sendColouredMessage("&aYou have %s pending clan invite(s): %s", invites.size(), StringUtils.join(invites, ", "));
 			player.sendColouredMessage("&aUse \"/clan join <clanTag>\" to join one of them!");
 		}
+
+		if (playerIsInClan(playerName))
+		{
+			Clan playerClan = getPlayerClan(playerName);
+			if (playerClan != null)
+				sendClanMessage(playerClan.getId(), player, "Message of the Day: " + playerClan.getMotd());
+		}
 	}
 
 	public boolean playerHasPendingInvite(String clanID, String playerName)
@@ -248,17 +255,28 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 		// Make sure said clan exists.
 		if (clan != null)
 		{
-			message = "&3[" + clan.getId() + "] &7" + message;
 			// Loop all clan members.
 			for (String playerName : clan.getMembers())
 			{
 				IPlayer player = server.getPlayerExact(playerName);
 				if (player != null && player.isOnline()) // Check player is valid and online.
-					player.sendColouredMessage(message); // Send the message to the player.
+					sendClanMessage(clanID, player, message);
 			}
 
 			console.logInformation(message);
 		}
+	}
+
+	public void sendClanMessage(String clanID, IPlayer player, String message)
+	{
+		player.sendColouredMessage("&3[" + clanID + "] &7" + message);
+	}
+
+	public void setClanMotd(String clanID, String message)
+	{
+		clans.get(clanID).setMotd(message);
+		clanRepository.updateMotd(clanID, message);
+		sendMessageToClan(clanID, "Message of the Day: " + message);
 	}
 
 	public void disbandClan(Clan clan)

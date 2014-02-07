@@ -2,6 +2,7 @@ package no.runsafe.clans.monitors;
 
 import no.runsafe.clans.handlers.CharterHandler;
 import no.runsafe.clans.handlers.ClanHandler;
+import no.runsafe.framework.api.IServer;
 import no.runsafe.framework.api.block.IBlock;
 import no.runsafe.framework.api.event.player.IPlayerRightClick;
 import no.runsafe.framework.api.player.IPlayer;
@@ -12,10 +13,11 @@ import java.util.List;
 
 public class PlayerMonitor implements IPlayerRightClick
 {
-	public PlayerMonitor(CharterHandler charterHandler, ClanHandler clanHandler)
+	public PlayerMonitor(CharterHandler charterHandler, ClanHandler clanHandler, IServer server)
 	{
 		this.charterHandler = charterHandler;
 		this.clanHandler = clanHandler;
+		this.server = server;
 	}
 
 	@Override
@@ -83,8 +85,15 @@ public class PlayerMonitor implements IPlayerRightClick
 
 				// Add all players on the charter to the clan if they are not already in a clan.
 				for (String signedPlayer : charterSigns)
+				{
 					if (!clanHandler.playerIsInClan(signedPlayer))
+					{
 						clanHandler.addClanMember(clanName, signedPlayer);
+						IPlayer clanPlayer = server.getPlayerExact(signedPlayer);
+						if (clanPlayer != null && clanPlayer.isOnline())
+							clanPlayer.sendColouredMessage("");
+					}
+				}
 
 				clanHandler.addClanMember(clanName, player.getName()); // Add the signing player to the clan.
 			}
@@ -96,4 +105,5 @@ public class PlayerMonitor implements IPlayerRightClick
 
 	private final CharterHandler charterHandler;
 	private final ClanHandler clanHandler;
+	private final IServer server;
 }
