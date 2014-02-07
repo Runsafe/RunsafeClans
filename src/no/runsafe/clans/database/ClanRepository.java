@@ -43,7 +43,7 @@ public class ClanRepository extends Repository
 
 	public void persistClan(Clan clan)
 	{
-		database.execute("INSERT INTO `clans` (`clanID`, `leader`, `created`, `motd`) VALUES(?, ?, NOW())", clan.getId(), clan.getLeader(), clan.getMotd());
+		database.execute("INSERT INTO `clans` (`clanID`, `leader`, `created`, `motd`) VALUES(?, ?, NOW(), ?)", clan.getId(), clan.getLeader(), clan.getMotd());
 	}
 
 	@Override
