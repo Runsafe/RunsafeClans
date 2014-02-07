@@ -256,6 +256,8 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 				if (player != null && player.isOnline()) // Check player is valid and online.
 					player.sendColouredMessage(message); // Send the message to the player.
 			}
+
+			console.logInformation(message);
 		}
 	}
 
