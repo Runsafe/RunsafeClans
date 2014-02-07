@@ -322,6 +322,13 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 		inviteRepository.clearAllPendingInvitesForClan(clanID); // Clear all pending invites.
 	}
 
+	public void clanChat(IPlayer player, String message)
+	{
+		Clan playerClan = getPlayerClan(player.getName());
+		if (playerClan != null)
+			sendMessageToClan(playerClan.getId(), player.getPrettyName() + "&7: " + message);
+	}
+
 	private Map<String, Clan> clans = new ConcurrentHashMap<String, Clan>(0);
 	private Map<String, String> playerClanIndex = new ConcurrentHashMap<String, String>(0);
 	private Map<String, List<String>> playerInvites = new ConcurrentHashMap<String, List<String>>(0);
