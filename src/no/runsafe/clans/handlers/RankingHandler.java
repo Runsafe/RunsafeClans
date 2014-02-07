@@ -13,7 +13,7 @@ public class RankingHandler implements IConfigurationChanged
 		this.clanHandler = clanHandler;
 	}
 
-	public LinkedHashMap<String, Integer> getRankingRoster()
+	public List<String> getRankingRoster()
 	{
 		Map<String, Clan> clanMap = clanHandler.getClans();
 		Map<String, Integer> roster = new HashMap<String, Integer>(clanMap.size());
@@ -25,7 +25,14 @@ public class RankingHandler implements IConfigurationChanged
 			roster.put(clan.getId(), score);
 		}
 
-		return sortByValues(roster);
+		LinkedHashMap<String, Integer> sorted = sortByValues(roster); // Sort the stuff!
+		List<String> ordered = new ArrayList<String>(sorted.size());
+
+		List<Map.Entry<String, Integer>> holder = new ArrayList<Map.Entry<String, Integer>>(sorted.entrySet());
+		for (int i = holder.size() - 1; i >= 0; i--)
+			ordered.add(holder.get(i).getKey());
+
+		return ordered;
 	}
 
 	public static <K extends Comparable,V extends Comparable> LinkedHashMap<K,V> sortByValues(Map<K,V> map)
