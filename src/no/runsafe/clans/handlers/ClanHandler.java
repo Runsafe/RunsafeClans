@@ -346,7 +346,7 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 		Clan clan = getPlayerClan(playerName);
 		if (clan != null)
 		{
-			clan.addClanKills(1);
+			clan.addClanDeaths(1);
 			clanRepository.updateStatistic(clan.getId(), "clanDeaths", clan.getClanDeaths());
 		}
 	}
