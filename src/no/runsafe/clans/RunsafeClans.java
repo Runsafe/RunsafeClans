@@ -6,6 +6,7 @@ import no.runsafe.clans.database.ClanMemberRepository;
 import no.runsafe.clans.database.ClanRepository;
 import no.runsafe.clans.handlers.CharterHandler;
 import no.runsafe.clans.handlers.ClanHandler;
+import no.runsafe.clans.handlers.RankingHandler;
 import no.runsafe.clans.monitors.CombatMonitor;
 import no.runsafe.clans.monitors.PlayerMonitor;
 import no.runsafe.framework.RunsafeConfigurablePlugin;
@@ -38,6 +39,7 @@ public class RunsafeClans extends RunsafeConfigurablePlugin
 		addComponent(ClanHandler.class);
 		addComponent(PlayerMonitor.class);
 		addComponent(CombatMonitor.class);
+		addComponent(RankingHandler.class);
 
 		// Commands
 		Command clans = new Command("clan", "Clan related commands", null);
