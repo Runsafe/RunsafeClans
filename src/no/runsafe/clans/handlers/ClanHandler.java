@@ -285,14 +285,14 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 				if (player != null && player.isOnline()) // Check player is valid and online.
 					sendClanMessage(clanID, player, message);
 			}
-
-			console.logInformation(message);
 		}
 	}
 
 	public void sendClanMessage(String clanID, IPlayer player, String message)
 	{
-		player.sendColouredMessage("&3[" + clanID + "] &7" + message);
+		message = "&3[" + clanID + "] &7" + message;
+		player.sendColouredMessage(message);
+		console.logInformation(message);
 	}
 
 	public void setClanMotd(String clanID, String message)
