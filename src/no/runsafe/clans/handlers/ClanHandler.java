@@ -20,10 +20,7 @@ import org.joda.time.Period;
 import org.joda.time.PeriodType;
 import org.joda.time.format.PeriodFormat;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
@@ -349,6 +346,11 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 			clan.addClanDeaths(1);
 			clanRepository.updateStatistic(clan.getId(), "clanDeaths", clan.getClanDeaths());
 		}
+	}
+
+	public Map<String, Clan> getClans()
+	{
+		return clans;
 	}
 
 	private Map<String, Clan> clans = new ConcurrentHashMap<String, Clan>(0);
