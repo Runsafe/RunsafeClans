@@ -1,9 +1,6 @@
 package no.runsafe.clans;
 
-import no.runsafe.clans.commands.ClanInfo;
-import no.runsafe.clans.commands.CreateClan;
-import no.runsafe.clans.commands.InviteMember;
-import no.runsafe.clans.commands.JoinClan;
+import no.runsafe.clans.commands.*;
 import no.runsafe.clans.database.ClanInviteRepository;
 import no.runsafe.clans.database.ClanMemberRepository;
 import no.runsafe.clans.database.ClanRepository;
@@ -48,5 +45,6 @@ public class RunsafeClans extends RunsafeConfigurablePlugin
 		clans.addSubCommand(getInstance(InviteMember.class));
 		clans.addSubCommand(getInstance(ClanInfo.class));
 		clans.addSubCommand(getInstance(JoinClan.class));
+		clans.addSubCommand(getInstance(DisbandClan.class));
 	}
 }

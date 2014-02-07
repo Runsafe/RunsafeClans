@@ -210,7 +210,7 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 		// Make sure said clan exists.
 		if (clan != null)
 		{
-			message = "&3[" + clan.getId() + "] " + message;
+			message = "&3[" + clan.getId() + "] &7" + message;
 			// Loop all clan members.
 			for (String playerName : clan.getMembers())
 			{
@@ -219,6 +219,26 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 					player.sendColouredMessage(message); // Send the message to the player.
 			}
 		}
+	}
+
+	public void disbandClan(Clan clan)
+	{
+		String clanID = clan.getId();
+		sendMessageToClan(clanID, "The clan has been disbanded by the leader.");
+
+		// Loop all members.
+		for (String clanMember : clan.getMembers())
+			playerClanIndex.remove(clanMember); // Remove the players clan index.
+
+		// Check all pending invites and remove any for this clan.
+		for (Map.Entry<String, List<String>> invite : playerInvites.entrySet())
+			if (invite.getValue().contains(clanID))
+				playerInvites.get(invite.getKey()).remove(clanID); // Remove the invite from deleted clan.
+
+		memberRepository.removeAllClanMembers(clanID); // Wipe the roster.
+		clanRepository.deleteClan(clanID); // Delete the clan from the database.
+		clans.remove(clanID); // Delete the clan from the cache.
+		inviteRepository.clearAllPendingInvitesForClan(clanID); // Clear all pending invites.
 	}
 
 	private Map<String, Clan> clans = new ConcurrentHashMap<String, Clan>(0);

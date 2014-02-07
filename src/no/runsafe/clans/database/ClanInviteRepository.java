@@ -36,6 +36,11 @@ public class ClanInviteRepository extends Repository
 		database.execute("DELETE FROM `clan_invites` WHERE `player` = ?", playerName);
 	}
 
+	public void clearAllPendingInvitesForClan(String clanID)
+	{
+		database.execute("DELETE FROM `clan_invites` WHERE `clanID` = ?", clanID);
+	}
+
 	@Nonnull
 	@Override
 	public String getTableName()
