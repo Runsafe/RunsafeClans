@@ -4,6 +4,7 @@ import no.runsafe.clans.Clan;
 import no.runsafe.clans.database.ClanInviteRepository;
 import no.runsafe.clans.database.ClanMemberRepository;
 import no.runsafe.clans.database.ClanRepository;
+import no.runsafe.clans.events.ClanJoinEvent;
 import no.runsafe.framework.api.IConfiguration;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.IServer;
@@ -268,6 +269,7 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 			removeAllPendingInvites(playerName); // Remove all pending invites.
 			addClanMember(clanID, playerName); // Add the member to the clan.
 			sendMessageToClan(clanID, playerName + " has joined the clan.");
+			new ClanJoinEvent(player).Fire(); // Fire a join event.
 		}
 	}
 
