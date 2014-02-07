@@ -41,6 +41,7 @@ public class KickClanMember extends PlayerAsyncCommand
 
 		if (targetPlayer.isOnline())
 			targetPlayer.sendColouredMessage("&cYou have been kicked from the clan.");
+
 		return "&aPlayer kicked from your clan.";
 	}
 
