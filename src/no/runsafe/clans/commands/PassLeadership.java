@@ -12,7 +12,7 @@ public class PassLeadership extends PlayerAsyncCommand
 {
 	public PassLeadership(IScheduler scheduler, ClanHandler clanHandler)
 	{
-		super("passleadership", "Pass the leadership of your clan to another", "runsafe.clans.promote", scheduler, new AnyPlayerRequired());
+		super("passleadership", "Make another clan member leader.", "runsafe.clans.promote", scheduler, new AnyPlayerRequired());
 		this.clanHandler = clanHandler;
 	}
 

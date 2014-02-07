@@ -10,7 +10,7 @@ public class LeaveClan extends PlayerAsyncCommand
 {
 	public LeaveClan(IScheduler scheduler, ClanHandler clanHandler)
 	{
-		super("leave", "Leave the clan you are in.", "runsafe.clans.leave", scheduler);
+		super("leave", "Leave the clan you are in", "runsafe.clans.leave", scheduler);
 		this.clanHandler = clanHandler;
 	}
 
