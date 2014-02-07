@@ -18,7 +18,7 @@ public class JoinClan extends PlayerAsyncCommand
 	@Override
 	public String OnAsyncExecute(IPlayer executor, IArgumentList parameters)
 	{
-		String clanName = parameters.get("clan");
+		String clanName = parameters.get("clan").toUpperCase();
 		if (clanHandler.playerHasPendingInvite(clanName, executor.getName()))
 		{
 			clanHandler.acceptClanInvite(clanName, executor);
