@@ -181,7 +181,7 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 		playerInvites.get(playerName).add(clanID); // Add clan invite to the player.
 
 		if (player.isOnline()) // If the player is online, inform them about the invite!
-			player.sendColouredMessage("&aYou have been invited to join the '%1$s' clan. Use \"/clan join %1$s\" to join!");
+			player.sendColouredMessage("&aYou have been invited to join the '%1$s' clan. Use \"/clan join %1$s\" to join!", clanID);
 	}
 
 	public void removeAllPendingInvites(String playerName)
