@@ -5,6 +5,7 @@ import no.runsafe.clans.database.ClanInviteRepository;
 import no.runsafe.clans.database.ClanMemberRepository;
 import no.runsafe.clans.database.ClanRepository;
 import no.runsafe.framework.api.IConfiguration;
+import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.IServer;
 import no.runsafe.framework.api.event.player.IPlayerJoinEvent;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
@@ -27,10 +28,11 @@ import java.util.regex.Pattern;
 
 public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, IPlayerJoinEvent
 {
-	public ClanHandler(IConsole console, IServer server, ClanRepository clanRepository, ClanMemberRepository memberRepository, ClanInviteRepository inviteRepository)
+	public ClanHandler(IConsole console, IServer server, IScheduler scheduler, ClanRepository clanRepository, ClanMemberRepository memberRepository, ClanInviteRepository inviteRepository)
 	{
 		this.console = console;
 		this.server = server;
+		this.scheduler = scheduler;
 		this.clanRepository = clanRepository;
 		this.memberRepository = memberRepository;
 		this.inviteRepository = inviteRepository;
@@ -193,7 +195,7 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 	@Override
 	public void OnPlayerJoinEvent(RunsafePlayerJoinEvent event)
 	{
-		IPlayer player = event.getPlayer(); // Grab the player.
+		final IPlayer player = event.getPlayer(); // Grab the player.
 		String playerName = player.getName();
 
 		// Check if we have any pending invites.
@@ -206,9 +208,19 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 
 		if (playerIsInClan(playerName))
 		{
-			Clan playerClan = getPlayerClan(playerName);
+			final Clan playerClan = getPlayerClan(playerName);
 			if (playerClan != null)
-				sendClanMessage(playerClan.getId(), player, "Message of the Day: " + playerClan.getMotd());
+			{
+				scheduler.startAsyncTask(new Runnable()
+				{
+					@Override
+					public void run()
+					{
+						if (player.isOnline())
+							sendClanMessage(playerClan.getId(), player, "Message of the Day: " + playerClan.getMotd());
+					}
+				}, 3);
+			}
 		}
 	}
 
@@ -304,6 +316,7 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 	private Map<String, List<String>> playerInvites = new ConcurrentHashMap<String, List<String>>(0);
 	private final IConsole console;
 	private final IServer server;
+	private final IScheduler scheduler;
 	private final ClanRepository clanRepository;
 	private final ClanMemberRepository memberRepository;
 	private final ClanInviteRepository inviteRepository;
