@@ -58,14 +58,47 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 
 	public void addClanMember(String clanID, String playerName)
 	{
-		clans.get(clanID).addMember(playerName);
-		playerClanIndex.put(playerName, clanID);
-		memberRepository.addClanMember(clanID, playerName);
+		clans.get(clanID).addMember(playerName); // Add to cache.
+		playerClanIndex.put(playerName, clanID); // Add to index.
+		memberRepository.addClanMember(clanID, playerName); // Add to member database.
+	}
+
+	public void removeClanMember(String playerName, boolean kick)
+	{
+		Clan playerClan = getPlayerClan(playerName);
+
+		if (playerClan != null)
+		{
+			String clanID = playerClan.getId();
+			removeClanMember(clanID, playerName);
+
+			sendMessageToClan(clanID, playerName + " has " + (kick ? "been kicked from" : "left") + " the clan.");
+		}
+	}
+
+	private void removeClanMember(String clanID, String playerName)
+	{
+		clans.get(clanID).removeMember(playerName); // Remove from cache.
+		memberRepository.removeClanMemberByName(playerName); // Remove from database.
+		playerClanIndex.remove(playerName); // Remove from index.
+	}
+
+	public void changeClanLeader(String clanID, IPlayer newLeader)
+	{
+		String playerName = newLeader.getName();
+		clans.get(clanID).setLeader(playerName);
+		clanRepository.changeClanLeader(clanID, newLeader);
+		sendMessageToClan(clanID, playerName + " has been given leadership of the clan.");
 	}
 
 	public boolean playerIsInClan(String playerName)
 	{
 		return playerClanIndex.containsKey(playerName);
+	}
+
+	public boolean playerIsInClan(String playerName, String clanID)
+	{
+		return playerClanIndex.containsKey(playerName) && playerClanIndex.get(playerName).equals(clanID);
 	}
 
 	public Clan getPlayerClan(String playerName)
@@ -139,8 +172,13 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 		Map<String, String> data = new HashMap<String, String>(1);
 		Clan playerClan = getPlayerClan(player.getName());
 		data.put("runsafe.clans.clan", playerClan == null ? "None" : playerClan.getId());
-		data.put("runsafe.clans.joined", formatTime(memberRepository.getClanMemberJoinDate(player)));
+		data.put("runsafe.clans.joined", getPlayerJoinString(player));
 		return data;
+	}
+
+	public String getPlayerJoinString(IPlayer player)
+	{
+		return formatTime(memberRepository.getClanMemberJoinDate(player));
 	}
 
 	private String formatTime(DateTime time)
