@@ -2,7 +2,6 @@ package no.runsafe.clans.monitors;
 
 import no.runsafe.clans.handlers.CharterHandler;
 import no.runsafe.clans.handlers.ClanHandler;
-import no.runsafe.framework.api.IServer;
 import no.runsafe.framework.api.block.IBlock;
 import no.runsafe.framework.api.event.player.IPlayerRightClick;
 import no.runsafe.framework.api.player.IPlayer;
