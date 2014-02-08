@@ -13,11 +13,10 @@ import java.util.List;
 
 public class PlayerMonitor implements IPlayerRightClick
 {
-	public PlayerMonitor(CharterHandler charterHandler, ClanHandler clanHandler, IServer server)
+	public PlayerMonitor(CharterHandler charterHandler, ClanHandler clanHandler)
 	{
 		this.charterHandler = charterHandler;
 		this.clanHandler = clanHandler;
-		this.server = server;
 	}
 
 	@Override
@@ -98,5 +97,4 @@ public class PlayerMonitor implements IPlayerRightClick
 
 	private final CharterHandler charterHandler;
 	private final ClanHandler clanHandler;
-	private final IServer server;
 }
