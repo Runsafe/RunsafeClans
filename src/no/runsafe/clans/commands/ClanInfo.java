@@ -2,6 +2,7 @@ package no.runsafe.clans.commands;
 
 import no.runsafe.clans.Clan;
 import no.runsafe.clans.handlers.ClanHandler;
+import no.runsafe.clans.handlers.RankingHandler;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.command.argument.IArgumentList;
 import no.runsafe.framework.api.command.argument.RequiredArgument;
@@ -9,12 +10,15 @@ import no.runsafe.framework.api.command.player.PlayerAsyncCommand;
 import no.runsafe.framework.api.player.IPlayer;
 import org.apache.commons.lang.StringUtils;
 
+import java.util.List;
+
 public class ClanInfo extends PlayerAsyncCommand
 {
-	public ClanInfo(IScheduler scheduler, ClanHandler clanHandler)
+	public ClanInfo(IScheduler scheduler, ClanHandler clanHandler, RankingHandler rankHandler)
 	{
 		super("info", "Get information on another clan", "runsafe.clans.info", scheduler, new RequiredArgument("clan"));
 		this.clanHandler = clanHandler;
+		this.rankHandler = rankHandler;
 	}
 
 	@Override
@@ -34,6 +38,22 @@ public class ClanInfo extends PlayerAsyncCommand
 		info.append(formatLine("Enemy Clan Kills", clan.getClanKills()));
 		info.append(formatLine("Enemy Clan Deaths", clan.getClanDeaths()));
 
+		int ranking = -1;
+		int currentRanking = 1;
+
+		List<String> roster = rankHandler.getRankingRoster();
+		for (String rosterClan : roster)
+		{
+			if (rosterClan.equals(clanName))
+			{
+				ranking = currentRanking;
+				break;
+			}
+			currentRanking ++;
+		}
+
+		info.append(formatLine("Ranking", ranking > -1 ? ranking : "No rank"));
+
 		return info.toString();
 	}
 
@@ -43,4 +63,5 @@ public class ClanInfo extends PlayerAsyncCommand
 	}
 
 	private final ClanHandler clanHandler;
+	private final RankingHandler rankHandler;
 }
