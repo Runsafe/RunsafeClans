@@ -31,8 +31,11 @@ public class KickClanMember extends PlayerAsyncCommand
 		if (targetPlayer == null)
 			return "&cInvalid player.";
 
-		Clan playerClan = clanHandler.getPlayerClan(playerName); // Grab the players clan.
 		String targetPlayerName = targetPlayer.getName();
+		if (targetPlayerName.equals(playerName))
+			return "&cYou cannot kick yourself.";
+
+		Clan playerClan = clanHandler.getPlayerClan(playerName); // Grab the players clan.
 
 		if (!clanHandler.playerIsInClan(targetPlayerName, playerClan.getId()))
 			return "&cThat player is not in your clan.";
