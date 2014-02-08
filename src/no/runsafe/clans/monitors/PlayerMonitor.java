@@ -78,6 +78,13 @@ public class PlayerMonitor implements IPlayerRightClick
 					}
 				}
 
+				if (clanHandler.playerIsInClan(playerName))
+				{
+					player.sendColouredMessage("&cYou are already in a clan!");
+					player.closeInventory();
+					return false;
+				}
+
 				clanHandler.createClan(clanName, charterHandler.getLeaderName(usingItem)); // Forge the clan!
 
 				// Add all players on the charter to the clan if they are not already in a clan.
