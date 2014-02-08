@@ -80,22 +80,15 @@ public class PlayerMonitor implements IPlayerRightClick
 					}
 				}
 
-				player.sendColouredMessage(String.format("&aThe clan '%s' has been formed!", clanName)); // Inform the user they are part of the clan.
 				clanHandler.createClan(clanName, charterHandler.getLeaderName(usingItem)); // Forge the clan!
 
 				// Add all players on the charter to the clan if they are not already in a clan.
 				for (String signedPlayer : charterSigns)
-				{
 					if (!clanHandler.playerIsInClan(signedPlayer))
-					{
 						clanHandler.addClanMember(clanName, signedPlayer);
-						IPlayer clanPlayer = server.getPlayerExact(signedPlayer);
-						if (clanPlayer != null && clanPlayer.isOnline())
-							clanPlayer.sendColouredMessage("");
-					}
-				}
 
 				clanHandler.addClanMember(clanName, player.getName()); // Add the signing player to the clan.
+				clanHandler.sendMessageToClan(clanName, "Your clan has been formed!");
 			}
 			player.closeInventory();
 			return false;
