@@ -87,6 +87,7 @@ public class PlayerMonitor implements IPlayerRightClick
 
 				clanHandler.addClanMember(clanName, player.getName()); // Add the signing player to the clan.
 				clanHandler.sendMessageToClan(clanName, "Your clan has been formed!");
+				player.removeExactItem(usingItem); // Remove the charter.
 			}
 			player.closeInventory();
 			return false;
