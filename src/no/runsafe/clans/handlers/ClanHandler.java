@@ -267,6 +267,10 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 			removeAllPendingInvites(playerName); // Remove all pending invites.
 			addClanMember(clanID, playerName); // Add the member to the clan.
 			sendMessageToClan(clanID, playerName + " has joined the clan.");
+
+			Clan playerClan = getPlayerClan(playerName);
+			if (playerClan != null)
+				sendClanMessage(playerClan.getId(), player, "Message of the Day: " + playerClan.getMotd());
 		}
 	}
 
