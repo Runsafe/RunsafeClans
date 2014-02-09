@@ -21,7 +21,7 @@ public class RankingHandler implements IConfigurationChanged
 		for (Map.Entry<String, Clan> clanNode : clanMap.entrySet())
 		{
 			Clan clan = clanNode.getValue();
-			int score = (clan.getMemberCount() * clanMemberScore) + (clan.getClanKills() * clanKillScore);
+			int score = ((clan.getMemberCount() * clanMemberScore) + (clan.getClanKills() * clanKillScore)) - (clan.getClanDeaths() * clanKillScore);
 			roster.put(clan.getId(), score);
 		}
 
