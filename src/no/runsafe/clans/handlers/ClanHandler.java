@@ -227,7 +227,7 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 					public void run()
 					{
 						if (player.isOnline())
-							sendClanMessage(playerClan.getId(), player, "Message of the Day: " + playerClan.getMotd());
+							player.sendColouredMessage(formatClanMessage(playerClan.getId(), formatMotd(playerClan.getMotd())));
 					}
 				}, 3);
 			}
@@ -270,7 +270,7 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 
 			Clan playerClan = getPlayerClan(playerName);
 			if (playerClan != null)
-				sendClanMessage(playerClan.getId(), player, "Message of the Day: " + playerClan.getMotd());
+				player.sendColouredMessage(formatClanMessage(playerClan.getId(), formatMotd(playerClan.getMotd())));
 		}
 	}
 
@@ -282,20 +282,25 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 		if (clan != null)
 		{
 			// Loop all clan members.
+			message = formatClanMessage(clanID, message);
 			for (String playerName : clan.getMembers())
 			{
 				IPlayer player = server.getPlayerExact(playerName);
 				if (player != null && player.isOnline()) // Check player is valid and online.
-					sendClanMessage(clanID, player, message);
+					player.sendColouredMessage(message);
 			}
 			console.logInformation(message);
 		}
 	}
 
-	public void sendClanMessage(String clanID, IPlayer player, String message)
+	public String formatClanMessage(String clanID, String message)
 	{
-		message = "&3[" + clanID + "] &7" + message;
-		player.sendColouredMessage(message);
+		return "&3[" + clanID + "] &7" + message;
+	}
+
+	public String formatMotd(String message)
+	{
+		return "Message of the Day: " + message;
 	}
 
 	public void setClanMotd(String clanID, String message)
