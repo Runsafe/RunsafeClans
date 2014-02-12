@@ -11,10 +11,7 @@ import no.runsafe.clans.monitors.CombatMonitor;
 import no.runsafe.clans.monitors.PlayerMonitor;
 import no.runsafe.framework.RunsafeConfigurablePlugin;
 import no.runsafe.framework.api.command.Command;
-import no.runsafe.framework.features.Commands;
-import no.runsafe.framework.features.Database;
-import no.runsafe.framework.features.Events;
-import no.runsafe.framework.features.FrameworkHooks;
+import no.runsafe.framework.features.*;
 
 public class RunsafeClans extends RunsafeConfigurablePlugin
 {

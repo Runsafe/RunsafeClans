@@ -4,10 +4,13 @@ import no.runsafe.clans.Clan;
 import no.runsafe.clans.events.BackstabberEvent;
 import no.runsafe.clans.events.MutinyEvent;
 import no.runsafe.clans.handlers.ClanHandler;
+import no.runsafe.framework.api.IConfiguration;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.IServer;
+import no.runsafe.framework.api.IUniverse;
 import no.runsafe.framework.api.event.entity.IEntityDamageByEntityEvent;
 import no.runsafe.framework.api.event.player.IPlayerDeathEvent;
+import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.entity.ProjectileEntity;
 import no.runsafe.framework.minecraft.entity.RunsafeEntity;
@@ -19,7 +22,7 @@ import no.runsafe.framework.minecraft.event.player.RunsafePlayerDeathEvent;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class CombatMonitor implements IEntityDamageByEntityEvent, IPlayerDeathEvent
+public class CombatMonitor implements IEntityDamageByEntityEvent, IPlayerDeathEvent, IConfigurationChanged
 {
 	public CombatMonitor(IServer server, IScheduler scheduler, ClanHandler clanHandler)
 	{
@@ -70,6 +73,10 @@ public class CombatMonitor implements IEntityDamageByEntityEvent, IPlayerDeathEv
 			IPlayer victim = (IPlayer) event.getEntity();
 			if (!victim.isVanished())
 			{
+				IUniverse universe = victim.getUniverse();
+				if (universe == null || !universe.getName().equals(clanUniverse))
+					return;
+
 				IPlayer source = null;
 				RunsafeEntity attacker = event.getDamageActor();
 
@@ -126,8 +133,15 @@ public class CombatMonitor implements IEntityDamageByEntityEvent, IPlayerDeathEv
 		return null;
 	}
 
+	@Override
+	public void OnConfigurationChanged(IConfiguration config)
+	{
+		clanUniverse = config.getConfigValueAsString("clanUniverse");
+	}
+
 	private final IServer server;
 	private final IScheduler scheduler;
 	private final ClanHandler clanHandler;
+	private String clanUniverse;
 	private final ConcurrentHashMap<String, CombatTrackingNode> track = new ConcurrentHashMap<String, CombatTrackingNode>(0);
 }
