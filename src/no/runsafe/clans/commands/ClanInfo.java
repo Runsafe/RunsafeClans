@@ -37,6 +37,7 @@ public class ClanInfo extends PlayerAsyncCommand
 		info.append(formatLine("Members", "(" + clan.getMemberCount() + ") " + StringUtils.join(clan.getMembers(), ", ")));
 		info.append(formatLine("Enemy Clan Kills", clan.getClanKills()));
 		info.append(formatLine("Enemy Clan Deaths", clan.getClanDeaths()));
+		info.append(formatLine("Dergon Kills", clan.getDergonKills()));
 
 		int ranking = -1;
 		int currentRanking = 1;
