@@ -18,7 +18,7 @@ public class ListClans extends PlayerAsyncCommand
 	@Override
 	public String OnAsyncExecute(IPlayer executor, IArgumentList parameters)
 	{
-		return "&6Clans: &r" + StringUtils.join(handler.getClans().keySet(), " ,");
+		return "&6Clans: &r" + StringUtils.join(handler.getClans().keySet(), ", ");
 	}
 
 	private final ClanHandler handler;
