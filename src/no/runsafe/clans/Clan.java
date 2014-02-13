@@ -67,6 +67,11 @@ public class Clan
 		clanDeaths += amount;
 	}
 
+	public void addDergonKills(int amount)
+	{
+		dergonKills += amount;
+	}
+
 	public int getClanKills()
 	{
 		return clanKills;
@@ -77,10 +82,16 @@ public class Clan
 		return clanDeaths;
 	}
 
+	public int getDergonKills()
+	{
+		return dergonKills;
+	}
+
 	private final String id;
 	private String leader;
 	private String motd;
 	private int clanKills = 0;
 	private int clanDeaths = 0;
+	private int dergonKills = 0;
 	private final List<String> members = new ArrayList<String>(0);
 }

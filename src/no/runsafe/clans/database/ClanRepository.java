@@ -18,12 +18,13 @@ public class ClanRepository extends Repository
 	{
 		Map<String, Clan> clanList = new HashMap<String, Clan>(0);
 
-		for (IRow row : database.query("SELECT `clanID`, `leader`, `motd`, `clanKills`, `clanDeaths` FROM `clans`"))
+		for (IRow row : database.query("SELECT `clanID`, `leader`, `motd`, `clanKills`, `clanDeaths`, `dergonKills` FROM `clans`"))
 		{
 			String clanName = row.String("clanID");
 			Clan clan = new Clan(clanName, row.String("leader"), row.String("motd"));
 			clan.addClanKills(row.Integer("clanKills")); // Add in kills stat
 			clan.addClanDeaths(row.Integer("clanDeaths")); // Add in deaths stat
+			clan.addDergonKills(row.Integer("dergonKills")); // Add dergon kills.
 			clanList.put(clanName, clan);
 		}
 		return clanList;
@@ -79,6 +80,9 @@ public class ClanRepository extends Repository
 		update.addQueries("ALTER TABLE `clans`" +
 				"ADD COLUMN `clanKills` INT NOT NULL DEFAULT '0' AFTER `motd`," +
 				"ADD COLUMN `clanDeaths` INT NOT NULL DEFAULT '0' AFTER `clanKills`;");
+
+		update.addQueries("ALTER TABLE `clans`" +
+				"ADD COLUMN `dergonKills` INT(10) UNSIGNED NOT NULL DEFAULT '0' AFTER `clanDeaths`");
 
 		return update;
 	}
