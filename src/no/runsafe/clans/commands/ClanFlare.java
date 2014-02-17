@@ -25,10 +25,10 @@ public class ClanFlare extends PlayerCommand
 			return "&cYou are nowhere.";
 
 		handler.clanChat(executor, String.format(
-				"Assistance required at X: %.2f, Y: %.2f, Z: %.2f!",
-				location.getX(),
-				location.getY(),
-				location.getZ()
+				"Assistance required at X: %s, Y: %s, Z: %s!",
+				location.getBlockX(),
+				location.getBlockY(),
+				location.getBlockZ()
 		));
 		return null;
 	}
