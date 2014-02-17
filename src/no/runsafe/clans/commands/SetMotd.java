@@ -7,6 +7,7 @@ import no.runsafe.framework.api.command.argument.IArgumentList;
 import no.runsafe.framework.api.command.argument.TrailingArgument;
 import no.runsafe.framework.api.command.player.PlayerAsyncCommand;
 import no.runsafe.framework.api.player.IPlayer;
+import no.runsafe.framework.text.ChatColour;
 
 public class SetMotd extends PlayerAsyncCommand
 {
@@ -31,7 +32,7 @@ public class SetMotd extends PlayerAsyncCommand
 		if (clan == null)
 			return "&cSomething just broke.";
 
-		clanHandler.setClanMotd(clan.getId(), parameters.get("motd"));
+		clanHandler.setClanMotd(clan.getId(), ChatColour.Strip(parameters.get("motd")));
 		return null;
 	}
 

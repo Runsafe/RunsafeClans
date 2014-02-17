@@ -6,6 +6,7 @@ import no.runsafe.framework.api.command.argument.IArgumentList;
 import no.runsafe.framework.api.command.argument.TrailingArgument;
 import no.runsafe.framework.api.command.player.PlayerAsyncCommand;
 import no.runsafe.framework.api.player.IPlayer;
+import no.runsafe.framework.text.ChatColour;
 
 public class ClanChat extends PlayerAsyncCommand
 {
@@ -23,7 +24,7 @@ public class ClanChat extends PlayerAsyncCommand
 		if (!clanHandler.playerIsInClan(playerName))
 			return "&cYou are not in a clan.";
 
-		clanHandler.clanChat(executor, parameters.get("message"));
+		clanHandler.clanChat(executor, ChatColour.Strip(parameters.get("message")));
 		return null;
 	}
 
