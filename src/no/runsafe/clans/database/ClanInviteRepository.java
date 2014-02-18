@@ -41,6 +41,11 @@ public class ClanInviteRepository extends Repository
 		database.execute("DELETE FROM `clan_invites` WHERE `clanID` = ?", clanID);
 	}
 
+	public void addInvite(String playerName, String clanID)
+	{
+		database.execute("INSERT IGNORE INTO `clan_invites` (`player`, `clanID`) VALUES(?, ?)", playerName, clanID);
+	}
+
 	@Nonnull
 	@Override
 	public String getTableName()
