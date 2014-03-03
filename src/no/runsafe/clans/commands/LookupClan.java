@@ -3,8 +3,8 @@ package no.runsafe.clans.commands;
 import no.runsafe.clans.Clan;
 import no.runsafe.clans.handlers.ClanHandler;
 import no.runsafe.framework.api.IScheduler;
-import no.runsafe.framework.api.command.argument.AnyPlayerRequired;
 import no.runsafe.framework.api.command.argument.IArgumentList;
+import no.runsafe.framework.api.command.argument.Player;
 import no.runsafe.framework.api.command.player.PlayerAsyncCommand;
 import no.runsafe.framework.api.player.IPlayer;
 
@@ -12,14 +12,14 @@ public class LookupClan extends PlayerAsyncCommand
 {
 	public LookupClan(IScheduler scheduler, ClanHandler clanHandler)
 	{
-		super("lookup", "Lookup which clan a player is in", "runsafe.clans.lookup", scheduler, new AnyPlayerRequired());
+		super("lookup", "Lookup which clan a player is in", "runsafe.clans.lookup", scheduler, new Player.Any.Required());
 		this.clanHandler = clanHandler;
 	}
 
 	@Override
 	public String OnAsyncExecute(IPlayer executor, IArgumentList parameters)
 	{
-		IPlayer targetPlayer = parameters.getPlayer("player");
+		IPlayer targetPlayer = parameters.getValue("player");
 		if (targetPlayer == null)
 			return "&cInvalid player!";
 

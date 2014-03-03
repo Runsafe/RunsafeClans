@@ -3,8 +3,8 @@ package no.runsafe.clans.commands;
 import no.runsafe.clans.Clan;
 import no.runsafe.clans.handlers.ClanHandler;
 import no.runsafe.framework.api.IScheduler;
-import no.runsafe.framework.api.command.argument.AnyPlayerRequired;
 import no.runsafe.framework.api.command.argument.IArgumentList;
+import no.runsafe.framework.api.command.argument.Player;
 import no.runsafe.framework.api.command.player.PlayerAsyncCommand;
 import no.runsafe.framework.api.player.IPlayer;
 
@@ -12,7 +12,7 @@ public class InviteMember extends PlayerAsyncCommand
 {
 	public InviteMember(IScheduler scheduler, ClanHandler clanHandler)
 	{
-		super("invite", "Invite a member to the clan", "runsafe.clans.invite", scheduler, new AnyPlayerRequired());
+		super("invite", "Invite a member to the clan", "runsafe.clans.invite", scheduler, new Player.Any.Required());
 		this.clanHandler = clanHandler;
 	}
 
@@ -27,7 +27,7 @@ public class InviteMember extends PlayerAsyncCommand
 		if (!clanHandler.playerIsClanLeader(playerName))
 			return "&cYou are not the clan leader, you cannot invite players.";
 
-		IPlayer targetPlayer = parameters.getPlayer("player");
+		IPlayer targetPlayer = parameters.getValue("player") ;
 		if (targetPlayer == null)
 			return "&cInvalid player.";
 
