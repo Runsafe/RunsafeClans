@@ -12,7 +12,7 @@ public class LookupClan extends PlayerAsyncCommand
 {
 	public LookupClan(IScheduler scheduler, ClanHandler clanHandler)
 	{
-		super("lookup", "Lookup which clan a player is in", "runsafe.clans.lookup", scheduler, new Player.Any.Required());
+		super("lookup", "Lookup which clan a player is in", "runsafe.clans.lookup", scheduler, new Player().require());
 		this.clanHandler = clanHandler;
 	}
 

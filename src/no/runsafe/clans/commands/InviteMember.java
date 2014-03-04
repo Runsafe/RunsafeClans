@@ -12,7 +12,7 @@ public class InviteMember extends PlayerAsyncCommand
 {
 	public InviteMember(IScheduler scheduler, ClanHandler clanHandler)
 	{
-		super("invite", "Invite a member to the clan", "runsafe.clans.invite", scheduler, new Player.Any.Required());
+		super("invite", "Invite a member to the clan", "runsafe.clans.invite", scheduler, new Player().require());
 		this.clanHandler = clanHandler;
 	}
 

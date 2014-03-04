@@ -12,7 +12,7 @@ public class KickClanMember extends PlayerAsyncCommand
 {
 	public KickClanMember(IScheduler scheduler, ClanHandler clanHandler)
 	{
-		super("kick", "Kick a member from your clan", "runsafe.clans.kick", scheduler, new Player.Any.Required());
+		super("kick", "Kick a member from your clan", "runsafe.clans.kick", scheduler, new Player().require());
 		this.clanHandler = clanHandler;
 	}
 
