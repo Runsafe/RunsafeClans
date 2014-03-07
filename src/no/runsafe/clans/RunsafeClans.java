@@ -57,6 +57,7 @@ public class RunsafeClans extends RunsafeConfigurablePlugin
 		clans.addSubCommand(getInstance(ClanRankings.class));
 		clans.addSubCommand(getInstance(ListClans.class));
 		clans.addSubCommand(getInstance(ClanFlare.class));
+		clans.addSubCommand(getInstance(ClanSpeak.class));
 
 		addComponent(ClanChat.class);
 

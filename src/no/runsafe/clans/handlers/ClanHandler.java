@@ -335,7 +335,12 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 	{
 		Clan playerClan = getPlayerClan(player.getName());
 		if (playerClan != null)
-			sendMessageToClan(playerClan.getId(), player.getPrettyName() + "&7: " + message);
+			clanChat(player, playerClan, message);
+	}
+
+	public void clanChat(IPlayer player, Clan clan, String message)
+	{
+		sendMessageToClan(clan.getId(), player.getPrettyName() + "&7: " + message);
 	}
 
 	public void addClanKill(String playerName)

@@ -9,3 +9,6 @@ commands:
   clanchat:
     description: Allows you to talk in clan chat.
     aliases: [c]
+  clanspeak:
+    description: Broadcast to a clan
+    aliases: [cs]
