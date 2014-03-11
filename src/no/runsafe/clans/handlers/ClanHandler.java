@@ -58,6 +58,7 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 
 	public void addClanMember(String clanID, String playerName)
 	{
+		removeAllPendingInvites(playerName); // Remove all pending invites.
 		clans.get(clanID).addMember(playerName); // Add to cache.
 		playerClanIndex.put(playerName, clanID); // Add to index.
 		memberRepository.addClanMember(clanID, playerName); // Add to member database.
@@ -265,7 +266,6 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 		// Make sure the player has a pending invite we can accept.
 		if (playerHasPendingInvite(clanID, playerName))
 		{
-			removeAllPendingInvites(playerName); // Remove all pending invites.
 			addClanMember(clanID, playerName); // Add the member to the clan.
 			sendMessageToClan(clanID, playerName + " has joined the clan.");
 
