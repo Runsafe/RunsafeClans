@@ -162,7 +162,7 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 				if (!clanExists(clanName)) // Check the clan exists.
 				{
 					invalidClans.add(clanName);
-					console.logError("Invalid clan invite found: %s - Marking for purge!");
+					console.logError("Invalid clan invite found: %s - Marking for purge!", clanName);
 				}
 			}
 		}
