@@ -172,11 +172,7 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 			inviteRepository.clearAllPendingInvitesForClan(invalidClan);
 
 		for (Map.Entry<String, List<String>> inviteNode : playerInvites.entrySet())
-		{
 			inviteNode.getValue().removeAll(invalidClans);
-			if (inviteNode.getValue().isEmpty())
-				playerInvites.remove(inviteNode.getKey());
-		}
 	}
 
 	@Override
@@ -214,18 +210,21 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 		{
 			final List<String> invites = playerInvites.get(playerName);
 
-			scheduler.startAsyncTask(new Runnable()
-			{
-				@Override
-				public void run()
+			if (invites.isEmpty())
+				playerInvites.remove(playerName);
+			else
+				scheduler.startAsyncTask(new Runnable()
 				{
-					if (player.isOnline())
+					@Override
+					public void run()
 					{
-						player.sendColouredMessage("&aYou have %s pending clan invite(s): %s", invites.size(), StringUtils.join(invites, ", "));
-						player.sendColouredMessage("&aUse \"/clan join <clanTag>\" to join one of them!");
+						if (player.isOnline())
+						{
+							player.sendColouredMessage("&aYou have %s pending clan invite(s): %s", invites.size(), StringUtils.join(invites, ", "));
+							player.sendColouredMessage("&aUse \"/clan join <clanTag>\" to join one of them!");
+						}
 					}
-				}
-			}, 3);
+				}, 3);
 		}
 
 		if (playerIsInClan(playerName))
