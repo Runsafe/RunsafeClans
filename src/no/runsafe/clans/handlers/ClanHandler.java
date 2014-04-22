@@ -153,19 +153,26 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 		console.logInformation("Loaded %s clans with %s members.", clans.size(), memberCount);
 
 		playerInvites = inviteRepository.getPendingInvites(); // Grab pending invites from the database.
+		List<String> invalidClans = new ArrayList<String>(0);
+
 		for (Map.Entry<String, List<String>> inviteNode : playerInvites.entrySet())
 		{
-			String playerName = inviteNode.getKey(); // The name of the player who's been invited.
-
 			for (String clanName : inviteNode.getValue()) // Loop through all the invites and check they are valid.
 			{
 				if (!clanExists(clanName)) // Check the clan exists.
 				{
-					playerInvites.get(playerName).remove(clanName); // Remove non-existent clan invite.
-					console.logError("Purging invalid clan invite to %s from %s", playerName, clanName);
+					invalidClans.add(clanName);
+					console.logError("Invalid clan invite found: %s - Marking for purge!");
 				}
 			}
 		}
+
+		// Process invalid clans found in invites and purge!
+		for (String invalidClan : invalidClans)
+			inviteRepository.clearAllPendingInvitesForClan(invalidClan);
+
+		for (Map.Entry<String, List<String>> inviteNode : playerInvites.entrySet())
+			inviteNode.getValue().removeAll(invalidClans);
 	}
 
 	@Override
