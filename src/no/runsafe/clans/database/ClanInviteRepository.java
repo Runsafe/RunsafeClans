@@ -31,6 +31,11 @@ public class ClanInviteRepository extends Repository
 		return map;
 	}
 
+	public void clearPendingInvite(String playerName, String clanID)
+	{
+		database.execute("DELETE FROM `clan_invites` WHERE `player` = ? AND `clanID` = ?", playerName, clanID);
+	}
+
 	public void clearAllPendingInvites(String playerName)
 	{
 		database.execute("DELETE FROM `clan_invites` WHERE `player` = ?", playerName);

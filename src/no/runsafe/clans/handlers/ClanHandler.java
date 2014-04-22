@@ -259,6 +259,15 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 		inviteRepository.clearAllPendingInvites(playerName); // Persist the change in database.
 	}
 
+	public void removePendingInvite(IPlayer player, String clanName)
+	{
+		String playerName = player.getName();
+		if (playerInvites.containsKey(playerName))
+			playerInvites.get(playerName).remove(clanName);
+
+		inviteRepository.clearPendingInvite(playerName, clanName);
+	}
+
 	public void acceptClanInvite(String clanID, IPlayer player)
 	{
 		String playerName = player.getName();
