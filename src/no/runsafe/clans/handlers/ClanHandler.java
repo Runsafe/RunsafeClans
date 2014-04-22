@@ -172,7 +172,11 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 			inviteRepository.clearAllPendingInvitesForClan(invalidClan);
 
 		for (Map.Entry<String, List<String>> inviteNode : playerInvites.entrySet())
+		{
 			inviteNode.getValue().removeAll(invalidClans);
+			if (inviteNode.getValue().isEmpty())
+				playerInvites.remove(inviteNode.getKey());
+		}
 	}
 
 	@Override
