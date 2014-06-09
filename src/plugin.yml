@@ -3,6 +3,7 @@ main: no.runsafe.clans.RunsafeClans
 version: 1.0.@BUILD@
 author: Kruithne
 description: Adds clan support!
+depend: [nChat]
 commands:
   clan:
     description: Clan related commands.

@@ -9,24 +9,32 @@ import no.runsafe.framework.api.IConfiguration;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.IServer;
 import no.runsafe.framework.api.event.player.IPlayerJoinEvent;
+import no.runsafe.framework.api.event.player.IPlayerQuitEvent;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.api.hook.IPlayerDataProvider;
 import no.runsafe.framework.api.log.IConsole;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.event.player.RunsafePlayerJoinEvent;
+import no.runsafe.framework.minecraft.event.player.RunsafePlayerQuitEvent;
+import no.runsafe.nchat.channel.BasicChatChannel;
+import no.runsafe.nchat.channel.IChannelManager;
+import no.runsafe.nchat.channel.IChatChannel;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Period;
 import org.joda.time.PeriodType;
 import org.joda.time.format.PeriodFormat;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
-public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, IPlayerJoinEvent
+public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, IPlayerJoinEvent, IPlayerQuitEvent
 {
-	public ClanHandler(IConsole console, IServer server, IScheduler scheduler, ClanRepository clanRepository, ClanMemberRepository memberRepository, ClanInviteRepository inviteRepository)
+	public ClanHandler(IConsole console, IServer server, IScheduler scheduler, ClanRepository clanRepository, ClanMemberRepository memberRepository, ClanInviteRepository inviteRepository, IChannelManager channelManager)
 	{
 		this.console = console;
 		this.server = server;
@@ -34,6 +42,7 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 		this.clanRepository = clanRepository;
 		this.memberRepository = memberRepository;
 		this.inviteRepository = inviteRepository;
+		this.channelManager = channelManager;
 	}
 
 	public void createClan(String clanID, String playerLeader)
@@ -203,7 +212,7 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 	public void OnPlayerJoinEvent(RunsafePlayerJoinEvent event)
 	{
 		final IPlayer player = event.getPlayer(); // Grab the player.
-		String playerName = player.getName();
+		final String playerName = player.getName();
 
 		// Check if we have any pending invites.
 		if (playerInvites.containsKey(playerName))
@@ -238,10 +247,31 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 					public void run()
 					{
 						if (player.isOnline())
+						{
+							IChatChannel clanChannel = channelManager.getChannelByName(playerClan.getId());
+							if (clanChannel == null)
+							{
+								clanChannel = new BasicChatChannel(console, channelManager, playerClan.getId());
+								channelManager.registerChannel(clanChannel);
+							}
+							clanChannel.Join(player);
 							player.sendColouredMessage(formatClanMessage(playerClan.getId(), formatMotd(playerClan.getMotd())));
+						}
 					}
 				}, 3);
 			}
+		}
+	}
+
+	@Override
+	public void OnPlayerQuit(RunsafePlayerQuitEvent event)
+	{
+		if (playerIsInClan(event.getPlayer().getName()))
+		{
+			Clan playerClan = getPlayerClan(event.getPlayer().getName());
+			IChatChannel clanChannel = channelManager.getChannelByName(playerClan.getId());
+			if (clanChannel != null)
+				clanChannel.Leave(event.getPlayer());
 		}
 	}
 
@@ -410,4 +440,5 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 	private final ClanInviteRepository inviteRepository;
 	private final Pattern clanNamePattern = Pattern.compile("^[A-Z]{3}$");
 	private final PeriodType output_format = PeriodType.standard().withMillisRemoved().withSecondsRemoved();
+	private final IChannelManager channelManager;
 }
