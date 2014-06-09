@@ -1,6 +1,7 @@
 package no.runsafe.clans.handlers;
 
 import no.runsafe.clans.Clan;
+import no.runsafe.clans.chat.ClanChannel;
 import no.runsafe.clans.database.ClanInviteRepository;
 import no.runsafe.clans.database.ClanMemberRepository;
 import no.runsafe.clans.database.ClanRepository;
@@ -131,6 +132,8 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 	@Override
 	public void OnConfigurationChanged(IConfiguration config)
 	{
+		clanTagFormat = config.getConfigValueAsString("chatTag");
+
 		int memberCount = 0; // Keep track of how many members we have.
 		clans = clanRepository.getClans(); // Populate a list of clans.
 		playerClanIndex.clear(); // Clear the index.
@@ -239,6 +242,7 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 		if (playerIsInClan(playerName))
 		{
 			final Clan playerClan = getPlayerClan(playerName);
+			final ClanHandler handler = this;
 			if (playerClan != null)
 			{
 				scheduler.startAsyncTask(new Runnable()
@@ -251,7 +255,7 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 							IChatChannel clanChannel = channelManager.getChannelByName(playerClan.getId());
 							if (clanChannel == null)
 							{
-								clanChannel = new BasicChatChannel(console, channelManager, playerClan.getId());
+								clanChannel = new ClanChannel(console, channelManager, playerClan.getId(), handler);
 								channelManager.registerChannel(clanChannel);
 							}
 							clanChannel.Join(player);
@@ -424,11 +428,17 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 		}
 	}
 
+	public String formatClanTag(String name)
+	{
+		return String.format(clanTagFormat, name);
+	}
+
 	public Map<String, Clan> getClans()
 	{
 		return clans;
 	}
 
+	private String clanTagFormat;
 	private Map<String, Clan> clans = new ConcurrentHashMap<String, Clan>(0);
 	private Map<String, String> playerClanIndex = new ConcurrentHashMap<String, String>(0);
 	private Map<String, List<String>> playerInvites = new ConcurrentHashMap<String, List<String>>(0);
