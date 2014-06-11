@@ -9,10 +9,4 @@ public class ClanLeaveEvent extends ClanEvent
 	{
 		super(player, clan, "runsafe.clans.leave");
 	}
-
-	@Override
-	public Object getData()
-	{
-		return null;
-	}
 }

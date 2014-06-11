@@ -20,7 +20,7 @@ public class ClanEvent extends RunsafeCustomEvent
 	@Override
 	public Object getData()
 	{
-		return null;
+		return clan;
 	}
 
 	private final Clan clan;

@@ -9,10 +9,4 @@ public class ClanJoinEvent extends ClanEvent
 	{
 		super(player, clan, "runsafe.clans.join");
 	}
-
-	@Override
-	public Object getData()
-	{
-		return null;
-	}
 }
