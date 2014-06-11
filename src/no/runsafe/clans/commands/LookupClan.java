@@ -3,12 +3,13 @@ package no.runsafe.clans.commands;
 import no.runsafe.clans.Clan;
 import no.runsafe.clans.handlers.ClanHandler;
 import no.runsafe.framework.api.IScheduler;
+import no.runsafe.framework.api.command.AsyncCommand;
+import no.runsafe.framework.api.command.ICommandExecutor;
 import no.runsafe.framework.api.command.argument.IArgumentList;
 import no.runsafe.framework.api.command.argument.Player;
-import no.runsafe.framework.api.command.player.PlayerAsyncCommand;
 import no.runsafe.framework.api.player.IPlayer;
 
-public class LookupClan extends PlayerAsyncCommand
+public class LookupClan extends AsyncCommand
 {
 	public LookupClan(IScheduler scheduler, ClanHandler clanHandler)
 	{
@@ -17,7 +18,7 @@ public class LookupClan extends PlayerAsyncCommand
 	}
 
 	@Override
-	public String OnAsyncExecute(IPlayer executor, IArgumentList parameters)
+	public String OnAsyncExecute(ICommandExecutor executor, IArgumentList parameters)
 	{
 		IPlayer targetPlayer = parameters.getValue("player");
 		if (targetPlayer == null)

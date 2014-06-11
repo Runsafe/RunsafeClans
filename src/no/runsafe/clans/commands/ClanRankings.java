@@ -2,13 +2,15 @@ package no.runsafe.clans.commands;
 
 import no.runsafe.clans.handlers.RankingHandler;
 import no.runsafe.framework.api.IScheduler;
+import no.runsafe.framework.api.command.AsyncCommand;
+import no.runsafe.framework.api.command.ICommandExecutor;
 import no.runsafe.framework.api.command.argument.IArgumentList;
 import no.runsafe.framework.api.command.player.PlayerAsyncCommand;
 import no.runsafe.framework.api.player.IPlayer;
 
 import java.util.List;
 
-public class ClanRankings extends PlayerAsyncCommand
+public class ClanRankings extends AsyncCommand
 {
 	public ClanRankings(IScheduler scheduler, RankingHandler rankingHandler)
 	{
@@ -17,7 +19,7 @@ public class ClanRankings extends PlayerAsyncCommand
 	}
 
 	@Override
-	public String OnAsyncExecute(IPlayer executor, IArgumentList parameters)
+	public String OnAsyncExecute(ICommandExecutor executor, IArgumentList parameters)
 	{
 		StringBuilder data = new StringBuilder("Current Top Clan Rankings");
 		List<String> roster = rankingHandler.getRankingRoster();

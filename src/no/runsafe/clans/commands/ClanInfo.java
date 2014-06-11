@@ -4,6 +4,8 @@ import no.runsafe.clans.Clan;
 import no.runsafe.clans.handlers.ClanHandler;
 import no.runsafe.clans.handlers.RankingHandler;
 import no.runsafe.framework.api.IScheduler;
+import no.runsafe.framework.api.command.AsyncCommand;
+import no.runsafe.framework.api.command.ICommandExecutor;
 import no.runsafe.framework.api.command.argument.IArgumentList;
 import no.runsafe.framework.api.command.argument.RequiredArgument;
 import no.runsafe.framework.api.command.player.PlayerAsyncCommand;
@@ -12,7 +14,7 @@ import org.apache.commons.lang.StringUtils;
 
 import java.util.List;
 
-public class ClanInfo extends PlayerAsyncCommand
+public class ClanInfo extends AsyncCommand
 {
 	public ClanInfo(IScheduler scheduler, ClanHandler clanHandler, RankingHandler rankHandler)
 	{
@@ -22,7 +24,7 @@ public class ClanInfo extends PlayerAsyncCommand
 	}
 
 	@Override
-	public String OnAsyncExecute(IPlayer executor, IArgumentList parameters)
+	public String OnAsyncExecute(ICommandExecutor executor, IArgumentList parameters)
 	{
 		String clanName = parameters.get("clan").toUpperCase();
 
