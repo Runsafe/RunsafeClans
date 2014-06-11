@@ -3,11 +3,11 @@ package no.runsafe.clans.events;
 import no.runsafe.clans.Clan;
 import no.runsafe.framework.api.player.IPlayer;
 
-public class ClanJoinEvent extends ClanEvent
+public class ClanLeaveEvent extends ClanEvent
 {
-	public ClanJoinEvent(IPlayer player, Clan clan)
+	public ClanLeaveEvent(IPlayer player, Clan clan)
 	{
-		super(player, clan, "runsafe.clans.join");
+		super(player, clan, "runsafe.clans.leave");
 	}
 
 	@Override
