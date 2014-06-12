@@ -228,6 +228,8 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 	@Override
 	public void OnPlayerJoinEvent(RunsafePlayerJoinEvent event)
 	{
+		if (event.isFake())
+			return;
 		final IPlayer player = event.getPlayer(); // Grab the player.
 		final String playerName = player.getName();
 
@@ -278,7 +280,7 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 	@Override
 	public void OnPlayerQuit(RunsafePlayerQuitEvent event)
 	{
-		if (playerIsInClan(event.getPlayer().getName()))
+		if (!event.isFake() && playerIsInClan(event.getPlayer().getName()))
 		{
 			Clan playerClan = getPlayerClan(event.getPlayer().getName());
 			leaveClanChannel(event.getPlayer(), playerClan.getId());
