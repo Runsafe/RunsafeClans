@@ -5,8 +5,6 @@ import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.command.AsyncCommand;
 import no.runsafe.framework.api.command.ICommandExecutor;
 import no.runsafe.framework.api.command.argument.IArgumentList;
-import no.runsafe.framework.api.command.player.PlayerAsyncCommand;
-import no.runsafe.framework.api.player.IPlayer;
 
 import java.util.List;
 

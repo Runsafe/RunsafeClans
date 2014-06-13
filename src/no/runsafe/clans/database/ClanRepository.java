@@ -4,6 +4,7 @@ import no.runsafe.clans.Clan;
 import no.runsafe.framework.api.database.*;
 import no.runsafe.framework.api.player.IPlayer;
 
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -56,12 +57,14 @@ public class ClanRepository extends Repository
 	}
 
 	@Override
+	@Nonnull
 	public String getTableName()
 	{
 		return "clans";
 	}
 
 	@Override
+	@Nonnull
 	public ISchemaUpdate getSchemaUpdateQueries()
 	{
 		ISchemaUpdate update = new SchemaUpdate();

@@ -23,7 +23,7 @@ public class CreateClan extends PlayerAsyncCommand
 		String clanName = parameters.get("clanTag").toUpperCase();
 
 		// Check we have been given a valid clan name.
-		if (!clanHandler.isValidClanName(clanName))
+		if (clanHandler.isInvalidClanName(clanName))
 			return String.format("&c'%s' is not a valid clan tag. A clan tag must be three characters using characters A-Z.", clanName);
 
 		// Make sure there is not a clan with that name already existing.

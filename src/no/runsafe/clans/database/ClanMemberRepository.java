@@ -4,6 +4,7 @@ import no.runsafe.framework.api.database.*;
 import no.runsafe.framework.api.player.IPlayer;
 import org.joda.time.DateTime;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -35,11 +36,6 @@ public class ClanMemberRepository extends Repository
 		database.execute("INSERT INTO `clan_members` (`clanID`, `member`, `joined`) VALUES(?, ?, NOW())", clanID, playerName);
 	}
 
-	public void removeClanMember(IPlayer player)
-	{
-		removeClanMemberByName(player.getName());
-	}
-
 	public void removeClanMemberByName(String playerName)
 	{
 		database.execute("DELETE FROM `clan_members` WHERE `member` = ?", playerName);
@@ -56,12 +52,14 @@ public class ClanMemberRepository extends Repository
 	}
 
 	@Override
+	@Nonnull
 	public String getTableName()
 	{
 		return "clan_members";
 	}
 
 	@Override
+	@Nonnull
 	public ISchemaUpdate getSchemaUpdateQueries()
 	{
 		ISchemaUpdate update = new SchemaUpdate();
@@ -71,7 +69,7 @@ public class ClanMemberRepository extends Repository
 				"`clanID` VARCHAR(3) NOT NULL," +
 				"`member` VARCHAR(20) NOT NULL," +
 				"PRIMARY KEY (`clanID`, `member`)" +
-			")"
+				")"
 		);
 
 		update.addQueries("ALTER TABLE `clan_members` ADD COLUMN `joined` DATETIME NOT NULL AFTER `member`;");

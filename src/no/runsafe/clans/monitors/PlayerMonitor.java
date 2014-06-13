@@ -35,7 +35,7 @@ public class PlayerMonitor implements IPlayerRightClick
 			String clanName = charterHandler.getClanName(usingItem); // Grab the clan name from the book.
 
 			// Check we have been given a valid clan name.
-			if (!clanHandler.isValidClanName(clanName))
+			if (clanHandler.isInvalidClanName(clanName))
 			{
 				player.sendColouredMessage(String.format("&c'%s' is not a valid clan tag. A clan tag must be three characters using characters A-Z.", clanName));
 				player.closeInventory();

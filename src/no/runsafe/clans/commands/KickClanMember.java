@@ -40,7 +40,7 @@ public class KickClanMember extends PlayerAsyncCommand
 		if (!clanHandler.playerIsInClan(targetPlayerName, playerClan.getId()))
 			return "&cThat player is not in your clan.";
 
-		clanHandler.removeClanMember(targetPlayer, true); // Kick the player.
+		clanHandler.kickClanMember(targetPlayer, executor); // Kick the player.
 
 		if (targetPlayer.isOnline())
 			targetPlayer.sendColouredMessage("&cYou have been kicked from the clan.");

@@ -25,7 +25,7 @@ public class LeaveClan extends PlayerAsyncCommand
 		if (clanHandler.playerIsClanLeader(playerName))
 			return "&cYou cannot leave your clan, disband it first!";
 
-		clanHandler.removeClanMember(executor, false);
+		clanHandler.removeClanMember(executor);
 		return "&aYou have left the clan.";
 	}
 
