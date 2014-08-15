@@ -19,6 +19,8 @@ import no.runsafe.framework.minecraft.entity.RunsafeProjectile;
 import no.runsafe.framework.minecraft.event.entity.RunsafeEntityDamageByEntityEvent;
 import no.runsafe.framework.minecraft.event.player.RunsafePlayerDeathEvent;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -74,7 +76,7 @@ public class CombatMonitor implements IEntityDamageByEntityEvent, IPlayerDeathEv
 			if (!victim.isVanished())
 			{
 				IUniverse universe = victim.getUniverse();
-				if (universe == null || !universe.getName().equals(clanUniverse))
+				if (universe == null || !clanUniverses.contains(universe.getName()))
 					return;
 
 				IPlayer source = null;
@@ -136,12 +138,13 @@ public class CombatMonitor implements IEntityDamageByEntityEvent, IPlayerDeathEv
 	@Override
 	public void OnConfigurationChanged(IConfiguration config)
 	{
-		clanUniverse = config.getConfigValueAsString("clanUniverse");
+		clanUniverses.clear();
+		Collections.addAll(clanUniverses, config.getConfigValueAsString("clanUniverse").split(","));
 	}
 
 	private final IServer server;
 	private final IScheduler scheduler;
 	private final ClanHandler clanHandler;
-	private String clanUniverse;
+	private List<String> clanUniverses = new ArrayList<String>(0);
 	private final ConcurrentHashMap<String, CombatTrackingNode> track = new ConcurrentHashMap<String, CombatTrackingNode>(0);
 }
