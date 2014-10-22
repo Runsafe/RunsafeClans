@@ -1,6 +1,7 @@
 package no.runsafe.clans.commands;
 
 import no.runsafe.clans.Clan;
+import no.runsafe.clans.Config;
 import no.runsafe.clans.handlers.ClanHandler;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.command.argument.IArgumentList;
@@ -10,10 +11,11 @@ import no.runsafe.framework.api.player.IPlayer;
 
 public class InviteMember extends PlayerAsyncCommand
 {
-	public InviteMember(IScheduler scheduler, ClanHandler clanHandler)
+	public InviteMember(IScheduler scheduler, ClanHandler clanHandler, Config config)
 	{
 		super("invite", "Invite a member to the clan", "runsafe.clans.invite", scheduler, new Player().require());
 		this.clanHandler = clanHandler;
+		this.config = config;
 	}
 
 	@Override
@@ -37,6 +39,10 @@ public class InviteMember extends PlayerAsyncCommand
 			return "&cThat player is already in a clan.";
 
 		Clan clan = clanHandler.getPlayerClan(playerName); // Grab the players clan.
+
+		if (clan.getMemberCount() >= config.getClanSize())
+			return "&cYour clan is full! Remove someone before inviting more.";
+
 		if (clanHandler.playerHasPendingInvite(clan.getId(), targetPlayerName))
 			return "&cThat player has already been invited to this clan.";
 
@@ -45,4 +51,5 @@ public class InviteMember extends PlayerAsyncCommand
 	}
 
 	private final ClanHandler clanHandler;
+	private final Config config;
 }

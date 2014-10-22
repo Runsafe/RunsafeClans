@@ -26,6 +26,7 @@ public class RunsafeClans extends RunsafeConfigurablePlugin
 		addComponent(FrameworkHooks.class);
 
 		// Plugin components
+		addComponent(Config.class);
 
 		// Database
 		addComponent(ClanRepository.class);
