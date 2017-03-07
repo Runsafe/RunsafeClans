@@ -88,7 +88,7 @@ public class CombatMonitor implements IEntityDamageByEntityEvent, IPlayerDeathEv
 				{
 					RunsafeProjectile projectile = (RunsafeProjectile) attacker;
 					if (!(projectile.getEntityType() == ProjectileEntity.Egg || projectile.getEntityType() == ProjectileEntity.Snowball))
-						source = this.findPlayer(((RunsafeProjectile) attacker).getShooter());
+						source = this.findPlayer((RunsafeLivingEntity)((RunsafeProjectile) attacker).getShooter());
 				}
 
 				if (source == null || source.isVanished() || source.shouldNotSee(victim) || isSamePlayer(victim, source))
