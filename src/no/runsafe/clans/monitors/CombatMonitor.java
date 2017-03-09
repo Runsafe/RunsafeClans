@@ -8,6 +8,7 @@ import no.runsafe.framework.api.IConfiguration;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.IServer;
 import no.runsafe.framework.api.IUniverse;
+import no.runsafe.framework.api.entity.IProjectileSource;
 import no.runsafe.framework.api.event.entity.IEntityDamageByEntityEvent;
 import no.runsafe.framework.api.event.player.IPlayerDeathEvent;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
@@ -88,7 +89,7 @@ public class CombatMonitor implements IEntityDamageByEntityEvent, IPlayerDeathEv
 				{
 					RunsafeProjectile projectile = (RunsafeProjectile) attacker;
 					if (!(projectile.getEntityType() == ProjectileEntity.Egg || projectile.getEntityType() == ProjectileEntity.Snowball))
-						source = this.findPlayer(((RunsafeProjectile) attacker).getShooter());
+						source = projectile.getShootingPlayer();
 				}
 
 				if (source == null || source.isVanished() || source.shouldNotSee(victim) || isSamePlayer(victim, source))
