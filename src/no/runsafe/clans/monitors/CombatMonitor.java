@@ -93,7 +93,7 @@ public class CombatMonitor implements IEntityDamageByEntityEvent, IPlayerDeathEv
 				source = projectile.getShootingPlayer();
 		}
 
-		if (source == null || source.isVanished() || source.shouldNotSee(victim) || isSamePlayer(victim, source))
+		if (source == null || source.isVanished() || source.shouldNotSee(victim) || victim.equals(source))
 			return;
 
 		registerHit(victim, source); // Register the hit!
@@ -118,11 +118,6 @@ public class CombatMonitor implements IEntityDamageByEntityEvent, IPlayerDeathEv
 				track.remove(victimName); // Remove after 10 seconds.
 			}
 		}, 10));
-	}
-
-	private boolean isSamePlayer(IPlayer one, IPlayer two)
-	{
-		return one.equals(two);
 	}
 
 	private IPlayer findPlayer(RunsafeLivingEntity entity)
