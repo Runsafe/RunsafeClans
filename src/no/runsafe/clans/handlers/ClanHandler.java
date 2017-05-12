@@ -77,25 +77,25 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 	@Override
 	public void OnPlayerCustomEvent(RunsafeCustomEvent event)
 	{
-		if (event instanceof ClanEvent)
+		if (!(event instanceof ClanEvent))
+			return;
+
+		Clan clan = ((ClanEvent) event).getClan();
+		IPlayer player = event.getPlayer();
+		if (event instanceof ClanJoinEvent)
 		{
-			Clan clan = ((ClanEvent) event).getClan();
-			IPlayer player = event.getPlayer();
-			if (event instanceof ClanJoinEvent)
-			{
-				joinClanChannel(player, clan.getId());
-				sendMessageToClan(clan.getId(), player.getPrettyName() + " has joined the clan.");
-			}
-			else if (event instanceof ClanLeaveEvent)
-			{
-				leaveClanChannel(player, clan.getId());
-				sendMessageToClan(clan.getId(), player.getPrettyName() + " has left the clan.");
-			}
-			else if (event instanceof ClanKickEvent)
-			{
-				leaveClanChannel(player, clan.getId());
-				sendMessageToClan(clan.getId(), player.getPrettyName() + " has been kicked from the clan by " + ((ClanKickEvent) event).getKicker().getPrettyName() + ".");
-			}
+			joinClanChannel(player, clan.getId());
+			sendMessageToClan(clan.getId(), player.getPrettyName() + " has joined the clan.");
+		}
+		else if (event instanceof ClanLeaveEvent)
+		{
+			leaveClanChannel(player, clan.getId());
+			sendMessageToClan(clan.getId(), player.getPrettyName() + " has left the clan.");
+		}
+		else if (event instanceof ClanKickEvent)
+		{
+			leaveClanChannel(player, clan.getId());
+			sendMessageToClan(clan.getId(), player.getPrettyName() + " has been kicked from the clan by " + ((ClanKickEvent) event).getKicker().getPrettyName() + ".");
 		}
 	}
 

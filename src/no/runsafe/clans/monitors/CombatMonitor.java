@@ -41,63 +41,62 @@ public class CombatMonitor implements IEntityDamageByEntityEvent, IPlayerDeathEv
 		String deadPlayerName = deadPlayer.getName();
 
 		// Check we tracked the player getting hit and they are in a clan!
-		if (track.containsKey(deadPlayerName) && clanHandler.playerIsInClan(deadPlayerName))
+		if (!track.containsKey(deadPlayerName) || !clanHandler.playerIsInClan(deadPlayerName))
+			return;
+
+		String killerName = track.get(deadPlayerName).getAttacker(); // Grab the name of the last player to hit them.
+		if (!clanHandler.playerIsInClan(killerName))
+			return;
+
+		Clan deadPlayerClan = clanHandler.getPlayerClan(deadPlayerName); // Dead players clan.
+		if (clanHandler.playerIsInClan(killerName, deadPlayerClan.getId()))
 		{
-			String killerName = track.get(deadPlayerName).getAttacker(); // Grab the name of the last player to hit them.
-			if (clanHandler.playerIsInClan(killerName))
+			IPlayer thePlayer = server.getPlayerExact(killerName);
+
+			if (thePlayer != null)
 			{
-				Clan deadPlayerClan = clanHandler.getPlayerClan(deadPlayerName); // Dead players clan.
-
-				if (clanHandler.playerIsInClan(killerName, deadPlayerClan.getId()))
-				{
-					IPlayer thePlayer = server.getPlayerExact(killerName);
-
-					if (thePlayer != null)
-					{
-						new BackstabberEvent(thePlayer).Fire();
-						if (clanHandler.playerIsClanLeader(deadPlayerName))
-							new MutinyEvent(thePlayer).Fire();
-					}
-				}
-				else
-				{
-					clanHandler.addClanKill(killerName); // Stat the kill
-					clanHandler.addClanDeath(deadPlayerName); // Stat the death
-				}
+				new BackstabberEvent(thePlayer).Fire();
+				if (clanHandler.playerIsClanLeader(deadPlayerName))
+					new MutinyEvent(thePlayer).Fire();
 			}
+		}
+		else
+		{
+			clanHandler.addClanKill(killerName); // Stat the kill
+			clanHandler.addClanDeath(deadPlayerName); // Stat the death
 		}
 	}
 
 	@Override
 	public void OnEntityDamageByEntity(RunsafeEntityDamageByEntityEvent event)
 	{
-		if (event.getEntity() instanceof IPlayer)
+		if (!(event.getEntity() instanceof IPlayer))
+			return;
+
+		IPlayer victim = (IPlayer) event.getEntity();
+		if (victim.isVanished())
+			return;
+
+		IUniverse universe = victim.getUniverse();
+		if (universe == null || !clanUniverses.contains(universe.getName()))
+			return;
+
+		IPlayer source = null;
+		RunsafeEntity attacker = event.getDamageActor();
+
+		if (attacker instanceof IPlayer)
+			source = (IPlayer) attacker;
+		else if (attacker instanceof RunsafeProjectile)
 		{
-			IPlayer victim = (IPlayer) event.getEntity();
-			if (!victim.isVanished())
-			{
-				IUniverse universe = victim.getUniverse();
-				if (universe == null || !clanUniverses.contains(universe.getName()))
-					return;
-
-				IPlayer source = null;
-				RunsafeEntity attacker = event.getDamageActor();
-
-				if (attacker instanceof IPlayer)
-					source = (IPlayer) attacker;
-				else if (attacker instanceof RunsafeProjectile)
-				{
-					RunsafeProjectile projectile = (RunsafeProjectile) attacker;
-					if (!(projectile.getEntityType() == ProjectileEntity.Egg || projectile.getEntityType() == ProjectileEntity.Snowball))
-						source = projectile.getShootingPlayer();
-				}
-
-				if (source == null || source.isVanished() || source.shouldNotSee(victim) || isSamePlayer(victim, source))
-					return;
-
-				registerHit(victim, source); // Register the hit!
-			}
+			RunsafeProjectile projectile = (RunsafeProjectile) attacker;
+			if (!(projectile.getEntityType() == ProjectileEntity.Egg || projectile.getEntityType() == ProjectileEntity.Snowball))
+				source = projectile.getShootingPlayer();
 		}
+
+		if (source == null || source.isVanished() || source.shouldNotSee(victim) || isSamePlayer(victim, source))
+			return;
+
+		registerHit(victim, source); // Register the hit!
 	}
 
 	private void registerHit(IPlayer victim, IPlayer attacker)
