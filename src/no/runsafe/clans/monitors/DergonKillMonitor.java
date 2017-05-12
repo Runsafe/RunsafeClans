@@ -15,7 +15,7 @@ public class DergonKillMonitor implements IPlayerCustomEvent
 	public void OnPlayerCustomEvent(RunsafeCustomEvent event)
 	{
 		if (event.getEvent().equals("runsafe.dergon.slay"))
-			handler.addDergonKill(event.getPlayer().getName());
+			handler.addDergonKill(event.getPlayer());
 	}
 
 	private final ClanHandler handler;

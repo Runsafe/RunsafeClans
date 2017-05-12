@@ -1,13 +1,15 @@
 package no.runsafe.clans.monitors;
 
+import no.runsafe.framework.api.player.IPlayer;
+
 public class CombatTrackingNode
 {
-	public String getAttacker()
+	public IPlayer getAttacker()
 	{
 		return attacker;
 	}
 
-	public CombatTrackingNode setAttacker(String attacker)
+	public CombatTrackingNode setAttacker(IPlayer attacker)
 	{
 		this.attacker = attacker;
 		return this;
@@ -24,6 +26,6 @@ public class CombatTrackingNode
 		return this;
 	}
 
-	private String attacker;
+	private IPlayer attacker;
 	private int timerID;
 }

@@ -326,9 +326,9 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 		}
 	}
 
-	public void addDergonKill(String playerName)
+	public void addDergonKill(IPlayer player)
 	{
-		Clan clan = getPlayerClan(playerName);
+		Clan clan = getPlayerClan(player.getName());
 		if (clan != null)
 		{
 			String clanID = clan.getId();

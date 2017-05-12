@@ -44,7 +44,7 @@ public class CombatMonitor implements IEntityDamageByEntityEvent, IPlayerDeathEv
 		if (!track.containsKey(deadPlayerName) || !clanHandler.playerIsInClan(deadPlayerName))
 			return;
 
-		String killerName = track.get(deadPlayerName).getAttacker(); // Grab the name of the last player to hit them.
+		String killerName = track.get(deadPlayerName).getAttacker().getName(); // Grab the name of the last player to hit them.
 		if (!clanHandler.playerIsInClan(killerName))
 			return;
 
@@ -110,7 +110,7 @@ public class CombatMonitor implements IEntityDamageByEntityEvent, IPlayerDeathEv
 			track.put(victimName, new CombatTrackingNode()); // Create blank node.
 
 		// Update the node with new information.
-		track.get(victimName).setAttacker(attacker.getName()).setTimerID(scheduler.startAsyncTask(new Runnable()
+		track.get(victimName).setAttacker(attacker).setTimerID(scheduler.startAsyncTask(new Runnable()
 		{
 			@Override
 			public void run()
@@ -122,7 +122,7 @@ public class CombatMonitor implements IEntityDamageByEntityEvent, IPlayerDeathEv
 
 	private boolean isSamePlayer(IPlayer one, IPlayer two)
 	{
-		return one.getName().equalsIgnoreCase(two.getName());
+		return one.equals(two);
 	}
 
 	private IPlayer findPlayer(RunsafeLivingEntity entity)
