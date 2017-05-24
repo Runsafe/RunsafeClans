@@ -1,17 +1,16 @@
 package no.runsafe.clans.monitors;
 
 import no.runsafe.clans.Clan;
+import no.runsafe.clans.Config;
 import no.runsafe.clans.events.BackstabberEvent;
 import no.runsafe.clans.events.MutinyEvent;
 import no.runsafe.clans.handlers.ClanHandler;
-import no.runsafe.framework.api.IConfiguration;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.IServer;
 import no.runsafe.framework.api.IUniverse;
 import no.runsafe.framework.api.entity.IProjectileSource;
 import no.runsafe.framework.api.event.entity.IEntityDamageByEntityEvent;
 import no.runsafe.framework.api.event.player.IPlayerDeathEvent;
-import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.entity.ProjectileEntity;
 import no.runsafe.framework.minecraft.entity.RunsafeEntity;
@@ -20,18 +19,17 @@ import no.runsafe.framework.minecraft.entity.RunsafeProjectile;
 import no.runsafe.framework.minecraft.event.entity.RunsafeEntityDamageByEntityEvent;
 import no.runsafe.framework.minecraft.event.player.RunsafePlayerDeathEvent;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class CombatMonitor implements IEntityDamageByEntityEvent, IPlayerDeathEvent, IConfigurationChanged
+public class CombatMonitor implements IEntityDamageByEntityEvent, IPlayerDeathEvent
 {
-	public CombatMonitor(IServer server, IScheduler scheduler, ClanHandler clanHandler)
+	public CombatMonitor(IServer server, IScheduler scheduler, ClanHandler clanHandler, Config config)
 	{
 		this.server = server;
 		this.scheduler = scheduler;
 		this.clanHandler = clanHandler;
+		this.config = config;
 	}
 
 	@Override
@@ -78,7 +76,7 @@ public class CombatMonitor implements IEntityDamageByEntityEvent, IPlayerDeathEv
 			return;
 
 		IUniverse universe = victim.getUniverse();
-		if (universe == null || !clanUniverses.contains(universe.getName()))
+		if (universe == null || !config.getClanUniverse().contains(universe.getName()))
 			return;
 
 		IPlayer source = null;
@@ -130,16 +128,9 @@ public class CombatMonitor implements IEntityDamageByEntityEvent, IPlayerDeathEv
 		return null;
 	}
 
-	@Override
-	public void OnConfigurationChanged(IConfiguration config)
-	{
-		clanUniverses.clear();
-		Collections.addAll(clanUniverses, config.getConfigValueAsString("clanUniverse").split(","));
-	}
-
 	private final IServer server;
 	private final IScheduler scheduler;
 	private final ClanHandler clanHandler;
-	private List<String> clanUniverses = new ArrayList<String>(0);
+	private final Config config;
 	private final ConcurrentHashMap<String, CombatTrackingNode> track = new ConcurrentHashMap<String, CombatTrackingNode>(0);
 }

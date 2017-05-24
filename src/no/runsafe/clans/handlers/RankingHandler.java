@@ -1,16 +1,16 @@
 package no.runsafe.clans.handlers;
 
 import no.runsafe.clans.Clan;
-import no.runsafe.framework.api.IConfiguration;
-import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
+import no.runsafe.clans.Config;
 
 import java.util.*;
 
-public class RankingHandler implements IConfigurationChanged
+public class RankingHandler
 {
-	public RankingHandler(ClanHandler clanHandler)
+	public RankingHandler(ClanHandler clanHandler, Config config)
 	{
 		this.clanHandler = clanHandler;
+		this.config = config;
 	}
 
 	public List<String> getRankingRoster()
@@ -21,7 +21,10 @@ public class RankingHandler implements IConfigurationChanged
 		for (Map.Entry<String, Clan> clanNode : clanMap.entrySet())
 		{
 			Clan clan = clanNode.getValue();
-			int score = ((clan.getMemberCount() * clanMemberScore) + (clan.getClanKills() * clanKillScore)) - (clan.getClanDeaths() * (clanKillScore / 2)) + (clan.getDergonKills() * clanDergonKillScore);
+			int score = (clan.getMemberCount() * config.getClanMemberScore())
+				+ (clan.getClanKills() * config.getClanKillScore())
+				- (clan.getClanDeaths() * (config.getClanKillScore() / 2))
+				+ (clan.getDergonKills() * config.getClanDergonKillScore());
 			roster.put(clan.getId(), score);
 		}
 
@@ -56,16 +59,6 @@ public class RankingHandler implements IConfigurationChanged
 		return sortedMap;
 	}
 
-	@Override
-	public void OnConfigurationChanged(IConfiguration config)
-	{
-		clanMemberScore = config.getConfigValueAsInt("ranking.clanMember");
-		clanKillScore = config.getConfigValueAsInt("ranking.clanKill");
-		clanDergonKillScore = config.getConfigValueAsInt("ranking.dergonKill");
-	}
-
-	private int clanMemberScore;
-	private int clanKillScore;
-	private int clanDergonKillScore;
+	private final Config config;
 	private final ClanHandler clanHandler;
 }
