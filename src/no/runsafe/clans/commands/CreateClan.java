@@ -20,7 +20,7 @@ public class CreateClan extends PlayerAsyncCommand
 	@Override
 	public String OnAsyncExecute(IPlayer executor, IArgumentList parameters)
 	{
-		String clanName = parameters.get("clanTag").toUpperCase();
+		String clanName = ((String) parameters.getValue("clanTag")).toUpperCase();
 
 		// Check we have been given a valid clan name.
 		if (clanHandler.isInvalidClanName(clanName))

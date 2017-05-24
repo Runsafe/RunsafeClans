@@ -32,7 +32,7 @@ public class SetMotd extends PlayerAsyncCommand
 		if (clan == null)
 			return "&cSomething just broke.";
 
-		clanHandler.setClanMotd(clan.getId(), ChatColour.Strip(parameters.get("motd")));
+		clanHandler.setClanMotd(clan.getId(), ChatColour.Strip(parameters.getValue("motd")));
 		return null;
 	}
 

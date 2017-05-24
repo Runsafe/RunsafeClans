@@ -24,7 +24,7 @@ public class ClanInfo extends AsyncCommand
 	@Override
 	public String OnAsyncExecute(ICommandExecutor executor, IArgumentList parameters)
 	{
-		String clanName = parameters.get("clan").toUpperCase();
+		String clanName = ((String) parameters.getValue("clan")).toUpperCase();
 
 		if (!clanHandler.clanExists(clanName))
 			return "&cNo clan named '" + clanName + "' exists.";
