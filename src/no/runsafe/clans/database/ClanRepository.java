@@ -80,11 +80,11 @@ public class ClanRepository extends Repository
 			")"
 		);
 
-		update.addQueries("ALTER TABLE `clans` ADD COLUMN `motd` VARCHAR(255) NOT NULL AFTER `created`;");
+		update.addQueries("ALTER TABLE `clans` ADD COLUMN `motd` VARCHAR(255) NOT NULL AFTER `created`");
 
 		update.addQueries("ALTER TABLE `clans`" +
 				"ADD COLUMN `clanKills` INT NOT NULL DEFAULT '0' AFTER `motd`," +
-				"ADD COLUMN `clanDeaths` INT NOT NULL DEFAULT '0' AFTER `clanKills`;");
+				"ADD COLUMN `clanDeaths` INT NOT NULL DEFAULT '0' AFTER `clanKills`");
 
 		update.addQueries("ALTER TABLE `clans`" +
 				"ADD COLUMN `dergonKills` INT(10) UNSIGNED NOT NULL DEFAULT '0' AFTER `clanDeaths`");
