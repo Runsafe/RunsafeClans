@@ -1,7 +1,9 @@
 package no.runsafe.clans.monitors;
 
+import no.runsafe.clans.Config;
 import no.runsafe.clans.handlers.CharterHandler;
 import no.runsafe.clans.handlers.ClanHandler;
+import no.runsafe.framework.api.IUniverse;
 import no.runsafe.framework.api.block.IBlock;
 import no.runsafe.framework.api.event.player.IPlayerRightClick;
 import no.runsafe.framework.api.player.IPlayer;
@@ -12,15 +14,21 @@ import java.util.List;
 
 public class PlayerMonitor implements IPlayerRightClick
 {
-	public PlayerMonitor(CharterHandler charterHandler, ClanHandler clanHandler)
+	public PlayerMonitor(CharterHandler charterHandler, ClanHandler clanHandler, Config config)
 	{
 		this.charterHandler = charterHandler;
 		this.clanHandler = clanHandler;
+		this.config = config;
 	}
 
 	@Override
 	public boolean OnPlayerRightClick(IPlayer player, RunsafeMeta usingItem, IBlock targetBlock)
 	{
+		// Check we're in the right universe.
+		IUniverse universe = player.getUniverse();
+		if (universe == null || !config.getClanUniverse().contains(universe.getName()))
+			return true;
+
 		// Check we are holding a charter.
 		if (usingItem == null || !usingItem.is(Item.Special.Crafted.WrittenBook) || !charterHandler.itemIsCharter(usingItem))
 			return true;
@@ -103,4 +111,5 @@ public class PlayerMonitor implements IPlayerRightClick
 
 	private final CharterHandler charterHandler;
 	private final ClanHandler clanHandler;
+	private final Config config;
 }
