@@ -72,6 +72,8 @@ public class ClanInviteRepository extends Repository
 			")"
 		);
 
+		update.addQueries(String.format("ALTER TABLE `%s` MODIFY COLUMN player VARCHAR(36)", getTableName()));
+
 		return update;
 	}
 }

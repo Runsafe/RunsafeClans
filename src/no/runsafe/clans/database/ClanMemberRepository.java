@@ -74,6 +74,8 @@ public class ClanMemberRepository extends Repository
 
 		update.addQueries("ALTER TABLE `clan_members` ADD COLUMN `joined` DATETIME NOT NULL AFTER `member`;");
 
+		update.addQueries(String.format("ALTER TABLE `%s` MODIFY COLUMN member VARCHAR(36)", getTableName()));
+
 		return update;
 	}
 }

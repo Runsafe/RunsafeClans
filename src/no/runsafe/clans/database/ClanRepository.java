@@ -89,6 +89,8 @@ public class ClanRepository extends Repository
 		update.addQueries("ALTER TABLE `clans`" +
 				"ADD COLUMN `dergonKills` INT(10) UNSIGNED NOT NULL DEFAULT '0' AFTER `clanDeaths`");
 
+		update.addQueries(String.format("ALTER TABLE `%s` MODIFY COLUMN leader VARCHAR(36)", getTableName()));
+
 		return update;
 	}
 
