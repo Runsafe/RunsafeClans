@@ -1,5 +1,6 @@
 package no.runsafe.clans.database;
 
+import no.runsafe.framework.api.IServer;
 import no.runsafe.framework.api.database.*;
 import no.runsafe.framework.api.player.IPlayer;
 import org.joda.time.DateTime;
@@ -12,33 +13,34 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class ClanMemberRepository extends Repository
 {
-	public ClanMemberRepository(IDatabase database)
+	public ClanMemberRepository(IDatabase database, IServer server)
 	{
 		this.database = database;
+		this.server = server;
 	}
 
-	public Map<String, List<String>> getClanRosters()
+	public Map<String, List<IPlayer>> getClanRosters()
 	{
-		Map<String, List<String>> rosters = new ConcurrentHashMap<String, List<String>>(0);
+		Map<String, List<IPlayer>> rosters = new ConcurrentHashMap<>(0);
 		for (IRow row : database.query("SELECT `clanID`, `member` FROM `clan_members`"))
 		{
 			String clanName = row.String("clanID");
 			if (!rosters.containsKey(clanName))
-				rosters.put(clanName, new ArrayList<String>(1));
+				rosters.put(clanName, new ArrayList<>(1));
 
-			rosters.get(clanName).add(row.String("member"));
+			rosters.get(clanName).add(server.getPlayer(row.String("member")));
 		}
 		return rosters;
 	}
 
-	public void addClanMember(String clanID, String playerName)
+	public void addClanMember(String clanID, IPlayer player)
 	{
-		database.execute("INSERT INTO `clan_members` (`clanID`, `member`, `joined`) VALUES(?, ?, NOW())", clanID, playerName);
+		database.execute("INSERT INTO `clan_members` (`clanID`, `member`, `joined`) VALUES(?, ?, NOW())", clanID, player.getName());
 	}
 
-	public void removeClanMemberByName(String playerName)
+	public void removeClanMember(IPlayer player)
 	{
-		database.execute("DELETE FROM `clan_members` WHERE `member` = ?", playerName);
+		database.execute("DELETE FROM `clan_members` WHERE `member` = ?", player);
 	}
 
 	public void removeAllClanMembers(String clanID)
@@ -78,4 +80,6 @@ public class ClanMemberRepository extends Repository
 
 		return update;
 	}
+
+	private final IServer server;
 }

@@ -6,7 +6,6 @@ import no.runsafe.clans.events.BackstabberEvent;
 import no.runsafe.clans.events.MutinyEvent;
 import no.runsafe.clans.handlers.ClanHandler;
 import no.runsafe.framework.api.IScheduler;
-import no.runsafe.framework.api.IServer;
 import no.runsafe.framework.api.IUniverse;
 import no.runsafe.framework.api.entity.IProjectileSource;
 import no.runsafe.framework.api.event.entity.IEntityDamageByEntityEvent;
@@ -24,9 +23,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class CombatMonitor implements IEntityDamageByEntityEvent, IPlayerDeathEvent
 {
-	public CombatMonitor(IServer server, IScheduler scheduler, ClanHandler clanHandler, Config config)
+	public CombatMonitor(IScheduler scheduler, ClanHandler clanHandler, Config config)
 	{
-		this.server = server;
 		this.scheduler = scheduler;
 		this.clanHandler = clanHandler;
 		this.config = config;
@@ -36,32 +34,29 @@ public class CombatMonitor implements IEntityDamageByEntityEvent, IPlayerDeathEv
 	public void OnPlayerDeathEvent(RunsafePlayerDeathEvent event)
 	{
 		IPlayer deadPlayer = event.getEntity();
-		String deadPlayerName = deadPlayer.getName();
 
 		// Check we tracked the player getting hit and they are in a clan!
-		if (!track.containsKey(deadPlayer) || !clanHandler.playerIsInClan(deadPlayerName))
+		if (!track.containsKey(deadPlayer) || !clanHandler.playerIsInClan(deadPlayer))
 			return;
 
-		String killerName = track.get(deadPlayer).getAttacker().getName(); // Grab the name of the last player to hit them.
-		if (!clanHandler.playerIsInClan(killerName))
+		IPlayer killer = track.get(deadPlayer).getAttacker(); // Grab the name of the last player to hit them.
+		if (!clanHandler.playerIsInClan(killer))
 			return;
 
-		Clan deadPlayerClan = clanHandler.getPlayerClan(deadPlayerName); // Dead players clan.
-		if (clanHandler.playerIsInClan(killerName, deadPlayerClan.getId()))
+		Clan deadPlayerClan = clanHandler.getPlayerClan(deadPlayer); // Dead players clan.
+		if (clanHandler.playerIsInClan(killer, deadPlayerClan.getId()))
 		{
-			IPlayer thePlayer = server.getPlayerExact(killerName);
-
-			if (thePlayer != null)
+			if (killer != null)
 			{
-				new BackstabberEvent(thePlayer).Fire();
-				if (clanHandler.playerIsClanLeader(deadPlayerName))
-					new MutinyEvent(thePlayer).Fire();
+				new BackstabberEvent(killer).Fire();
+				if (clanHandler.playerIsClanLeader(deadPlayer))
+					new MutinyEvent(killer).Fire();
 			}
 		}
 		else
 		{
-			clanHandler.addClanKill(killerName); // Stat the kill
-			clanHandler.addClanDeath(deadPlayerName); // Stat the death
+			clanHandler.addClanKill(killer); // Stat the kill
+			clanHandler.addClanDeath(deadPlayer); // Stat the death
 		}
 	}
 
@@ -116,7 +111,6 @@ public class CombatMonitor implements IEntityDamageByEntityEvent, IPlayerDeathEv
 		}, 10));
 	}
 
-	private final IServer server;
 	private final IScheduler scheduler;
 	private final ClanHandler clanHandler;
 	private final Config config;
