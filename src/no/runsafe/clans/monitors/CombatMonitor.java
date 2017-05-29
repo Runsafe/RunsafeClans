@@ -116,16 +116,6 @@ public class CombatMonitor implements IEntityDamageByEntityEvent, IPlayerDeathEv
 		}, 10));
 	}
 
-	private IPlayer findPlayer(RunsafeLivingEntity entity)
-	{
-		List<IPlayer> onlinePlayers = server.getOnlinePlayers();
-		for (IPlayer player : onlinePlayers)
-			if (entity != null && player != null && entity.getEntityId() == player.getEntityId())
-				return player;
-
-		return null;
-	}
-
 	private final IServer server;
 	private final IScheduler scheduler;
 	private final ClanHandler clanHandler;
