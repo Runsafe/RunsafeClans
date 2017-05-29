@@ -107,7 +107,7 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 		IPlayer player = event.getPlayer(); // Grab the player.
 
 		// Check if we have any pending invites.
-		if (playerInvites.containsKey(player.getName()))
+		if (playerInvites.containsKey(player))
 			processPendingInvites(player);
 
 		if (playerIsInClan(player.getName()))
@@ -143,12 +143,13 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 
 	public void addClanMember(String clanID, String playerName)
 	{
-		removeAllPendingInvites(playerName); // Remove all pending invites.
+		IPlayer player = server.getPlayer(playerName);
+		removeAllPendingInvites(player); // Remove all pending invites.
 		Clan clan = clans.get(clanID);
-		clan.addMember(server.getPlayer(playerName)); // Add to cache.
+		clan.addMember(player); // Add to cache.
 		playerClanIndex.put(playerName, clanID); // Add to index.
 		memberRepository.addClanMember(clan.getId(), playerName);
-		new ClanJoinEvent(server.getPlayerExact(playerName), clan).Fire(); // Fire a join event.
+		new ClanJoinEvent(player, clan).Fire(); // Fire a join event.
 	}
 
 	public void kickClanMember(IPlayer player, IPlayer kicker)
@@ -215,45 +216,42 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 		return playerClan != null && playerClan.getLeader().getName().equals(playerName);
 	}
 
-	public boolean playerHasPendingInvite(String clanID, String playerName)
+	public boolean playerHasPendingInvite(String clanID, IPlayer player)
 	{
-		return playerInvites.containsKey(playerName) && playerInvites.get(playerName).contains(clanID);
+		return playerInvites.containsKey(player) && playerInvites.get(player).contains(clanID);
 	}
 
 	public void invitePlayerToClan(String clanID, IPlayer player)
 	{
-		String playerName = player.getName();
-		if (!playerInvites.containsKey(playerName))
-			playerInvites.put(playerName, new ArrayList<String>(1));
+		if (!playerInvites.containsKey(player))
+			playerInvites.put(player, new ArrayList<>(1));
 
-		playerInvites.get(playerName).add(clanID); // Add clan invite to the player.
-		inviteRepository.addInvite(playerName, clanID);
+		playerInvites.get(player).add(clanID); // Add clan invite to the player.
+		inviteRepository.addInvite(player, clanID);
 
 		NotifyNewInvite(clanID, player);
 	}
 
-	public void removeAllPendingInvites(String playerName)
+	public void removeAllPendingInvites(IPlayer player)
 	{
-		playerInvites.remove(playerName); // Remove all pending invites.
-		inviteRepository.clearAllPendingInvites(playerName); // Persist the change in database.
+		playerInvites.remove(player); // Remove all pending invites.
+		inviteRepository.clearAllPendingInvites(player); // Persist the change in database.
 	}
 
 	public void removePendingInvite(IPlayer player, String clanName)
 	{
-		String playerName = player.getName();
-		if (playerInvites.containsKey(playerName))
-			playerInvites.get(playerName).remove(clanName);
+		if (playerInvites.containsKey(player))
+			playerInvites.get(player).remove(clanName);
 
-		inviteRepository.clearPendingInvite(playerName, clanName);
+		inviteRepository.clearPendingInvite(player, clanName);
 	}
 
 	public void acceptClanInvite(String clanID, IPlayer player)
 	{
-		String playerName = player.getName();
-
 		// Make sure the player has a pending invite we can accept.
-		if (playerHasPendingInvite(clanID, playerName))
+		if (playerHasPendingInvite(clanID, player))
 		{
+			String playerName = player.getName();
 			addClanMember(clanID, playerName); // Add the member to the clan.
 			Clan playerClan = getPlayerClan(playerName);
 			if (playerClan != null)
@@ -386,7 +384,7 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 		playerInvites.putAll(inviteRepository.getPendingInvites()); // Grab pending invites from the database.
 		List<String> invalidClans = new ArrayList<String>(0);
 
-		for (Map.Entry<String, List<String>> inviteNode : playerInvites.entrySet())
+		for (Map.Entry<IPlayer, List<String>> inviteNode : playerInvites.entrySet())
 		{
 			for (String clanName : inviteNode.getValue()) // Loop through all the invites and check they are valid.
 			{
@@ -402,7 +400,7 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 		for (String invalidClan : invalidClans)
 			inviteRepository.clearAllPendingInvitesForClan(invalidClan);
 
-		for (Map.Entry<String, List<String>> inviteNode : playerInvites.entrySet())
+		for (Map.Entry<IPlayer, List<String>> inviteNode : playerInvites.entrySet())
 			inviteNode.getValue().removeAll(invalidClans);
 	}
 
@@ -467,10 +465,10 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 
 	private void processPendingInvites(final IPlayer player)
 	{
-		final List<String> invites = playerInvites.get(player.getName());
+		final List<String> invites = playerInvites.get(player);
 
 		if (invites.isEmpty())
-			playerInvites.remove(player.getName());
+			playerInvites.remove(player);
 		else
 			scheduler.startAsyncTask(new Runnable()
 			{
@@ -518,7 +516,7 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 	{
 		// Check all pending invites and remove any for this clan.
 		inviteRepository.clearAllPendingInvitesForClan(clanID); // Clear all pending invites.
-		for (Map.Entry<String, List<String>> invite : playerInvites.entrySet())
+		for (Map.Entry<IPlayer, List<String>> invite : playerInvites.entrySet())
 			if (invite.getValue().contains(clanID))
 				playerInvites.get(invite.getKey()).remove(clanID); // Remove the invite from deleted clan.
 	}
@@ -526,7 +524,7 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 	private String clanTagFormat;
 	private final Map<String, Clan> clans = new ConcurrentHashMap<String, Clan>(0);
 	private final Map<String, String> playerClanIndex = new ConcurrentHashMap<String, String>(0);
-	private final Map<String, List<String>> playerInvites = new ConcurrentHashMap<String, List<String>>(0);
+	private final Map<IPlayer, List<String>> playerInvites = new ConcurrentHashMap<>(0);
 	private final IConsole console;
 	private final IServer server;
 	private final IScheduler scheduler;

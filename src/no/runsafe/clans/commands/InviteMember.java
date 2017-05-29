@@ -33,9 +33,7 @@ public class InviteMember extends PlayerAsyncCommand
 		if (targetPlayer == null)
 			return "&cInvalid player.";
 
-		String targetPlayerName = targetPlayer.getName();
-
-		if (clanHandler.playerIsInClan(targetPlayerName))
+		if (clanHandler.playerIsInClan(targetPlayer.getName()))
 			return "&cThat player is already in a clan.";
 
 		Clan clan = clanHandler.getPlayerClan(playerName); // Grab the players clan.
@@ -43,7 +41,7 @@ public class InviteMember extends PlayerAsyncCommand
 		if (clan.getMemberCount() >= config.getClanSize())
 			return "&cYour clan is full! Remove someone before inviting more.";
 
-		if (clanHandler.playerHasPendingInvite(clan.getId(), targetPlayerName))
+		if (clanHandler.playerHasPendingInvite(clan.getId(), targetPlayer))
 			return "&cThat player has already been invited to this clan.";
 
 		clanHandler.invitePlayerToClan(clan.getId(), targetPlayer); // Invite the player.
