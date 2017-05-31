@@ -1,7 +1,7 @@
 package no.runsafe.clans.handlers;
 
-import no.runsafe.framework.api.IServer;
 import no.runsafe.framework.api.player.IPlayer;
+import no.runsafe.framework.api.server.IPlayerProvider;
 import no.runsafe.framework.minecraft.Item;
 import no.runsafe.framework.minecraft.item.meta.RunsafeBook;
 import no.runsafe.framework.minecraft.item.meta.RunsafeMeta;
@@ -15,11 +15,11 @@ public class CharterHandler
 {
 	/**
 	 * Constructor for handling clan charters.
-	 * @param server The server. Used for getting a player object from their username and or UUID.
+	 * @param playerProvider The provider of player objects.
 	 */
-	public CharterHandler(IServer server)
+	public CharterHandler(IPlayerProvider playerProvider)
 	{
-		this.server = server;
+		this.playerProvider = playerProvider;
 	}
 
 	public void givePlayerCharter(IPlayer player, String clanName)
@@ -66,7 +66,7 @@ public class CharterHandler
 			List<String> charterPages = charter.getPages();
 			List<IPlayer> charterSigns = new ArrayList<IPlayer>(0);
 			for(String page : charterPages)
-				charterSigns.add(server.getPlayer(UUID.fromString(page)));
+				charterSigns.add(playerProvider.getPlayer(UUID.fromString(page)));
 			return charterSigns;
 		}
 
@@ -79,5 +79,5 @@ public class CharterHandler
 		charter.addPages(player.getUniqueId().toString()); // Add the sign to the charter.
 	}
 
-	private final IServer server;
+	private final IPlayerProvider playerProvider;
 }

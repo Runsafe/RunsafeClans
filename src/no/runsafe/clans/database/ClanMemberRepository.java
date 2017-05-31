@@ -1,8 +1,8 @@
 package no.runsafe.clans.database;
 
-import no.runsafe.framework.api.IServer;
 import no.runsafe.framework.api.database.*;
 import no.runsafe.framework.api.player.IPlayer;
+import no.runsafe.framework.api.server.IPlayerProvider;
 import org.joda.time.DateTime;
 
 import javax.annotation.Nonnull;
@@ -13,10 +13,10 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class ClanMemberRepository extends Repository
 {
-	public ClanMemberRepository(IDatabase database, IServer server)
+	public ClanMemberRepository(IDatabase database, IPlayerProvider playerProvider)
 	{
 		this.database = database;
-		this.server = server;
+		this.playerProvider = playerProvider;
 	}
 
 	public Map<String, List<IPlayer>> getClanRosters()
@@ -28,7 +28,7 @@ public class ClanMemberRepository extends Repository
 			if (!rosters.containsKey(clanName))
 				rosters.put(clanName, new ArrayList<>(1));
 
-			rosters.get(clanName).add(server.getPlayer(row.String("member")));
+			rosters.get(clanName).add(playerProvider.getPlayer(row.String("member")));
 		}
 		return rosters;
 	}
@@ -81,5 +81,5 @@ public class ClanMemberRepository extends Repository
 		return update;
 	}
 
-	private final IServer server;
+	private final IPlayerProvider playerProvider;
 }

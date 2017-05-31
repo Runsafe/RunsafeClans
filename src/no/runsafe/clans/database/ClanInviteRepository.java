@@ -1,8 +1,8 @@
 package no.runsafe.clans.database;
 
-import no.runsafe.framework.api.IServer;
 import no.runsafe.framework.api.database.*;
 import no.runsafe.framework.api.player.IPlayer;
+import no.runsafe.framework.api.server.IPlayerProvider;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -12,10 +12,10 @@ import java.util.Map;
 
 public class ClanInviteRepository extends Repository
 {
-	public ClanInviteRepository(IDatabase database, IServer server)
+	public ClanInviteRepository(IDatabase database, IPlayerProvider playerProvider)
 	{
 		this.database = database;
-		this.server = server;
+		this.playerProvider = playerProvider;
 	}
 
 	public Map<IPlayer, List<String>> getPendingInvites()
@@ -24,7 +24,7 @@ public class ClanInviteRepository extends Repository
 
 		for (IRow row : database.query("SELECT `clanID`, `player` FROM `clan_invites`"))
 		{
-			IPlayer player = server.getPlayer(row.String("player"));
+			IPlayer player = playerProvider.getPlayer(row.String("player"));
 			if (!map.containsKey(player))
 				map.put(player, new ArrayList<>(0));
 
@@ -80,5 +80,5 @@ public class ClanInviteRepository extends Repository
 		return update;
 	}
 
-	private final IServer server;
+	private final IPlayerProvider playerProvider;
 }
