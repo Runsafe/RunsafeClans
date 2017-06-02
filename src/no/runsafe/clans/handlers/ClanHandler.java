@@ -11,7 +11,6 @@ import no.runsafe.clans.events.ClanKickEvent;
 import no.runsafe.clans.events.ClanLeaveEvent;
 import no.runsafe.framework.api.IConfiguration;
 import no.runsafe.framework.api.IScheduler;
-import no.runsafe.framework.api.IServer;
 import no.runsafe.framework.api.event.player.IPlayerCustomEvent;
 import no.runsafe.framework.api.event.player.IPlayerJoinEvent;
 import no.runsafe.framework.api.event.player.IPlayerQuitEvent;
@@ -40,10 +39,9 @@ import java.util.regex.Pattern;
 
 public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, IPlayerJoinEvent, IPlayerQuitEvent, IPlayerCustomEvent
 {
-	public ClanHandler(IConsole console, IServer server, IScheduler scheduler, ClanRepository clanRepository, ClanMemberRepository memberRepository, ClanInviteRepository inviteRepository, IChannelManager channelManager)
+	public ClanHandler(IConsole console, IScheduler scheduler, ClanRepository clanRepository, ClanMemberRepository memberRepository, ClanInviteRepository inviteRepository, IChannelManager channelManager)
 	{
 		this.console = console;
-		this.server = server;
 		this.scheduler = scheduler;
 		this.clanRepository = clanRepository;
 		this.memberRepository = memberRepository;
@@ -523,7 +521,6 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 	private final Map<IPlayer, String> playerClanIndex = new ConcurrentHashMap<>(0);
 	private final Map<IPlayer, List<String>> playerInvites = new ConcurrentHashMap<>(0);
 	private final IConsole console;
-	private final IServer server;
 	private final IScheduler scheduler;
 	private final ClanRepository clanRepository;
 	private final ClanMemberRepository memberRepository;
