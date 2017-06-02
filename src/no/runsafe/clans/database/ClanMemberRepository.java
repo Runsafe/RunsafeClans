@@ -9,6 +9,7 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ClanMemberRepository extends Repository
@@ -28,7 +29,7 @@ public class ClanMemberRepository extends Repository
 			if (!rosters.containsKey(clanName))
 				rosters.put(clanName, new ArrayList<>(1));
 
-			rosters.get(clanName).add(playerProvider.getPlayer(row.String("member")));
+			rosters.get(clanName).add(playerProvider.getPlayer(UUID.fromString(row.String("member"))));
 		}
 		return rosters;
 	}
