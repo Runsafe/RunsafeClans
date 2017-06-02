@@ -15,11 +15,6 @@ public class Config implements IConfigurationChanged
 		// Get maximum clan size.
 		clanSize = configuration.getConfigValueAsInt("clanSize");
 
-		// Get clan score information.
-		clanMemberScore = configuration.getConfigValueAsInt("ranking.clanMember");
-		clanKillScore = configuration.getConfigValueAsInt("ranking.clanKill");
-		clanDergonKillScore = configuration.getConfigValueAsInt("ranking.dergonKill");
-
 		// Get all worlds in the clan universe.
 		clanUniverse.clear();
 		Collections.addAll(clanUniverse, configuration.getConfigValueAsString("clanUniverse").split(","));
@@ -30,29 +25,11 @@ public class Config implements IConfigurationChanged
 		return clanSize;
 	}
 
-	public int getClanMemberScore()
-	{
-		return clanMemberScore;
-	}
-
-	public int getClanKillScore()
-	{
-		return clanKillScore;
-	}
-
-	public int getClanDergonKillScore()
-	{
-		return clanDergonKillScore;
-	}
-
 	public List<String> getClanUniverse()
 	{
 		return clanUniverse;
 	}
 
 	private int clanSize;
-	private int clanMemberScore;
-	private int clanKillScore;
-	private int clanDergonKillScore;
 	private List<String> clanUniverse = new ArrayList<String>(0);
 }
