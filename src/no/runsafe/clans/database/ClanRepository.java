@@ -8,6 +8,7 @@ import no.runsafe.framework.api.server.IPlayerProvider;
 import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class ClanRepository extends Repository
 {
@@ -24,7 +25,7 @@ public class ClanRepository extends Repository
 		for (IRow row : database.query("SELECT `clanID`, `leader`, `motd`, `clanKills`, `clanDeaths`, `dergonKills` FROM `clans`"))
 		{
 			String clanName = row.String("clanID");
-			Clan clan = new Clan(clanName, playerProvider.getPlayer(row.String("leader")), row.String("motd"));
+			Clan clan = new Clan(clanName, playerProvider.getPlayer(UUID.fromString(row.String("leader"))), row.String("motd"));
 			clan.addClanKills(row.Integer("clanKills")); // Add in kills stat
 			clan.addClanDeaths(row.Integer("clanDeaths")); // Add in deaths stat
 			clan.addDergonKills(row.Integer("dergonKills")); // Add dergon kills.
@@ -45,12 +46,15 @@ public class ClanRepository extends Repository
 
 	public void changeClanLeader(String clanID, IPlayer leader)
 	{
-		database.execute("UPDATE `clans` SET `leader` = ? WHERE `clanID` = ?", leader.getName(), clanID);
+		database.execute("UPDATE `clans` SET `leader` = ? WHERE `clanID` = ?", leader.getUniqueId().toString(), clanID);
 	}
 
 	public void persistClan(Clan clan)
 	{
-		database.execute("INSERT INTO `clans` (`clanID`, `leader`, `created`, `motd`) VALUES(?, ?, NOW(), ?)", clan.getId(), clan.getLeader(), clan.getMotd());
+		database.execute(
+			"INSERT INTO `clans` (`clanID`, `leader`, `created`, `motd`) VALUES(?, ?, NOW(), ?)",
+			clan.getId(), clan.getLeader().getUniqueId().toString(), clan.getMotd()
+		);
 	}
 
 	public void updateStatistic(String clanID, String statistic, int value)
@@ -89,7 +93,15 @@ public class ClanRepository extends Repository
 		update.addQueries("ALTER TABLE `clans`" +
 				"ADD COLUMN `dergonKills` INT(10) UNSIGNED NOT NULL DEFAULT '0' AFTER `clanDeaths`");
 
-		update.addQueries(String.format("ALTER TABLE `%s` MODIFY COLUMN leader VARCHAR(36)", getTableName()));
+		update.addQueries(
+			String.format("ALTER TABLE `%s` MODIFY COLUMN leader VARCHAR(36)", getTableName()),
+			String.format( // Player names -> Unique IDs
+				"UPDATE IGNORE `%s` SET `leader` = " +
+					"COALESCE((SELECT `uuid` FROM player_db WHERE `name`=`%s`.`leader`), `leader`) " +
+					"WHERE length(`leader`) != 36",
+				getTableName(), getTableName()
+			)
+		);
 
 		return update;
 	}

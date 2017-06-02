@@ -35,12 +35,12 @@ public class ClanMemberRepository extends Repository
 
 	public void addClanMember(String clanID, IPlayer player)
 	{
-		database.execute("INSERT INTO `clan_members` (`clanID`, `member`, `joined`) VALUES(?, ?, NOW())", clanID, player.getName());
+		database.execute("INSERT INTO `clan_members` (`clanID`, `member`, `joined`) VALUES(?, ?, NOW())", clanID, player.getUniqueId().toString());
 	}
 
 	public void removeClanMember(IPlayer player)
 	{
-		database.execute("DELETE FROM `clan_members` WHERE `member` = ?", player);
+		database.execute("DELETE FROM `clan_members` WHERE `member` = ?", player.getUniqueId().toString());
 	}
 
 	public void removeAllClanMembers(String clanID)
@@ -50,7 +50,7 @@ public class ClanMemberRepository extends Repository
 
 	public DateTime getClanMemberJoinDate(IPlayer player)
 	{
-		return database.queryDateTime("SELECT `joined` FROM `clan_members` WHERE `member` = ?", player.getName());
+		return database.queryDateTime("SELECT `joined` FROM `clan_members` WHERE `member` = ?", player.getUniqueId().toString());
 	}
 
 	@Override
@@ -76,7 +76,15 @@ public class ClanMemberRepository extends Repository
 
 		update.addQueries("ALTER TABLE `clan_members` ADD COLUMN `joined` DATETIME NOT NULL AFTER `member`");
 
-		update.addQueries(String.format("ALTER TABLE `%s` MODIFY COLUMN member VARCHAR(36)", getTableName()));
+		update.addQueries(
+			String.format("ALTER TABLE `%s` MODIFY COLUMN member VARCHAR(36)", getTableName()),
+				String.format( // Player names -> Unique IDs
+				"UPDATE IGNORE `%s` SET `member` = " +
+					"COALESCE((SELECT `uuid` FROM player_db WHERE `name`=`%s`.`member`), `member`) " +
+					"WHERE length(`member`) != 36",
+				getTableName(), getTableName()
+			)
+		);
 
 		return update;
 	}
