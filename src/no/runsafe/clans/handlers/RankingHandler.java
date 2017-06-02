@@ -21,7 +21,10 @@ public class RankingHandler implements IConfigurationChanged
 		for (Map.Entry<String, Clan> clanNode : clanMap.entrySet())
 		{
 			Clan clan = clanNode.getValue();
-			int score = ((clan.getMemberCount() * clanMemberScore) + (clan.getClanKills() * clanKillScore)) - (clan.getClanDeaths() * (clanKillScore / 2)) + (clan.getDergonKills() * clanDergonKillScore);
+			int score = (clan.getMemberCount() * clanMemberScore)
+				+ (clan.getClanKills() * clanKillScore)
+				- (clan.getClanDeaths() * (clanKillScore / 2))
+				+ (clan.getDergonKills() * clanDergonKillScore);
 			roster.put(clan.getId(), score);
 		}
 
@@ -55,6 +58,7 @@ public class RankingHandler implements IConfigurationChanged
 
 		return sortedMap;
 	}
+
 
 	@Override
 	public void OnConfigurationChanged(IConfiguration config)

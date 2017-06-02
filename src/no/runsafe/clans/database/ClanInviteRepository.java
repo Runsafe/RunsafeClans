@@ -1,44 +1,48 @@
 package no.runsafe.clans.database;
 
 import no.runsafe.framework.api.database.*;
+import no.runsafe.framework.api.player.IPlayer;
+import no.runsafe.framework.api.server.IPlayerProvider;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class ClanInviteRepository extends Repository
 {
-	public ClanInviteRepository(IDatabase database)
+	public ClanInviteRepository(IDatabase database, IPlayerProvider playerProvider)
 	{
 		this.database = database;
+		this.playerProvider = playerProvider;
 	}
 
-	public Map<String, List<String>> getPendingInvites()
+	public Map<IPlayer, List<String>> getPendingInvites()
 	{
-		Map<String, List<String>> map = new HashMap<String, List<String>>(0);
+		Map<IPlayer, List<String>> map = new HashMap<>(0);
 
 		for (IRow row : database.query("SELECT `clanID`, `player` FROM `clan_invites`"))
 		{
-			String playerName = row.String("player");
-			if (!map.containsKey(playerName))
-				map.put(playerName, new ArrayList<String>(0));
+			IPlayer player = playerProvider.getPlayer(UUID.fromString(row.String("player")));
+			if (!map.containsKey(player))
+				map.put(player, new ArrayList<>(0));
 
-			map.get(playerName).add(row.String("clanID"));
+			map.get(player).add(row.String("clanID"));
 		}
 
 		return map;
 	}
 
-	public void clearPendingInvite(String playerName, String clanID)
+	public void clearPendingInvite(IPlayer player, String clanID)
 	{
-		database.execute("DELETE FROM `clan_invites` WHERE `player` = ? AND `clanID` = ?", playerName, clanID);
+		database.execute("DELETE FROM `clan_invites` WHERE `player` = ? AND `clanID` = ?", player.getUniqueId().toString(), clanID);
 	}
 
-	public void clearAllPendingInvites(String playerName)
+	public void clearAllPendingInvites(IPlayer player)
 	{
-		database.execute("DELETE FROM `clan_invites` WHERE `player` = ?", playerName);
+		database.execute("DELETE FROM `clan_invites` WHERE `player` = ?", player.getUniqueId().toString());
 	}
 
 	public void clearAllPendingInvitesForClan(String clanID)
@@ -46,9 +50,9 @@ public class ClanInviteRepository extends Repository
 		database.execute("DELETE FROM `clan_invites` WHERE `clanID` = ?", clanID);
 	}
 
-	public void addInvite(String playerName, String clanID)
+	public void addInvite(IPlayer player, String clanID)
 	{
-		database.execute("INSERT IGNORE INTO `clan_invites` (`player`, `clanID`) VALUES(?, ?)", playerName, clanID);
+		database.execute("INSERT IGNORE INTO `clan_invites` (`player`, `clanID`) VALUES(?, ?)", player.getUniqueId().toString(), clanID);
 	}
 
 	@Nonnull
@@ -72,6 +76,18 @@ public class ClanInviteRepository extends Repository
 			")"
 		);
 
+		update.addQueries(
+			String.format("ALTER TABLE `%s` MODIFY COLUMN player VARCHAR(36)", getTableName()),
+			String.format( // Player names -> Unique IDs
+				"UPDATE IGNORE `%s` SET `player` = " +
+					"COALESCE((SELECT `uuid` FROM player_db WHERE `name`=`%s`.`player`), `player`) " +
+					"WHERE length(`player`) != 36",
+				getTableName(), getTableName()
+			)
+		);
+
 		return update;
 	}
+
+	private final IPlayerProvider playerProvider;
 }

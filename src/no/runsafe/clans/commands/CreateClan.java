@@ -20,7 +20,7 @@ public class CreateClan extends PlayerAsyncCommand
 	@Override
 	public String OnAsyncExecute(IPlayer executor, IArgumentList parameters)
 	{
-		String clanName = parameters.get("clanTag").toUpperCase();
+		String clanName = ((String) parameters.getValue("clanTag")).toUpperCase();
 
 		// Check we have been given a valid clan name.
 		if (clanHandler.isInvalidClanName(clanName))
@@ -30,8 +30,7 @@ public class CreateClan extends PlayerAsyncCommand
 		if (clanHandler.clanExists(clanName))
 			return String.format("&cA clan named '%s' already exists.", clanName);
 
-		String playerName = executor.getName();
-		if (clanHandler.playerIsInClan(playerName))
+		if (clanHandler.playerIsInClan(executor))
 			return "&cYou are already in a clan!";
 
 		charterHandler.givePlayerCharter(executor, clanName); // Give them a charter.
