@@ -32,11 +32,6 @@ public class PlayerMonitor implements IPlayerRightClick
 	@Override
 	public boolean OnPlayerRightClick(IPlayer player, RunsafeMeta usingItem, IBlock targetBlock)
 	{
-		// Check we're in the right universe.
-		IUniverse universe = player.getUniverse();
-		if (universe == null || !config.getClanUniverse().contains(universe.getName()))
-			return true;
-
 		// Check we are holding a charter.
 		if (usingItem == null || !usingItem.is(Item.Special.Crafted.WrittenBook) || !charterHandler.itemIsCharter(usingItem))
 			return true;
@@ -45,6 +40,11 @@ public class PlayerMonitor implements IPlayerRightClick
 		if (clickTimer.containsKey(player))
 			return false;
 		registerClickTimer(player);
+
+		// Check we're in the right universe.
+		IUniverse universe = player.getUniverse();
+		if (universe == null || !config.getClanUniverse().contains(universe.getName()))
+			return false;
 
 		if (clanHandler.playerIsInClan(player))
 		{
