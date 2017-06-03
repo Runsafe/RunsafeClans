@@ -3,6 +3,7 @@ package no.runsafe.clans.monitors;
 import no.runsafe.clans.Config;
 import no.runsafe.clans.handlers.CharterHandler;
 import no.runsafe.clans.handlers.ClanHandler;
+import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.IUniverse;
 import no.runsafe.framework.api.block.IBlock;
 import no.runsafe.framework.api.event.player.IPlayerRightClick;
@@ -11,14 +12,21 @@ import no.runsafe.framework.minecraft.Item;
 import no.runsafe.framework.minecraft.item.meta.RunsafeMeta;
 
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class PlayerMonitor implements IPlayerRightClick
 {
-	public PlayerMonitor(CharterHandler charterHandler, ClanHandler clanHandler, Config config)
+	public PlayerMonitor(
+		CharterHandler charterHandler,
+		ClanHandler clanHandler,
+		Config config,
+		IScheduler scheduler
+	)
 	{
 		this.charterHandler = charterHandler;
 		this.clanHandler = clanHandler;
 		this.config = config;
+		this.scheduler = scheduler;
 	}
 
 	@Override
@@ -32,6 +40,11 @@ public class PlayerMonitor implements IPlayerRightClick
 		// Check we are holding a charter.
 		if (usingItem == null || !usingItem.is(Item.Special.Crafted.WrittenBook) || !charterHandler.itemIsCharter(usingItem))
 			return true;
+
+		// Make sure the player isn't spamming the charter
+		if (clickTimer.containsKey(player))
+			return false;
+		registerClickTimer(player);
 
 		if (clanHandler.playerIsInClan(player))
 		{
@@ -108,7 +121,21 @@ public class PlayerMonitor implements IPlayerRightClick
 		return false;
 	}
 
+	private void registerClickTimer(final IPlayer player)
+	{
+		if (clickTimer.containsKey(player))
+			scheduler.cancelTask(clickTimer.get(player));
+
+		clickTimer.put(player, scheduler.startSyncTask(() ->
+		{
+			if (clickTimer.containsKey(player))
+				clickTimer.remove(player);
+		}, 2));
+	}
+
 	private final CharterHandler charterHandler;
 	private final ClanHandler clanHandler;
 	private final Config config;
+	private final ConcurrentHashMap<IPlayer, Integer> clickTimer = new ConcurrentHashMap<>();
+	private final IScheduler scheduler;
 }
