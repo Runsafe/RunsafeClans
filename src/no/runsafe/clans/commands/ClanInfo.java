@@ -7,9 +7,11 @@ import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.command.AsyncCommand;
 import no.runsafe.framework.api.command.ICommandExecutor;
 import no.runsafe.framework.api.command.argument.IArgumentList;
+import no.runsafe.framework.api.player.IPlayer;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ClanInfo extends AsyncCommand
 {
@@ -40,8 +42,11 @@ public class ClanInfo extends AsyncCommand
 		Clan clan = clanHandler.getClan(clanName); // Grab the clan information
 
 		info.append(formatLine("Name", clanName));
-		info.append(formatLine("Leader", clan.getLeader()));
-		info.append(formatLine("Members", "(" + clan.getMemberCount() + ") " + StringUtils.join(clan.getMembers(), ", ")));
+		info.append(formatLine("Leader", clan.getLeader().getPrettyName()));
+		info.append(formatLine(
+			"Members", "(" + clan.getMemberCount() + ") "
+			+ StringUtils.join(clan.getMembers().stream().map(IPlayer::getPrettyName).collect(Collectors.toList()), ", ")
+		));
 		info.append(formatLine("Enemy Clan Kills", clan.getClanKills()));
 		info.append(formatLine("Enemy Clan Deaths", clan.getClanDeaths()));
 		info.append(formatLine("Dergon Kills", clan.getDergonKills()));
