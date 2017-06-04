@@ -5,7 +5,6 @@ import no.runsafe.clans.Config;
 import no.runsafe.clans.handlers.ClanHandler;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.command.argument.IArgumentList;
-import no.runsafe.framework.api.command.argument.RequiredArgument;
 import no.runsafe.framework.api.command.player.PlayerAsyncCommand;
 import no.runsafe.framework.api.player.IPlayer;
 
@@ -13,15 +12,23 @@ public class JoinClan extends PlayerAsyncCommand
 {
 	public JoinClan(IScheduler scheduler, ClanHandler clanHandler, Config config)
 	{
-		super("join", "Accept an invite to a clan", "runsafe.clans.join", scheduler, new RequiredArgument("clan"));
+		super(
+			"join",
+			"Accept an invite to a clan",
+			"runsafe.clans.join",
+			scheduler,
+			new ClanArgument(CLAN, clanHandler)
+		);
 		this.clanHandler = clanHandler;
 		this.config = config;
 	}
 
+	private static final String CLAN = "clan";
+
 	@Override
 	public String OnAsyncExecute(IPlayer executor, IArgumentList parameters)
 	{
-		String clanName = ((String) parameters.getValue("clan")).toUpperCase();
+		String clanName = parameters.getValue(CLAN);
 		if (clanHandler.playerHasPendingInvite(clanName, executor))
 		{
 			Clan clan = clanHandler.getClan(clanName);
