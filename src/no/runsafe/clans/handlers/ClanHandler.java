@@ -165,10 +165,7 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 		Clan playerClan = getPlayerClan(player);
 
 		if (playerClan != null)
-		{
 			removeClanMember(playerClan, player);
-			new ClanLeaveEvent(player, playerClan).Fire();
-		}
 	}
 
 	private void removeClanMember(Clan clan, IPlayer player)
