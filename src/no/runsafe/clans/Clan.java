@@ -95,5 +95,5 @@ public class Clan
 	private int clanKills = 0;
 	private int clanDeaths = 0;
 	private int dergonKills = 0;
-	private final List<IPlayer> members = new ArrayList<IPlayer>(0);
+	private final List<IPlayer> members = new ArrayList<>(0);
 }

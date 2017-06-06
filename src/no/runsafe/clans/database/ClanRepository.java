@@ -20,7 +20,7 @@ public class ClanRepository extends Repository
 
 	public Map<String, Clan> getClans()
 	{
-		Map<String, Clan> clanList = new HashMap<String, Clan>(0);
+		Map<String, Clan> clanList = new HashMap<>(0);
 
 		for (IRow row : database.query("SELECT `clanID`, `leader`, `motd`, `clanKills`, `clanDeaths`, `dergonKills` FROM `clans`"))
 		{

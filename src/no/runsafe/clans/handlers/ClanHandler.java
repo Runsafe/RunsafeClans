@@ -60,7 +60,7 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 	@Override
 	public Map<String, String> GetPlayerData(IPlayer player)
 	{
-		Map<String, String> data = new HashMap<String, String>(1);
+		Map<String, String> data = new HashMap<>(1);
 		Clan playerClan = getPlayerClan(player);
 		data.put("runsafe.clans.clan", playerClan == null ? "None" : playerClan.getId());
 		data.put("runsafe.clans.joined", getPlayerJoinString(player));
@@ -374,7 +374,7 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 	{
 		playerInvites.clear();
 		playerInvites.putAll(inviteRepository.getPendingInvites()); // Grab pending invites from the database.
-		List<String> invalidClans = new ArrayList<String>(0);
+		List<String> invalidClans = new ArrayList<>(0);
 
 		for (Map.Entry<IPlayer, List<String>> inviteNode : playerInvites.entrySet())
 		{

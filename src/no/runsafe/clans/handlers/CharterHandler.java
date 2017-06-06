@@ -64,7 +64,7 @@ public class CharterHandler
 		if (charter.hasPages()) // Check we have some pages.
 		{
 			List<String> charterPages = charter.getPages();
-			List<IPlayer> charterSigns = new ArrayList<IPlayer>(0);
+			List<IPlayer> charterSigns = new ArrayList<>(0);
 			for(String page : charterPages)
 				charterSigns.add(playerProvider.getPlayer(UUID.fromString(page)));
 			return charterSigns;

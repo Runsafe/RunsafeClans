@@ -31,5 +31,5 @@ public class Config implements IConfigurationChanged
 	}
 
 	private int clanSize;
-	private List<String> clanUniverse = new ArrayList<String>(0);
+	private List<String> clanUniverse = new ArrayList<>(0);
 }
