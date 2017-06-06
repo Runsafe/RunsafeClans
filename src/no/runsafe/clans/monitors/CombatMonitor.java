@@ -101,13 +101,9 @@ public class CombatMonitor implements IEntityDamageByEntityEvent, IPlayerDeathEv
 			track.put(victim, new CombatTrackingNode()); // Create blank node.
 
 		// Update the node with new information.
-		track.get(victim).setAttacker(attacker).setTimerID(scheduler.startAsyncTask(new Runnable()
+		track.get(victim).setAttacker(attacker).setTimerID(scheduler.startAsyncTask(() ->
 		{
-			@Override
-			public void run()
-			{
-				track.remove(victim); // Remove after 10 seconds.
-			}
+			track.remove(victim); // Remove after 10 seconds.
 		}, 10));
 	}
 

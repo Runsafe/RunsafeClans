@@ -435,16 +435,12 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 		final Clan playerClan = getPlayerClan(player);
 		if (playerClan != null)
 		{
-			scheduler.startAsyncTask(new Runnable()
+			scheduler.startAsyncTask(() ->
 			{
-				@Override
-				public void run()
+				if (player.isOnline())
 				{
-					if (player.isOnline())
-					{
-						joinClanChannel(player, playerClan.getId());
-						sendMessageOfTheDay(player, playerClan);
-					}
+					joinClanChannel(player, playerClan.getId());
+					sendMessageOfTheDay(player, playerClan);
 				}
 			}, 3);
 		}
@@ -462,14 +458,7 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 		if (invites.isEmpty())
 			playerInvites.remove(player);
 		else
-			scheduler.startAsyncTask(new Runnable()
-			{
-				@Override
-				public void run()
-				{
-					NotifyPendingInvites(player, invites);
-				}
-			}, 3);
+			scheduler.startAsyncTask(() -> NotifyPendingInvites(player, invites), 3);
 	}
 
 	private void NotifyNewInvite(String clanID, IPlayer player)
