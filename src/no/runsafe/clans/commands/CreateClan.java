@@ -34,6 +34,10 @@ public class CreateClan extends PlayerAsyncCommand
 		if (!config.getClanUniverse().contains(executor.getUniverse().getName()))
 			return "&cPlease go to survival or spawn to create a clan.";
 
+		// Check for clan names that shouldn't be displayed.
+		if (clanName.contains("%"))
+			return "&cInvalid clan tag. A clan tag must be three characters using characters A-Z.";
+
 		// Check we have been given a valid clan name.
 		if (clanHandler.isInvalidClanName(clanName))
 			return String.format("&c'%s' is not a valid clan tag. A clan tag must be three characters using characters A-Z.", clanName);
