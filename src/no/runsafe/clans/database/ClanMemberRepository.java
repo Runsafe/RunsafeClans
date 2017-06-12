@@ -36,12 +36,12 @@ public class ClanMemberRepository extends Repository
 
 	public void addClanMember(String clanID, IPlayer player)
 	{
-		database.execute("INSERT INTO `clan_members` (`clanID`, `member`, `joined`) VALUES(?, ?, NOW())", clanID, player.getUniqueId().toString());
+		database.execute("INSERT INTO `clan_members` (`clanID`, `member`, `joined`) VALUES(?, ?, NOW())", clanID, player);
 	}
 
 	public void removeClanMember(IPlayer player)
 	{
-		database.execute("DELETE FROM `clan_members` WHERE `member` = ?", player.getUniqueId().toString());
+		database.execute("DELETE FROM `clan_members` WHERE `member` = ?", player);
 	}
 
 	public void removeAllClanMembers(String clanID)
@@ -51,7 +51,7 @@ public class ClanMemberRepository extends Repository
 
 	public DateTime getClanMemberJoinDate(IPlayer player)
 	{
-		return database.queryDateTime("SELECT `joined` FROM `clan_members` WHERE `member` = ?", player.getUniqueId().toString());
+		return database.queryDateTime("SELECT `joined` FROM `clan_members` WHERE `member` = ?", player);
 	}
 
 	@Override
