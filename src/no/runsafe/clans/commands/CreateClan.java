@@ -13,7 +13,13 @@ public class CreateClan extends PlayerAsyncCommand
 {
 	public CreateClan(IScheduler scheduler, ClanHandler clanHandler, CharterHandler charterHandler, Config config)
 	{
-		super("create", "Create a clan", "runsafe.clans.create", scheduler, new RequiredArgument("clanTag"));
+		super(
+			"create",
+			"Create a clan",
+			"runsafe.clans.create",
+			scheduler,
+			new RequiredArgument("clanTag").toUppercase()
+		);
 		this.clanHandler = clanHandler;
 		this.charterHandler = charterHandler;
 		this.config = config;
@@ -22,11 +28,15 @@ public class CreateClan extends PlayerAsyncCommand
 	@Override
 	public String OnAsyncExecute(IPlayer executor, IArgumentList parameters)
 	{
-		String clanName = ((String) parameters.getValue("clanTag")).toUpperCase();
+		String clanName = parameters.getValue("clanTag");
 
 		// Make sure the player is in the right universe.
 		if (!config.getClanUniverse().contains(executor.getUniverse().getName()))
 			return "&cPlease go to survival or spawn to create a clan.";
+
+		// Check for clan names that shouldn't be displayed.
+		if (clanName.contains("%"))
+			return "&cInvalid clan tag. A clan tag must be three characters using characters A-Z.";
 
 		// Check we have been given a valid clan name.
 		if (clanHandler.isInvalidClanName(clanName))

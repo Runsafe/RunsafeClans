@@ -60,7 +60,7 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 	@Override
 	public Map<String, String> GetPlayerData(IPlayer player)
 	{
-		Map<String, String> data = new HashMap<String, String>(1);
+		Map<String, String> data = new HashMap<>(1);
 		Clan playerClan = getPlayerClan(player);
 		data.put("runsafe.clans.clan", playerClan == null ? "None" : playerClan.getId());
 		data.put("runsafe.clans.joined", getPlayerJoinString(player));
@@ -165,10 +165,7 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 		Clan playerClan = getPlayerClan(player);
 
 		if (playerClan != null)
-		{
 			removeClanMember(playerClan, player);
-			new ClanLeaveEvent(player, playerClan).Fire();
-		}
 	}
 
 	private void removeClanMember(Clan clan, IPlayer player)
@@ -377,7 +374,7 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 	{
 		playerInvites.clear();
 		playerInvites.putAll(inviteRepository.getPendingInvites()); // Grab pending invites from the database.
-		List<String> invalidClans = new ArrayList<String>(0);
+		List<String> invalidClans = new ArrayList<>(0);
 
 		for (Map.Entry<IPlayer, List<String>> inviteNode : playerInvites.entrySet())
 		{
@@ -438,16 +435,12 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 		final Clan playerClan = getPlayerClan(player);
 		if (playerClan != null)
 		{
-			scheduler.startAsyncTask(new Runnable()
+			scheduler.startAsyncTask(() ->
 			{
-				@Override
-				public void run()
+				if (player.isOnline())
 				{
-					if (player.isOnline())
-					{
-						joinClanChannel(player, playerClan.getId());
-						sendMessageOfTheDay(player, playerClan);
-					}
+					joinClanChannel(player, playerClan.getId());
+					sendMessageOfTheDay(player, playerClan);
 				}
 			}, 3);
 		}
@@ -465,14 +458,7 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 		if (invites.isEmpty())
 			playerInvites.remove(player);
 		else
-			scheduler.startAsyncTask(new Runnable()
-			{
-				@Override
-				public void run()
-				{
-					NotifyPendingInvites(player, invites);
-				}
-			}, 3);
+			scheduler.startAsyncTask(() -> NotifyPendingInvites(player, invites), 3);
 	}
 
 	private void NotifyNewInvite(String clanID, IPlayer player)

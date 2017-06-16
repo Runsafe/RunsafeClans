@@ -20,7 +20,7 @@ public class ClanRepository extends Repository
 
 	public Map<String, Clan> getClans()
 	{
-		Map<String, Clan> clanList = new HashMap<String, Clan>(0);
+		Map<String, Clan> clanList = new HashMap<>(0);
 
 		for (IRow row : database.query("SELECT `clanID`, `leader`, `motd`, `clanKills`, `clanDeaths`, `dergonKills` FROM `clans`"))
 		{
@@ -46,14 +46,14 @@ public class ClanRepository extends Repository
 
 	public void changeClanLeader(String clanID, IPlayer leader)
 	{
-		database.execute("UPDATE `clans` SET `leader` = ? WHERE `clanID` = ?", leader.getUniqueId().toString(), clanID);
+		database.execute("UPDATE `clans` SET `leader` = ? WHERE `clanID` = ?", leader, clanID);
 	}
 
 	public void persistClan(Clan clan)
 	{
 		database.execute(
 			"INSERT INTO `clans` (`clanID`, `leader`, `created`, `motd`) VALUES(?, ?, NOW(), ?)",
-			clan.getId(), clan.getLeader().getUniqueId().toString(), clan.getMotd()
+			clan.getId(), clan.getLeader(), clan.getMotd()
 		);
 	}
 

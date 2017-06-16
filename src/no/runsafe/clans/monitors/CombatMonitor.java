@@ -7,18 +7,15 @@ import no.runsafe.clans.events.MutinyEvent;
 import no.runsafe.clans.handlers.ClanHandler;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.IUniverse;
-import no.runsafe.framework.api.entity.IProjectileSource;
 import no.runsafe.framework.api.event.entity.IEntityDamageByEntityEvent;
 import no.runsafe.framework.api.event.player.IPlayerDeathEvent;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.entity.ProjectileEntity;
 import no.runsafe.framework.minecraft.entity.RunsafeEntity;
-import no.runsafe.framework.minecraft.entity.RunsafeLivingEntity;
 import no.runsafe.framework.minecraft.entity.RunsafeProjectile;
 import no.runsafe.framework.minecraft.event.entity.RunsafeEntityDamageByEntityEvent;
 import no.runsafe.framework.minecraft.event.player.RunsafePlayerDeathEvent;
 
-import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class CombatMonitor implements IEntityDamageByEntityEvent, IPlayerDeathEvent
@@ -101,13 +98,9 @@ public class CombatMonitor implements IEntityDamageByEntityEvent, IPlayerDeathEv
 			track.put(victim, new CombatTrackingNode()); // Create blank node.
 
 		// Update the node with new information.
-		track.get(victim).setAttacker(attacker).setTimerID(scheduler.startAsyncTask(new Runnable()
+		track.get(victim).setAttacker(attacker).setTimerID(scheduler.startAsyncTask(() ->
 		{
-			@Override
-			public void run()
-			{
-				track.remove(victim); // Remove after 10 seconds.
-			}
+			track.remove(victim); // Remove after 10 seconds.
 		}, 10));
 	}
 

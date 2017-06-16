@@ -16,7 +16,7 @@ public class RankingHandler implements IConfigurationChanged
 	public List<String> getRankingRoster()
 	{
 		Map<String, Clan> clanMap = clanHandler.getClans();
-		Map<String, Integer> roster = new HashMap<String, Integer>(clanMap.size());
+		Map<String, Integer> roster = new HashMap<>(clanMap.size());
 
 		for (Map.Entry<String, Clan> clanNode : clanMap.entrySet())
 		{
@@ -29,9 +29,9 @@ public class RankingHandler implements IConfigurationChanged
 		}
 
 		LinkedHashMap<String, Integer> sorted = sortByValues(roster); // Sort the stuff!
-		List<String> ordered = new ArrayList<String>(sorted.size());
+		List<String> ordered = new ArrayList<>(sorted.size());
 
-		List<Map.Entry<String, Integer>> holder = new ArrayList<Map.Entry<String, Integer>>(sorted.entrySet());
+		List<Map.Entry<String, Integer>> holder = new ArrayList<>(sorted.entrySet());
 		for (int i = holder.size() - 1; i >= 0; i--)
 			ordered.add(holder.get(i).getKey());
 
@@ -40,16 +40,9 @@ public class RankingHandler implements IConfigurationChanged
 
 	public static <K extends Comparable,V extends Comparable> LinkedHashMap<K,V> sortByValues(Map<K,V> map)
 	{
-		List<Map.Entry<K,V>> entries = new LinkedList<Map.Entry<K,V>>(map.entrySet());
+		List<Map.Entry<K,V>> entries = new LinkedList<>(map.entrySet());
 
-		Collections.sort(entries, new Comparator<Map.Entry<K,V>>()
-		{
-			@Override
-			public int compare(Map.Entry<K, V> o1, Map.Entry<K, V> o2)
-			{
-				return o1.getValue().compareTo(o2.getValue());
-			}
-		});
+		Collections.sort(entries, (o1, o2) -> o1.getValue().compareTo(o2.getValue()));
 
 		LinkedHashMap<K,V> sortedMap = new LinkedHashMap<K,V>();
 

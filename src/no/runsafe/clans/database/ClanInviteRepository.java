@@ -37,12 +37,12 @@ public class ClanInviteRepository extends Repository
 
 	public void clearPendingInvite(IPlayer player, String clanID)
 	{
-		database.execute("DELETE FROM `clan_invites` WHERE `player` = ? AND `clanID` = ?", player.getUniqueId().toString(), clanID);
+		database.execute("DELETE FROM `clan_invites` WHERE `player` = ? AND `clanID` = ?", player, clanID);
 	}
 
 	public void clearAllPendingInvites(IPlayer player)
 	{
-		database.execute("DELETE FROM `clan_invites` WHERE `player` = ?", player.getUniqueId().toString());
+		database.execute("DELETE FROM `clan_invites` WHERE `player` = ?", player);
 	}
 
 	public void clearAllPendingInvitesForClan(String clanID)
@@ -52,7 +52,7 @@ public class ClanInviteRepository extends Repository
 
 	public void addInvite(IPlayer player, String clanID)
 	{
-		database.execute("INSERT IGNORE INTO `clan_invites` (`player`, `clanID`) VALUES(?, ?)", player.getUniqueId().toString(), clanID);
+		database.execute("INSERT IGNORE INTO `clan_invites` (`player`, `clanID`) VALUES(?, ?)", player, clanID);
 	}
 
 	@Nonnull
