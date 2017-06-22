@@ -256,7 +256,7 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 		Clan clan = getClan(clanID); // Grab the clan.
 		// Make sure said clan exists.
 		if (clan != null)
-			channelManager.getChannelByName(clanID).SendSystem(formatClanMessage(clanID, message));
+			channelManager.getChannelByName(clanID).SendSystem(message);
 	}
 
 	public String formatClanMessage(String clanID, String message)
