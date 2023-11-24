@@ -1,9 +1,7 @@
 package no.runsafe.clans;
 
 import no.runsafe.clans.commands.*;
-import no.runsafe.clans.database.ClanInviteRepository;
-import no.runsafe.clans.database.ClanMemberRepository;
-import no.runsafe.clans.database.ClanRepository;
+import no.runsafe.clans.database.*;
 import no.runsafe.clans.handlers.CharterHandler;
 import no.runsafe.clans.handlers.ClanHandler;
 import no.runsafe.clans.handlers.RankingHandler;
@@ -33,6 +31,8 @@ public class RunsafeClans extends RunsafeConfigurablePlugin
 		addComponent(ClanRepository.class);
 		addComponent(ClanMemberRepository.class);
 		addComponent(ClanInviteRepository.class);
+		addComponent(ClanKillRepository.class);
+		addComponent(ClanDergonKillRepository.class);
 
 		// Handlers/Monitors
 		addComponent(CharterHandler.class);

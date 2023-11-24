@@ -1,0 +1,49 @@
+package no.runsafe.clans.database;
+
+import no.runsafe.framework.api.database.ISchemaUpdate;
+import no.runsafe.framework.api.database.Repository;
+import no.runsafe.framework.api.database.SchemaUpdate;
+import no.runsafe.framework.api.player.IPlayer;
+
+import javax.annotation.Nonnull;
+
+public class ClanKillRepository extends Repository
+{
+	@Nonnull
+	@Override
+	public String getTableName()
+	{
+		return "clan_kills";
+	}
+
+	@Nonnull
+	@Override
+	public ISchemaUpdate getSchemaUpdateQueries()
+	{
+		ISchemaUpdate update = new SchemaUpdate();
+		update.addQueries(
+			"CREATE TABLE `clan_kills` (" +
+				"`killer` VARCHAR(36) NOT NULL," +
+				"`killerClanID` VARCHAR(3) NULL," +
+				"`killed` VARCHAR(36) NOT NULL," +
+				"`killedClanID` VARCHAR(3) NULL," +
+				"`date` DATETIME NOT NULL" +
+			");"
+		);
+		return update;
+	}
+
+	public void recordKill(IPlayer killer, String killerClanID, IPlayer killed, String killedClanID)
+	{
+		database.execute(
+			"INSERT INTO " + getTableName() + " (`killer`, `killerClanID`, `killed`, `killedClanID`, `date`) VALUES(?, ?, ?, ?, NOW())",
+			killer, killerClanID, killed, killedClanID
+		);
+	}
+
+	public void deleteClan(String clanID)
+	{
+		database.execute("UPDATE " + getTableName() + " SET `killerClanID` = NULL WHERE `killerClanID` = ?", clanID);
+		database.execute("UPDATE " + getTableName() + " SET `killedClanID` = NULL WHERE `killedClanID` = ?", clanID);
+	}
+}

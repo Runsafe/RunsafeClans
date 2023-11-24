@@ -52,8 +52,7 @@ public class CombatMonitor implements IEntityDamageByEntityEvent, IPlayerDeathEv
 		}
 		else
 		{
-			clanHandler.addClanKill(killer); // Stat the kill
-			clanHandler.addClanDeath(deadPlayer); // Stat the death
+			clanHandler.addClanKill(killer, deadPlayer); // Stat the kill / death
 		}
 	}
 

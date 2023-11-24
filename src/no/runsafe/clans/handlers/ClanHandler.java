@@ -2,9 +2,7 @@ package no.runsafe.clans.handlers;
 
 import no.runsafe.clans.Clan;
 import no.runsafe.clans.chat.ClanChannel;
-import no.runsafe.clans.database.ClanInviteRepository;
-import no.runsafe.clans.database.ClanMemberRepository;
-import no.runsafe.clans.database.ClanRepository;
+import no.runsafe.clans.database.*;
 import no.runsafe.clans.events.ClanEvent;
 import no.runsafe.clans.events.ClanJoinEvent;
 import no.runsafe.clans.events.ClanKickEvent;
@@ -39,13 +37,18 @@ import java.util.regex.Pattern;
 
 public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, IPlayerJoinEvent, IPlayerQuitEvent, IPlayerCustomEvent
 {
-	public ClanHandler(IConsole console, IScheduler scheduler, ClanRepository clanRepository, ClanMemberRepository memberRepository, ClanInviteRepository inviteRepository, IChannelManager channelManager)
+	public ClanHandler(IConsole console, IScheduler scheduler, ClanRepository clanRepository,
+		ClanMemberRepository memberRepository, ClanInviteRepository inviteRepository,
+		ClanDergonKillRepository dergonKillRepository, ClanKillRepository killRepository, IChannelManager channelManager
+	)
 	{
 		this.console = console;
 		this.scheduler = scheduler;
 		this.clanRepository = clanRepository;
 		this.memberRepository = memberRepository;
 		this.inviteRepository = inviteRepository;
+		this.dergonKillRepository = dergonKillRepository;
+		this.killRepository = killRepository;
 		this.channelManager = channelManager;
 	}
 
@@ -295,36 +298,38 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 		}
 	}
 
-	public void addClanKill(IPlayer player)
+	public void addClanKill(IPlayer killer, IPlayer killed)
 	{
-		Clan clan = getPlayerClan(player);
-		if (clan != null)
+		Clan killerClan = getPlayerClan(killer);
+		if (killerClan != null)
 		{
-			clan.addClanKills(1);
-			clanRepository.updateStatistic(clan.getId(), "clanKills", clan.getClanKills());
+			killerClan.addClanKills(1);
+			clanRepository.updateStatistic(killerClan.getId(), "clanKills", killerClan.getClanKills());
 		}
-	}
 
-	public void addClanDeath(IPlayer player)
-	{
-		Clan clan = getPlayerClan(player);
-		if (clan != null)
+		Clan killedClan = getPlayerClan(killed);
+		if (killedClan != null)
 		{
-			clan.addClanDeaths(1);
-			clanRepository.updateStatistic(clan.getId(), "clanDeaths", clan.getClanDeaths());
+			killedClan.addClanDeaths(1);
+			clanRepository.updateStatistic(killedClan.getId(), "clanDeaths", killedClan.getClanDeaths());
 		}
+
+		if (killerClan != null && killedClan != null)
+			killRepository.recordKill(killer, killerClan.getId(), killed, killedClan.getId());
 	}
 
 	public void addDergonKill(IPlayer player)
 	{
 		Clan clan = getPlayerClan(player);
+		String clanID = null;
 		if (clan != null)
 		{
-			String clanID = clan.getId();
+			clanID = clan.getId();
 			clan.addDergonKills(1);
 			clanRepository.updateStatistic(clanID, "dergonKills", clan.getDergonKills());
 			sendMessageToClan(clanID, "The clan has slain a dergon!");
 		}
+		dergonKillRepository.recordDergonKill(player, clanID);
 	}
 
 	public String formatClanTag(String name)
@@ -478,8 +483,13 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 
 	private void PurgeClan(String clanID)
 	{
-		clanRepository.deleteClan(clanID); // Delete the clan from the database.
-		clans.remove(clanID); // Delete the clan from the cache.
+		// Delete the clan from the databases.
+		clanRepository.deleteClan(clanID);
+		dergonKillRepository.deleteClan(clanID);
+		killRepository.deleteClan(clanID);
+
+		// Delete the clan from the cache.
+		clans.remove(clanID);
 	}
 
 	private void PurgeMembers(Clan clan, String clanID)
@@ -511,6 +521,8 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 	private final ClanRepository clanRepository;
 	private final ClanMemberRepository memberRepository;
 	private final ClanInviteRepository inviteRepository;
+	private final ClanDergonKillRepository dergonKillRepository;
+	private final ClanKillRepository killRepository;
 	private final Pattern clanNamePattern = Pattern.compile("^[A-Z]{3}$");
 	private final PeriodType output_format = PeriodType.standard().withMillisRemoved().withSecondsRemoved();
 	private final IChannelManager channelManager;
