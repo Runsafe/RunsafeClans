@@ -80,8 +80,8 @@ public class PlayerMonitor implements IPlayerRightClick
 			return false;
 		}
 
-		// If we have less than 2 signs on the charter, we should sign it!
-		if (charterSigns.size() < 2)
+		// If we have less than minClanSize-1 signs on the charter, we should sign it!
+		if (charterSigns.size() < config.getMinClanSize() - 1)
 		{
 			charterHandler.addCharterSign(usingItem, player);
 			player.sendColouredMessage("&aYou have signed the charter!");

@@ -12,12 +12,17 @@ public class Config implements IConfigurationChanged
 	@Override
 	public void OnConfigurationChanged(IConfiguration configuration)
 	{
-		// Get maximum clan size.
+		minClanSize = configuration.getConfigValueAsInt("minClanSize");
 		clanSize = configuration.getConfigValueAsInt("clanSize");
 
 		// Get all worlds in the clan universe.
 		clanUniverse.clear();
 		Collections.addAll(clanUniverse, configuration.getConfigValueAsString("clanUniverse").split(","));
+	}
+
+	public int getMinClanSize()
+	{
+		return minClanSize;
 	}
 
 	public int getClanSize()
@@ -30,6 +35,7 @@ public class Config implements IConfigurationChanged
 		return clanUniverse;
 	}
 
+	private int minClanSize;
 	private int clanSize;
 	private List<String> clanUniverse = new ArrayList<>(0);
 }
