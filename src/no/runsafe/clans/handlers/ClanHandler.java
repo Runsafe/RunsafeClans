@@ -203,7 +203,7 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 
 	public Clan getClan(String clanID)
 	{
-		return clans.containsKey(clanID) ? clans.get(clanID) : null;
+		return clans.getOrDefault(clanID, null);
 	}
 
 	public boolean playerIsClanLeader(IPlayer player)

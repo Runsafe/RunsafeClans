@@ -28,7 +28,7 @@ public class CreateClan extends PlayerAsyncCommand
 	@Override
 	public String OnAsyncExecute(IPlayer executor, IArgumentList parameters)
 	{
-		String clanName = parameters.getValue("clanTag");
+		String clanName = parameters.getRequired("clanTag");
 
 		// Make sure the player is in the right universe.
 		if (!config.getClanUniverse().contains(executor.getUniverse().getName()))

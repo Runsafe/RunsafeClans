@@ -126,11 +126,7 @@ public class PlayerMonitor implements IPlayerRightClick
 		if (clickTimer.containsKey(player))
 			scheduler.cancelTask(clickTimer.get(player));
 
-		clickTimer.put(player, scheduler.startSyncTask(() ->
-		{
-			if (clickTimer.containsKey(player))
-				clickTimer.remove(player);
-		}, 2));
+		clickTimer.put(player, scheduler.startSyncTask(() -> clickTimer.remove(player), 2));
 	}
 
 	private final CharterHandler charterHandler;
