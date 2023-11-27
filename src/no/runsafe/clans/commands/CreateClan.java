@@ -49,16 +49,16 @@ public class CreateClan extends PlayerAsyncCommand
 		if (clanHandler.playerIsInClan(executor))
 			return Config.userAlreadyInClanMessage;
 
-		// Check if minimum clan size is too small for a charter to be needed.
-		if (config.getMinClanSize() < 2)
+		// Check if we need a charter to create this clan.
+		if (config.getMinClanSize() > 1)
 		{
-			clanHandler.createClan(clanName, executor); // Forge the clan!
-			clanHandler.addClanMember(clanName, executor); // Add the signing player to the clan.
-			return Config.clanFormMessage;
+			charterHandler.givePlayerCharter(executor, clanName); // Give them a charter.
+			return Config.charterCreatedMessage;
 		}
 
-		charterHandler.givePlayerCharter(executor, clanName); // Give them a charter.
-		return Config.charterCreatedMessage;
+		clanHandler.createClan(clanName, executor); // Forge the clan!
+		clanHandler.addClanMember(clanName, executor); // Add the signing player to the clan.
+		return Config.clanFormMessage;
 	}
 
 	private final ClanHandler clanHandler;
