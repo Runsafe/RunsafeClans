@@ -1,5 +1,6 @@
 package no.runsafe.clans.commands;
 
+import no.runsafe.clans.Config;
 import no.runsafe.clans.handlers.ClanHandler;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.command.argument.IArgumentList;
@@ -29,9 +30,9 @@ public class DeclineClan extends PlayerAsyncCommand
 		if (clanHandler.playerHasPendingInvite(clanName, executor))
 		{
 			clanHandler.removePendingInvite(executor, clanName);
-			return "&cInvitation to " + clanName + " declined.";
+			return String.format(Config.invitationDeclinedMessage, clanName);
 		}
-		return "&cYou have not been invited to that clan.";
+		return Config.userNotInvitedMessage;
 	}
 
 	private final ClanHandler clanHandler;

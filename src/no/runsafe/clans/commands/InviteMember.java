@@ -22,28 +22,28 @@ public class InviteMember extends PlayerAsyncCommand
 	public String OnAsyncExecute(IPlayer executor, IArgumentList parameters)
 	{
 		if (!clanHandler.playerIsInClan(executor))
-			return "&cYou are not in a clan.";
+			return Config.userNotInClanMessage;
 
 		if (!clanHandler.playerIsClanLeader(executor))
-			return "&cYou are not the clan leader, you cannot invite players.";
+			return Config.userNotClanLeaderMessage;
 
 		IPlayer targetPlayer = parameters.getValue("player") ;
 		if (targetPlayer == null)
-			return "&cInvalid player.";
+			return Config.invalidPlayerMessage;
 
 		if (clanHandler.playerIsInClan(targetPlayer))
-			return "&cThat player is already in a clan.";
+			return Config.playerAlreadyInClanMessage;
 
 		Clan clan = clanHandler.getPlayerClan(executor); // Grab the players clan.
 
 		if (clan.getMemberCount() >= config.getClanSize())
-			return "&cYour clan is full! Remove someone before inviting more.";
+			return Config.inviteFailClanFullMessage;
 
 		if (clanHandler.playerHasPendingInvite(clan.getId(), targetPlayer))
-			return "&cThat player has already been invited to this clan.";
+			return Config.playerAlreadyInvitedMessage;
 
 		clanHandler.invitePlayerToClan(clan.getId(), targetPlayer); // Invite the player.
-		return "&aInvite sent!";
+		return Config.inviteSentMessage;
 	}
 
 	private final ClanHandler clanHandler;

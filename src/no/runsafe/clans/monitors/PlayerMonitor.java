@@ -48,7 +48,7 @@ public class PlayerMonitor implements IPlayerRightClick
 
 		if (clanHandler.playerIsInClan(player))
 		{
-			player.sendColouredMessage("&cYou are already in a clan, you cannot sign this.");
+			player.sendColouredMessage(Config.charterUserAlreadyInClanMessage);
 			player.closeInventory();
 			return false;
 		}
@@ -58,7 +58,7 @@ public class PlayerMonitor implements IPlayerRightClick
 		// Check we have been given a valid clan name.
 		if (clanHandler.isInvalidClanName(clanName))
 		{
-			player.sendColouredMessage(String.format("&c'%s' is not a valid clan tag. A clan tag must be three characters using characters A-Z.", clanName));
+			player.sendColouredMessage(String.format(Config.invalidClanTagMessage, clanName));
 			player.closeInventory();
 			return false;
 		}
@@ -66,7 +66,7 @@ public class PlayerMonitor implements IPlayerRightClick
 		// If the clan already exists, just tell them it can't happen.
 		if (clanHandler.clanExists(clanName))
 		{
-			player.sendColouredMessage(String.format("&cA clan named '%s' already exists.", clanName));
+			player.sendColouredMessage(String.format(Config.clanAlreadyExistsMessage, clanName));
 			player.closeInventory();
 			return false;
 		}
@@ -75,7 +75,7 @@ public class PlayerMonitor implements IPlayerRightClick
 
 		if (charterSigns.contains(player))
 		{
-			player.sendColouredMessage("&cYou have already signed this charter.");
+			player.sendColouredMessage(Config.charterUserAlreadySignedMessage);
 			player.closeInventory();
 			return false;
 		}
@@ -84,7 +84,7 @@ public class PlayerMonitor implements IPlayerRightClick
 		if (charterSigns.size() < config.getMinClanSize() - 1)
 		{
 			charterHandler.addCharterSign(usingItem, player);
-			player.sendColouredMessage("&aYou have signed the charter!");
+			player.sendColouredMessage(Config.charterUserSignedMessage);
 		}
 		else
 		{
@@ -93,7 +93,7 @@ public class PlayerMonitor implements IPlayerRightClick
 			{
 				if (clanHandler.playerIsInClan(signedPlayer))
 				{
-					player.sendColouredMessage("&cOne or more of the signatures on this charter are invalid, get more!");
+					player.sendColouredMessage(Config.charterInvalidSignaturesMessage);
 					player.closeInventory();
 					return false;
 				}
@@ -101,7 +101,7 @@ public class PlayerMonitor implements IPlayerRightClick
 
 			if (clanHandler.playerIsInClan(player))
 			{
-				player.sendColouredMessage("&cYou are already in a clan!");
+				player.sendColouredMessage(Config.userAlreadyInClanMessage);
 				player.closeInventory();
 				return false;
 			}
@@ -114,7 +114,7 @@ public class PlayerMonitor implements IPlayerRightClick
 					clanHandler.addClanMember(clanName, signedPlayer);
 
 			clanHandler.addClanMember(clanName, player); // Add the signing player to the clan.
-			clanHandler.sendMessageToClan(clanName, "Your clan has been formed!");
+			clanHandler.sendMessageToClan(clanName, Config.clanFormMessage);
 			player.removeExactItem(usingItem); // Remove the charter.
 		}
 		player.closeInventory();
