@@ -1,6 +1,7 @@
 package no.runsafe.clans.commands;
 
 import no.runsafe.clans.Clan;
+import no.runsafe.clans.Config;
 import no.runsafe.clans.handlers.ClanHandler;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.command.argument.IArgumentList;
@@ -20,21 +21,21 @@ public class PassLeadership extends PlayerAsyncCommand
 	public String OnAsyncExecute(IPlayer executor, IArgumentList parameters)
 	{
 		if (!clanHandler.playerIsInClan(executor))
-			return "&cYou are not in a clan.";
+			return Config.userNotInClanMessage;
 
 		if (!clanHandler.playerIsClanLeader(executor))
-			return "&cYou are not the leader of your clan.";
+			return Config.userNotClanLeaderMessage;
 
 		IPlayer targetPlayer = parameters.getValue("player") ;
 		if (targetPlayer == null)
-			return "&cInvalid player";
+			return Config.invalidPlayerMessage;
 
 		Clan playerClan = clanHandler.getPlayerClan(executor); // The clan of the player.
 		if (!clanHandler.playerIsInClan(targetPlayer, playerClan.getId()))
-			return "&cThat player is not in your clan.";
+			return Config.playerNotInUserClanMessage;
 
 		clanHandler.changeClanLeader(playerClan.getId(), targetPlayer); // Change the leader.
-		return "&aYou have passed the leadership of your clan!";
+		return Config.userPassLeadershipMessage;
 	}
 
 	private final ClanHandler clanHandler;

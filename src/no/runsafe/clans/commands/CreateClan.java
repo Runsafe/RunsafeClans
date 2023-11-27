@@ -28,29 +28,37 @@ public class CreateClan extends PlayerAsyncCommand
 	@Override
 	public String OnAsyncExecute(IPlayer executor, IArgumentList parameters)
 	{
-		String clanName = parameters.getValue("clanTag");
+		String clanName = parameters.getRequired("clanTag");
 
 		// Make sure the player is in the right universe.
 		if (!config.getClanUniverse().contains(executor.getUniverse().getName()))
-			return "&cPlease go to survival or spawn to create a clan.";
+			return Config.wrongWorldMessage;
 
 		// Check for clan names that shouldn't be displayed.
 		if (clanName.contains("%"))
-			return "&cInvalid clan tag. A clan tag must be three characters using characters A-Z.";
+			return Config.censoredInvalidClanTagMessage;
 
 		// Check we have been given a valid clan name.
 		if (clanHandler.isInvalidClanName(clanName))
-			return String.format("&c'%s' is not a valid clan tag. A clan tag must be three characters using characters A-Z.", clanName);
+			return String.format(Config.invalidClanTagMessage, clanName);
 
 		// Make sure there is not a clan with that name already existing.
 		if (clanHandler.clanExists(clanName))
-			return String.format("&cA clan named '%s' already exists.", clanName);
+			return String.format(Config.clanAlreadyExistsMessage, clanName);
 
 		if (clanHandler.playerIsInClan(executor))
-			return "&cYou are already in a clan!";
+			return Config.userAlreadyInClanMessage;
+
+		// Check if minimum clan size is too small for a charter to be needed.
+		if (config.getMinClanSize() < 2)
+		{
+			clanHandler.createClan(clanName, executor); // Forge the clan!
+			clanHandler.addClanMember(clanName, executor); // Add the signing player to the clan.
+			return Config.clanFormMessage;
+		}
 
 		charterHandler.givePlayerCharter(executor, clanName); // Give them a charter.
-		return "&aCharter created! Get two other people to sign it to create your clan!";
+		return Config.charterCreatedMessage;
 	}
 
 	private final ClanHandler clanHandler;

@@ -1,5 +1,6 @@
 package no.runsafe.clans.commands;
 
+import no.runsafe.clans.Config;
 import no.runsafe.clans.handlers.ClanHandler;
 import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.command.argument.IArgumentList;
@@ -18,14 +19,14 @@ public class ClanFlare extends PlayerCommand
 	public String OnExecute(IPlayer executor, IArgumentList parameters)
 	{
 		if (!handler.playerIsInClan(executor))
-			return "&cYou are not in a clan.";
+			return Config.userNotInClanMessage;
 
 		ILocation location = executor.getLocation();
 		if (location == null)
-			return "&cYou are nowhere.";
+			return Config.invalidLocationMessage;
 
 		handler.clanChat(executor, String.format(
-				"Assistance required at X: %s, Y: %s, Z: %s!",
+				Config.assistanceRequiredMessage,
 				location.getBlockX(),
 				location.getBlockY(),
 				location.getBlockZ()

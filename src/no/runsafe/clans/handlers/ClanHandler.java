@@ -1,6 +1,7 @@
 package no.runsafe.clans.handlers;
 
 import no.runsafe.clans.Clan;
+import no.runsafe.clans.Config;
 import no.runsafe.clans.chat.ClanChannel;
 import no.runsafe.clans.database.*;
 import no.runsafe.clans.events.ClanEvent;
@@ -86,17 +87,20 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 		if (event instanceof ClanJoinEvent)
 		{
 			joinClanChannel(player, clan.getId());
-			sendMessageToClan(clan.getId(), player.getPrettyName() + " has joined the clan.");
+			sendMessageToClan(clan.getId(), String.format(Config.playerClanJoinMessage, player.getPrettyName()));
 		}
 		else if (event instanceof ClanLeaveEvent)
 		{
 			leaveClanChannel(player, clan.getId());
-			sendMessageToClan(clan.getId(), player.getPrettyName() + " has left the clan.");
+			sendMessageToClan(clan.getId(), String.format(Config.playerClanLeaveMessage, player.getPrettyName()));
 		}
 		else if (event instanceof ClanKickEvent)
 		{
 			leaveClanChannel(player, clan.getId());
-			sendMessageToClan(clan.getId(), player.getPrettyName() + " has been kicked from the clan by " + ((ClanKickEvent) event).getKicker().getPrettyName() + ".");
+			sendMessageToClan(clan.getId(), String.format(
+				Config.playerClanLeaveMessage,
+				player.getPrettyName(), ((ClanKickEvent) event).getKicker().getPrettyName())
+			);
 		}
 	}
 
@@ -126,7 +130,7 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 	{
 		clanID = clanID.toUpperCase(); // Make sure the clan ID is upper-case.
 		if (clanExists(clanID)) return; // Be sure we don't have a clan with this name already.
-		Clan newClan = new Clan(clanID, playerLeader, "Welcome to " + clanID); // Create a new clan object.
+		Clan newClan = new Clan(clanID, playerLeader, String.format(Config.welcomeMessage, clanID)); // Create a new clan object.
 		clans.put(clanID, newClan); // Push the clan into the clan handler.
 		clanRepository.persistClan(newClan); // Persist the clan in the database.
 	}
@@ -183,7 +187,7 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 	{
 		clans.get(clanID).setLeader(newLeader);
 		clanRepository.changeClanLeader(clanID, newLeader);
-		sendMessageToClan(clanID, newLeader.getPrettyName() + " has been given leadership of the clan.");
+		sendMessageToClan(clanID, String.format(Config.newPlayerGivenClanLeadershipMessage, newLeader.getPrettyName()));
 	}
 
 	public boolean playerIsInClan(IPlayer player)
@@ -203,7 +207,7 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 
 	public Clan getClan(String clanID)
 	{
-		return clans.containsKey(clanID) ? clans.get(clanID) : null;
+		return clans.getOrDefault(clanID, null);
 	}
 
 	public boolean playerIsClanLeader(IPlayer player)
@@ -269,7 +273,7 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 
 	public String formatMotd(String message)
 	{
-		return "Message of the Day: " + message;
+		return String.format(Config.motd, message);
 	}
 
 	public void setClanMotd(String clanID, String message)
@@ -282,7 +286,7 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 	public void disbandClan(Clan clan)
 	{
 		String clanID = clan.getId();
-		sendMessageToClan(clanID, "The clan is being disbanded by the leader.");
+		sendMessageToClan(clanID, Config.clanDisbandedMessage);
 		PurgePendingInvites(clanID);
 		PurgeMembers(clan, clanID);
 		PurgeClan(clanID);
@@ -327,7 +331,7 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 			clanID = clan.getId();
 			clan.addDergonKills(1);
 			clanRepository.updateStatistic(clanID, "dergonKills", clan.getDergonKills());
-			sendMessageToClan(clanID, "The clan has slain a dergon!");
+			sendMessageToClan(clanID, Config.dergonSlayMessage);
 		}
 		dergonKillRepository.recordDergonKill(player, clanID);
 	}
@@ -469,15 +473,15 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 	private void NotifyNewInvite(String clanID, IPlayer player)
 	{
 		if (player.isOnline()) // If the player is online, inform them about the invite!
-			player.sendColouredMessage("&aYou have been invited to join the '%1$s' clan. Use \"/clan join %1$s\" to join!", clanID);
+			player.sendColouredMessage(Config.userNotifyNewInviteMessage, clanID);
 	}
 
 	private void NotifyPendingInvites(IPlayer player, List<String> invites)
 	{
 		if (player.isOnline())
 		{
-			player.sendColouredMessage("&aYou have %d pending clan invite(s): %s", invites.size(), StringUtils.join(invites, ", "));
-			player.sendColouredMessage("&aUse \"/clan join <clanTag>\" to join one of them!");
+			player.sendColouredMessage(Config.userNotifyInviteLine1Message, invites.size(), StringUtils.join(invites, ", "));
+			player.sendColouredMessage(Config.userNotifyInviteLine2Message);
 		}
 	}
 

@@ -1,6 +1,7 @@
 package no.runsafe.clans.commands;
 
 import no.runsafe.clans.Clan;
+import no.runsafe.clans.Config;
 import no.runsafe.clans.handlers.ClanHandler;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.command.argument.IArgumentList;
@@ -21,14 +22,14 @@ public class SetMotd extends PlayerAsyncCommand
 	public String OnAsyncExecute(IPlayer executor, IArgumentList parameters)
 	{
 		if (!clanHandler.playerIsInClan(executor))
-			return "&cYou are not in a clan.";
+			return Config.userNotInClanMessage;
 
 		if (!clanHandler.playerIsClanLeader(executor))
-			return "&cYou are not the clan leader.";
+			return Config.userNotClanLeaderMessage;
 
 		Clan clan = clanHandler.getPlayerClan(executor);
 		if (clan == null)
-			return "&cSomething just broke.";
+			return Config.errorMessage;
 
 		clanHandler.setClanMotd(clan.getId(), ChatColour.Strip(parameters.getValue("motd")));
 		return null;

@@ -1,6 +1,7 @@
 package no.runsafe.clans.commands;
 
 import no.runsafe.clans.Clan;
+import no.runsafe.clans.Config;
 import no.runsafe.clans.handlers.ClanHandler;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.command.AsyncCommand;
@@ -22,14 +23,17 @@ public class LookupClan extends AsyncCommand
 	{
 		IPlayer targetPlayer = parameters.getValue("player");
 		if (targetPlayer == null)
-			return "&cInvalid player!";
+			return Config.invalidPlayerMessage;
 
 		if (!clanHandler.playerIsInClan(targetPlayer))
-			return "&cThat player is not in a clan.";
+			return Config.playerNotInClanMessage;
 
 		Clan clan = clanHandler.getPlayerClan(targetPlayer);
 
-		return targetPlayer.getPrettyName() + "&f has been a member of " + clan.getId() + " for " + clanHandler.getPlayerJoinString(targetPlayer) + ".";
+		return String.format(
+			Config.playerLookupMessage,
+			targetPlayer.getPrettyName(), clan.getId(), clanHandler.getPlayerJoinString(targetPlayer)
+		);
 	}
 
 	private final ClanHandler clanHandler;

@@ -1,6 +1,7 @@
 package no.runsafe.clans.commands;
 
 import no.runsafe.clans.Clan;
+import no.runsafe.clans.Config;
 import no.runsafe.clans.handlers.ClanHandler;
 import no.runsafe.clans.handlers.RankingHandler;
 import no.runsafe.framework.api.IScheduler;
@@ -36,7 +37,7 @@ public class ClanInfo extends AsyncCommand
 		String clanName = parameters.getValue(CLAN);
 
 		if (!clanHandler.clanExists(clanName))
-			return "&cNo clan named '" + clanName + "' exists.";
+			return String.format(Config.clanDoesntExistMessage, clanName);
 
 		StringBuilder info = new StringBuilder("Clan information:");
 		Clan clan = clanHandler.getClan(clanName); // Grab the clan information

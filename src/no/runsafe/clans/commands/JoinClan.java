@@ -33,12 +33,12 @@ public class JoinClan extends PlayerAsyncCommand
 		{
 			Clan clan = clanHandler.getClan(clanName);
 			if (clan.getMemberCount() >= config.getClanSize())
-				return "&cThis clan is full! It looks like they don't love you.";
+				return Config.joinFailClanFullMessage;
 
 			clanHandler.acceptClanInvite(clanName, executor);
-			return "&aYou have accepted the clan invite!";
+			return Config.userAcceptInviteMessage;
 		}
-		return "&cYou have not been invited to that clan.";
+		return Config.userNotInvitedMessage;
 	}
 
 	private final ClanHandler clanHandler;

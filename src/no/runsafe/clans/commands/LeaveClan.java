@@ -1,5 +1,6 @@
 package no.runsafe.clans.commands;
 
+import no.runsafe.clans.Config;
 import no.runsafe.clans.handlers.ClanHandler;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.command.argument.IArgumentList;
@@ -18,13 +19,13 @@ public class LeaveClan extends PlayerAsyncCommand
 	public String OnAsyncExecute(IPlayer executor, IArgumentList parameters)
 	{
 		if (!clanHandler.playerIsInClan(executor))
-			return "&cYou are not in a clan.";
+			return Config.userNotInClanMessage;
 
 		if (clanHandler.playerIsClanLeader(executor))
-			return "&cYou cannot leave your clan, disband it first!";
+			return Config.clanOwnerLeaveFailMessage;
 
 		clanHandler.removeClanMember(executor);
-		return "&aYou have left the clan.";
+		return Config.userLeaveClanMessage;
 	}
 
 	private final ClanHandler clanHandler;
