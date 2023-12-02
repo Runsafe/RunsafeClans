@@ -516,6 +516,21 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 				playerInvites.get(invite.getKey()).remove(clanID); // Remove the invite from deleted clan.
 	}
 
+	public int getPlayerDergonKills(IPlayer player)
+	{
+		return dergonKillRepository.getDergonKills(player);
+	}
+
+	public int getPlayerClanKills(IPlayer player)
+	{
+		return killRepository.getPlayerKills(player);
+	}
+
+	public int getPlayerClanDeaths(IPlayer player)
+	{
+		return killRepository.getPlayerDeaths(player);
+	}
+
 	private String clanTagFormat;
 	private final Map<String, Clan> clans = new ConcurrentHashMap<>(0);
 	private final Map<IPlayer, String> playerClanIndex = new ConcurrentHashMap<>(0);

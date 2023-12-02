@@ -46,4 +46,22 @@ public class ClanKillRepository extends Repository
 		database.execute("UPDATE " + getTableName() + " SET `killerClanID` = NULL WHERE `killerClanID` = ?", clanID);
 		database.execute("UPDATE " + getTableName() + " SET `killedClanID` = NULL WHERE `killedClanID` = ?", clanID);
 	}
+
+	public int getPlayerKills(IPlayer player)
+	{
+		Integer value = database.queryInteger("SELECT COUNT(*) FROM " + getTableName() + " WHERE killer = ?;", player);
+		if (value == null)
+			return 0;
+
+		return value;
+	}
+
+	public int getPlayerDeaths(IPlayer player)
+	{
+		Integer value = database.queryInteger("SELECT COUNT(*) FROM " + getTableName() + " WHERE killed = ?;", player);
+		if (value == null)
+			return 0;
+
+		return value;
+	}
 }

@@ -51,5 +51,6 @@ message:
   assistanceRequired: 'Assistance required at X: %s, Y: %s, Z: %s!'
   motd: 'Message of the Day: %s'
   welcome: 'Welcome to %s'
-  playerLookup: '%s&f has been a member of %s for %s.'
+  playerLookup: '%s&b has been a member of &r%s&b for &r%s&b.'
+  playerStats: '&bDergon Kills: &r%d&b, Clan Kills: &r%d&b, Clan Deaths: &r%d&b.'
   dergonSlay: 'The clan has slain a dergon!'
