@@ -41,19 +41,20 @@ public class CombatMonitor implements IEntityDamageByEntityEvent, IPlayerDeathEv
 			return;
 
 		Clan deadPlayerClan = clanHandler.getPlayerClan(deadPlayer); // Dead players clan.
-		if (clanHandler.playerIsInClan(killer, deadPlayerClan.getId()))
-		{
-			if (killer != null)
-			{
-				new BackstabberEvent(killer).Fire();
-				if (clanHandler.playerIsClanLeader(deadPlayer))
-					new MutinyEvent(killer).Fire();
-			}
-		}
-		else
+		if (!clanHandler.playerIsInClan(killer, deadPlayerClan.getId()))
 		{
 			clanHandler.addClanKill(killer, deadPlayer); // Stat the kill / death
+			return;
 		}
+
+		if (killer == null)
+			return;
+
+		new BackstabberEvent(killer).Fire();
+		if (!clanHandler.playerIsClanLeader(deadPlayer))
+			return;
+
+		new MutinyEvent(killer).Fire();
 	}
 
 	@Override

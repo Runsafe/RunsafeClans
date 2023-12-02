@@ -252,21 +252,25 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 	public void acceptClanInvite(String clanID, IPlayer player)
 	{
 		// Make sure the player has a pending invite we can accept.
-		if (playerHasPendingInvite(clanID, player))
-		{
-			addClanMember(clanID, player); // Add the member to the clan.
-			Clan playerClan = getPlayerClan(player);
-			if (playerClan != null)
-				sendMessageOfTheDay(player, playerClan);
-		}
+		if (!playerHasPendingInvite(clanID, player))
+			return;
+
+		addClanMember(clanID, player); // Add the member to the clan.
+		Clan playerClan = getPlayerClan(player);
+		if (playerClan == null)
+			return;
+
+		sendMessageOfTheDay(player, playerClan);
 	}
 
 	public void sendMessageToClan(String clanID, String message)
 	{
 		Clan clan = getClan(clanID); // Grab the clan.
 		// Make sure said clan exists.
-		if (clan != null)
-			channelManager.getChannelByName(clanID).SendSystem(message);
+		if (clan == null)
+			return;
+
+		channelManager.getChannelByName(clanID).SendSystem(message);
 	}
 
 	public String formatClanMessage(String clanID, String message)
@@ -298,11 +302,11 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 	public void clanChat(IPlayer player, String message)
 	{
 		Clan playerClan = getPlayerClan(player);
-		if (playerClan != null)
-		{
-			IChatChannel channel = channelManager.getChannelByName(playerClan.getId());
-			channel.Send(new InternalRealChatEvent(player, message));
-		}
+		if (playerClan == null)
+			return;
+
+		IChatChannel channel = channelManager.getChannelByName(playerClan.getId());
+		channel.Send(new InternalRealChatEvent(player, message));
 	}
 
 	public void addClanKill(IPlayer killer, IPlayer killed)
@@ -392,11 +396,11 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 		{
 			for (String clanName : inviteNode.getValue()) // Loop through all the invites and check they are valid.
 			{
-				if (!clanExists(clanName)) // Check the clan exists.
-				{
-					invalidClans.add(clanName);
-					console.logError("Invalid clan invite found: %s - Marking for purge!", clanName);
-				}
+				if (clanExists(clanName)) // Check the clan exists.
+					continue;
+
+				invalidClans.add(clanName);
+				console.logError("Invalid clan invite found: %s - Marking for purge!", clanName);
 			}
 		}
 
@@ -420,21 +424,20 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 		for (Map.Entry<String, List<IPlayer>> roster : rosters.entrySet())
 		{
 			String clanName = roster.getKey(); // Grab the name of the clan.
-			if (clans.containsKey(clanName))
-			{
-				// We have clan members, add them to the clan.
-				for (IPlayer clanMember : roster.getValue())
-				{
-					playerClanIndex.put(clanMember, clanName); // Map the player to the clan index.
-					clans.get(clanName).addMember(clanMember); // Add the member to the clan.
-					memberCount++; // Increase our counter.
-				}
-			}
-			else
+			if (!clans.containsKey(clanName))
 			{
 				// We have clan members for a non-existent clan, remove them.
 				memberRepository.removeAllClanMembers(clanName);
 				console.logError("Purging %s members from invalid clan: %s", roster.getValue().size(), clanName);
+				continue;
+			}
+
+			// We have clan members, add them to the clan.
+			for (IPlayer clanMember : roster.getValue())
+			{
+				playerClanIndex.put(clanMember, clanName); // Map the player to the clan index.
+				clans.get(clanName).addMember(clanMember); // Add the member to the clan.
+				memberCount++; // Increase our counter.
 			}
 		}
 
@@ -445,17 +448,17 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 	private void processClanMemberConnected(final IPlayer player)
 	{
 		final Clan playerClan = getPlayerClan(player);
-		if (playerClan != null)
+		if (playerClan == null)
+			return;
+
+		scheduler.startAsyncTask(() ->
 		{
-			scheduler.startAsyncTask(() ->
+			if (player.isOnline())
 			{
-				if (player.isOnline())
-				{
-					joinClanChannel(player, playerClan.getId());
-					sendMessageOfTheDay(player, playerClan);
-				}
-			}, 3);
-		}
+				joinClanChannel(player, playerClan.getId());
+				sendMessageOfTheDay(player, playerClan);
+			}
+		}, 3);
 	}
 
 	private void sendMessageOfTheDay(IPlayer player, Clan playerClan)
@@ -481,11 +484,11 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 
 	private void NotifyPendingInvites(IPlayer player, List<String> invites)
 	{
-		if (player.isOnline())
-		{
-			player.sendColouredMessage(Config.userNotifyInviteLine1Message, invites.size(), StringUtils.join(invites, ", "));
-			player.sendColouredMessage(Config.userNotifyInviteLine2Message);
-		}
+		if (!player.isOnline())
+			return;
+
+		player.sendColouredMessage(Config.userNotifyInviteLine1Message, invites.size(), StringUtils.join(invites, ", "));
+		player.sendColouredMessage(Config.userNotifyInviteLine2Message);
 	}
 
 	private void PurgeClan(String clanID)

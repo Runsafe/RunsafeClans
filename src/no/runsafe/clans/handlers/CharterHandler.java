@@ -61,16 +61,14 @@ public class CharterHandler
 	public List<IPlayer> getCharterSigns(RunsafeMeta item)
 	{
 		RunsafeBook charter = (RunsafeBook) item; // Convert item to a book.
-		if (charter.hasPages()) // Check we have some pages.
-		{
-			List<String> charterPages = charter.getPages();
-			List<IPlayer> charterSigns = new ArrayList<>(0);
-			for(String page : charterPages)
-				charterSigns.add(playerProvider.getPlayer(UUID.fromString(page)));
-			return charterSigns;
-		}
+		if (!charter.hasPages()) // Check we have some pages.
+			return Collections.emptyList(); // Return an empty thing.
 
-		return Collections.emptyList(); // Return an empty thing.
+		List<String> charterPages = charter.getPages();
+		List<IPlayer> charterSigns = new ArrayList<>(0);
+		for(String page : charterPages)
+			charterSigns.add(playerProvider.getPlayer(UUID.fromString(page)));
+		return charterSigns;
 	}
 
 	public void addCharterSign(RunsafeMeta item, IPlayer player)

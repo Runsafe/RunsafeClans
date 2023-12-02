@@ -29,16 +29,15 @@ public class JoinClan extends PlayerAsyncCommand
 	public String OnAsyncExecute(IPlayer executor, IArgumentList parameters)
 	{
 		String clanName = parameters.getValue(CLAN);
-		if (clanHandler.playerHasPendingInvite(clanName, executor))
-		{
-			Clan clan = clanHandler.getClan(clanName);
-			if (clan.getMemberCount() >= config.getClanSize())
-				return Config.joinFailClanFullMessage;
+		if (!clanHandler.playerHasPendingInvite(clanName, executor))
+			return Config.userNotInvitedMessage;
 
-			clanHandler.acceptClanInvite(clanName, executor);
-			return Config.userAcceptInviteMessage;
-		}
-		return Config.userNotInvitedMessage;
+		Clan clan = clanHandler.getClan(clanName);
+		if (clan.getMemberCount() >= config.getClanSize())
+			return Config.joinFailClanFullMessage;
+
+		clanHandler.acceptClanInvite(clanName, executor);
+		return Config.userAcceptInviteMessage;
 	}
 
 	private final ClanHandler clanHandler;

@@ -85,38 +85,39 @@ public class PlayerMonitor implements IPlayerRightClick
 		{
 			charterHandler.addCharterSign(usingItem, player);
 			player.sendColouredMessage(Config.charterUserSignedMessage);
+			player.closeInventory();
+			return false;
 		}
-		else
+
+		// Make sure all signs are valid.
+		for (IPlayer signedPlayer : charterSigns)
 		{
-			// Make sure all signs are valid.
-			for (IPlayer signedPlayer : charterSigns)
-			{
-				if (clanHandler.playerIsInClan(signedPlayer))
-				{
-					player.sendColouredMessage(Config.charterInvalidSignaturesMessage);
-					player.closeInventory();
-					return false;
-				}
-			}
+			if (!clanHandler.playerIsInClan(signedPlayer))
+				continue;
 
-			if (clanHandler.playerIsInClan(player))
-			{
-				player.sendColouredMessage(Config.userAlreadyInClanMessage);
-				player.closeInventory();
-				return false;
-			}
-
-			clanHandler.createClan(clanName, charterHandler.getLeader(usingItem)); // Forge the clan!
-
-			// Add all players on the charter to the clan if they are not already in a clan.
-			for (IPlayer signedPlayer : charterSigns)
-				if (!clanHandler.playerIsInClan(signedPlayer))
-					clanHandler.addClanMember(clanName, signedPlayer);
-
-			clanHandler.addClanMember(clanName, player); // Add the signing player to the clan.
-			clanHandler.sendMessageToClan(clanName, Config.clanFormMessage);
-			player.removeExactItem(usingItem); // Remove the charter.
+			player.sendColouredMessage(Config.charterInvalidSignaturesMessage);
+			player.closeInventory();
+			return false;
 		}
+
+		if (clanHandler.playerIsInClan(player))
+		{
+			player.sendColouredMessage(Config.userAlreadyInClanMessage);
+			player.closeInventory();
+			return false;
+		}
+
+		clanHandler.createClan(clanName, charterHandler.getLeader(usingItem)); // Forge the clan!
+
+		// Add all players on the charter to the clan if they are not already in a clan.
+		for (IPlayer signedPlayer : charterSigns)
+			if (!clanHandler.playerIsInClan(signedPlayer))
+				clanHandler.addClanMember(clanName, signedPlayer);
+
+		clanHandler.addClanMember(clanName, player); // Add the signing player to the clan.
+		clanHandler.sendMessageToClan(clanName, Config.clanFormMessage);
+		player.removeExactItem(usingItem); // Remove the charter.
+
 		player.closeInventory();
 		return false;
 	}

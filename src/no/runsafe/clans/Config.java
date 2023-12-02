@@ -141,5 +141,5 @@ public class Config implements IConfigurationChanged
 
 	private int minClanSize;
 	private int clanSize;
-	private List<String> clanUniverse = new ArrayList<>(0);
+	private final List<String> clanUniverse = new ArrayList<>(0);
 }

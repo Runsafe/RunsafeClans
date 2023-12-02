@@ -26,10 +26,10 @@ public class ClanFlare extends PlayerCommand
 			return Config.invalidLocationMessage;
 
 		handler.clanChat(executor, String.format(
-				Config.assistanceRequiredMessage,
-				location.getBlockX(),
-				location.getBlockY(),
-				location.getBlockZ()
+			Config.assistanceRequiredMessage,
+			location.getBlockX(),
+			location.getBlockY(),
+			location.getBlockZ()
 		));
 		return null;
 	}
