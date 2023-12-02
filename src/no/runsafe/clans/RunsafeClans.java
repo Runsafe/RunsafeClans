@@ -9,14 +9,19 @@ import no.runsafe.clans.monitors.CombatMonitor;
 import no.runsafe.clans.monitors.DergonKillMonitor;
 import no.runsafe.clans.monitors.PlayerMonitor;
 import no.runsafe.framework.RunsafeConfigurablePlugin;
+import no.runsafe.framework.api.IServer;
 import no.runsafe.framework.api.command.Command;
 import no.runsafe.framework.features.*;
 
 public class RunsafeClans extends RunsafeConfigurablePlugin
 {
+	public static IServer server;
+
 	@Override
 	protected void pluginSetup()
 	{
+		server = getComponent(IServer.class);
+
 		// Framework features
 		addComponent(Commands.class);
 		addComponent(Database.class);

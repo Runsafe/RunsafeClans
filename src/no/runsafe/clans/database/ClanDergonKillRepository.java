@@ -44,4 +44,13 @@ public class ClanDergonKillRepository extends Repository
 	{
 		database.execute("UPDATE " + getTableName() + " SET `clanID` = NULL WHERE `clanID` = ?;", clanID);
 	}
+
+	public int getDergonKills(IPlayer player)
+	{
+		Integer value = database.queryInteger("SELECT COUNT(*) FROM " + getTableName() + " WHERE killer = ?;",  player);
+		if (value == null)
+			return 0;
+
+		return value;
+	}
 }

@@ -2,6 +2,7 @@ package no.runsafe.clans.handlers;
 
 import no.runsafe.clans.Clan;
 import no.runsafe.clans.Config;
+import no.runsafe.clans.RunsafeClans;
 import no.runsafe.clans.chat.ClanChannel;
 import no.runsafe.clans.database.*;
 import no.runsafe.clans.events.ClanEvent;
@@ -331,7 +332,7 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 			clanID = clan.getId();
 			clan.addDergonKills(1);
 			clanRepository.updateStatistic(clanID, "dergonKills", clan.getDergonKills());
-			sendMessageToClan(clanID, Config.dergonSlayMessage);
+			RunsafeClans.server.broadcastMessage(String.format(Config.dergonSlayMessage, clanID));
 		}
 		dergonKillRepository.recordDergonKill(player, clanID);
 	}
@@ -514,6 +515,21 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 		for (Map.Entry<IPlayer, List<String>> invite : playerInvites.entrySet())
 			if (invite.getValue().contains(clanID))
 				playerInvites.get(invite.getKey()).remove(clanID); // Remove the invite from deleted clan.
+	}
+
+	public int getPlayerDergonKills(IPlayer player)
+	{
+		return dergonKillRepository.getDergonKills(player);
+	}
+
+	public int getPlayerClanKills(IPlayer player)
+	{
+		return killRepository.getPlayerKills(player);
+	}
+
+	public int getPlayerClanDeaths(IPlayer player)
+	{
+		return killRepository.getPlayerDeaths(player);
 	}
 
 	private String clanTagFormat;

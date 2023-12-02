@@ -61,6 +61,7 @@ public class Config implements IConfigurationChanged
 		motd = configuration.getConfigValueAsString("message.motd");
 		welcomeMessage = configuration.getConfigValueAsString("message.welcome");
 		playerLookupMessage = configuration.getConfigValueAsString("message.playerLookup");
+		playerStatsMessage = configuration.getConfigValueAsString("message.playerStats");
 		dergonSlayMessage = configuration.getConfigValueAsString("message.dergonSlay");
 
 		minClanSize = configuration.getConfigValueAsInt("minClanSize");
@@ -135,6 +136,7 @@ public class Config implements IConfigurationChanged
 	public static String motd;
 	public static String welcomeMessage;
 	public static String playerLookupMessage;
+	public static String playerStatsMessage;
 	public static String dergonSlayMessage;
 
 	private int minClanSize;
