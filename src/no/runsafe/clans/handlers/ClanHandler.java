@@ -99,7 +99,7 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 		{
 			leaveClanChannel(player, clan.getId());
 			sendMessageToClan(clan.getId(), String.format(
-				Config.playerClanLeaveMessage,
+				Config.playerClanKickMessage,
 				player.getPrettyName(), ((ClanKickEvent) event).getKicker().getPrettyName())
 			);
 		}
@@ -161,19 +161,22 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 	{
 		Clan playerClan = getPlayerClan(player);
 
-		if (playerClan != null)
-		{
-			removeClanMember(playerClan, player);
-			new ClanKickEvent(player, playerClan, kicker).Fire();
-		}
+		if (playerClan == null)
+			return;
+
+		removeClanMember(playerClan, player);
+		new ClanKickEvent(player, playerClan, kicker).Fire();
 	}
 
 	public void removeClanMember(IPlayer player)
 	{
 		Clan playerClan = getPlayerClan(player);
 
-		if (playerClan != null)
-			removeClanMember(playerClan, player);
+		if (playerClan == null)
+			return;
+
+		removeClanMember(playerClan, player);
+		new ClanLeaveEvent(player, playerClan).Fire();
 	}
 
 	private void removeClanMember(Clan clan, IPlayer player)
@@ -181,7 +184,6 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 		clans.get(clan.getId()).removeMember(player); // Remove from cache.
 		playerClanIndex.remove(player); // Remove from index.
 		memberRepository.removeClanMember(player);
-		new ClanLeaveEvent(player, clan).Fire(); // Fire a leave event.
 	}
 
 	public void changeClanLeader(String clanID, IPlayer newLeader)
