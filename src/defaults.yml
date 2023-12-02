@@ -53,4 +53,4 @@ message:
   welcome: 'Welcome to %s'
   playerLookup: '%s&b has been a member of &r%s&b for &r%s&b.'
   playerStats: '&bDergon Kills: &r%d&b, Clan Kills: &r%d&b, Clan Deaths: &r%d&b.'
-  dergonSlay: 'The clan has slain a dergon!'
+  dergonSlay: '&b[%s] has slain a dergon!'

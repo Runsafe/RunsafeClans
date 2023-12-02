@@ -2,6 +2,7 @@ package no.runsafe.clans.handlers;
 
 import no.runsafe.clans.Clan;
 import no.runsafe.clans.Config;
+import no.runsafe.clans.RunsafeClans;
 import no.runsafe.clans.chat.ClanChannel;
 import no.runsafe.clans.database.*;
 import no.runsafe.clans.events.ClanEvent;
@@ -331,7 +332,7 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 			clanID = clan.getId();
 			clan.addDergonKills(1);
 			clanRepository.updateStatistic(clanID, "dergonKills", clan.getDergonKills());
-			sendMessageToClan(clanID, Config.dergonSlayMessage);
+			RunsafeClans.server.broadcastMessage(String.format(Config.dergonSlayMessage, clanID));
 		}
 		dergonKillRepository.recordDergonKill(player, clanID);
 	}
