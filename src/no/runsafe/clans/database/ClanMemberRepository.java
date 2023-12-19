@@ -3,9 +3,9 @@ package no.runsafe.clans.database;
 import no.runsafe.framework.api.database.*;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.api.server.IPlayerProvider;
-import org.joda.time.DateTime;
 
 import javax.annotation.Nonnull;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -49,9 +49,9 @@ public class ClanMemberRepository extends Repository
 		database.execute("DELETE FROM `clan_members` WHERE `clanID` = ?", clanID);
 	}
 
-	public DateTime getClanMemberJoinDate(IPlayer player)
+	public Instant getClanMemberJoinDate(IPlayer player)
 	{
-		return database.queryDateTime("SELECT `joined` FROM `clan_members` WHERE `member` = ?", player);
+		return database.queryInstant("SELECT `joined` FROM `clan_members` WHERE `member` = ?", player);
 	}
 
 	@Override

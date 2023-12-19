@@ -25,11 +25,10 @@ import no.runsafe.nchat.channel.IChannelManager;
 import no.runsafe.nchat.channel.IChatChannel;
 import no.runsafe.nchat.chat.InternalRealChatEvent;
 import org.apache.commons.lang.StringUtils;
-import org.joda.time.DateTime;
-import org.joda.time.Period;
-import org.joda.time.PeriodType;
-import org.joda.time.format.PeriodFormat;
+import org.apache.commons.lang.time.DurationFormatUtils;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -371,13 +370,14 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 			clanChannel.Leave(player);
 	}
 
-	private String formatTime(DateTime time)
+	private String formatTime(Instant time)
 	{
 		if (time == null)
 			return "null";
 
-		Period period = new Period(time, DateTime.now(), output_format);
-		return PeriodFormat.getDefault().print(period);
+		return DurationFormatUtils.formatDurationWords(
+			Duration.between(time, Instant.now()).toMillis(), true, true
+		);
 	}
 
 	private void processClanMemberDisconnected(RunsafePlayerQuitEvent event)
@@ -549,6 +549,5 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 	private final ClanDergonKillRepository dergonKillRepository;
 	private final ClanKillRepository killRepository;
 	private final Pattern clanNamePattern = Pattern.compile("^[A-Z]{3}$");
-	private final PeriodType output_format = PeriodType.standard().withMillisRemoved().withSecondsRemoved();
 	private final IChannelManager channelManager;
 }
