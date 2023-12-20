@@ -28,10 +28,10 @@ public class DeclineClan extends PlayerAsyncCommand
 	{
 		String clanName = parameters.getValue(CLAN);
 		if (!clanHandler.playerHasPendingInvite(clanName, executor))
-			return Config.userNotInvitedMessage;
+			return Config.Message.Invite.userNotInvited;
 
 		clanHandler.removePendingInvite(executor, clanName);
-		return String.format(Config.invitationDeclinedMessage, clanName);
+		return String.format(Config.Message.Invite.declined, clanName);
 	}
 
 	private final ClanHandler clanHandler;

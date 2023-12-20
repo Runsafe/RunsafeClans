@@ -22,14 +22,14 @@ public class SetMotd extends PlayerAsyncCommand
 	public String OnAsyncExecute(IPlayer executor, IArgumentList parameters)
 	{
 		if (!clanHandler.playerIsInClan(executor))
-			return Config.userNotInClanMessage;
+			return Config.Message.userNotInClan;
 
 		if (!clanHandler.playerIsClanLeader(executor))
-			return Config.userNotClanLeaderMessage;
+			return Config.Message.userNotClanLeader;
 
 		Clan clan = clanHandler.getPlayerClan(executor);
 		if (clan == null)
-			return Config.errorMessage;
+			return Config.Message.error;
 
 		String motd = ChatColour.Strip(parameters.getValue("motd"));
 		if (motd == null || motd.contains("%"))

@@ -87,18 +87,18 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 		if (event instanceof ClanJoinEvent)
 		{
 			joinClanChannel(player, clan.getId());
-			sendMessageToClan(clan.getId(), String.format(Config.playerClanJoinMessage, player.getPrettyName()));
+			sendMessageToClan(clan.getId(), String.format(Config.Message.playerClanJoin, player.getPrettyName()));
 		}
 		else if (event instanceof ClanLeaveEvent)
 		{
 			leaveClanChannel(player, clan.getId());
-			sendMessageToClan(clan.getId(), String.format(Config.playerClanLeaveMessage, player.getPrettyName()));
+			sendMessageToClan(clan.getId(), String.format(Config.Message.playerClanLeave, player.getPrettyName()));
 		}
 		else if (event instanceof ClanKickEvent)
 		{
 			leaveClanChannel(player, clan.getId());
 			sendMessageToClan(clan.getId(), String.format(
-				Config.playerClanKickMessage,
+				Config.Message.playerClanKick,
 				player.getPrettyName(), ((ClanKickEvent) event).getKicker().getPrettyName())
 			);
 		}
@@ -130,7 +130,7 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 	{
 		clanID = clanID.toUpperCase(); // Make sure the clan ID is upper-case.
 		if (clanExists(clanID)) return; // Be sure we don't have a clan with this name already.
-		Clan newClan = new Clan(clanID, playerLeader, String.format(Config.welcomeMessage, clanID)); // Create a new clan object.
+		Clan newClan = new Clan(clanID, playerLeader, String.format(Config.Message.Info.welcome, clanID)); // Create a new clan object.
 		clans.put(clanID, newClan); // Push the clan into the clan handler.
 		clanRepository.persistClan(newClan); // Persist the clan in the database.
 	}
@@ -189,7 +189,7 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 	{
 		clans.get(clanID).setLeader(newLeader);
 		clanRepository.changeClanLeader(clanID, newLeader);
-		sendMessageToClan(clanID, String.format(Config.newPlayerGivenClanLeadershipMessage, newLeader.getPrettyName()));
+		sendMessageToClan(clanID, String.format(Config.Message.newPlayerGivenClanLeadership, newLeader.getPrettyName()));
 	}
 
 	public boolean playerIsInClan(IPlayer player)
@@ -279,7 +279,7 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 
 	public String formatMotd(String message)
 	{
-		return String.format(Config.motd, message);
+		return String.format(Config.Message.Info.motd, message);
 	}
 
 	public void setClanMotd(String clanID, String message)
@@ -292,7 +292,7 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 	public void disbandClan(Clan clan)
 	{
 		String clanID = clan.getId();
-		sendMessageToClan(clanID, Config.clanDisbandedMessage);
+		sendMessageToClan(clanID, Config.Message.clanDisbanded);
 		PurgePendingInvites(clanID);
 		PurgeMembers(clan, clanID);
 		PurgeClan(clanID);
@@ -337,7 +337,7 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 			clanID = clan.getId();
 			clan.addDergonKills(1);
 			clanRepository.updateStatistic(clanID, "dergonKills", clan.getDergonKills());
-			RunsafeClans.server.broadcastMessage(String.format(Config.dergonSlayMessage, clanID));
+			RunsafeClans.server.broadcastMessage(String.format(Config.Message.Info.dergonSlay, clanID));
 		}
 		dergonKillRepository.recordDergonKill(player, clanID);
 	}
@@ -479,7 +479,7 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 	private void NotifyNewInvite(String clanID, IPlayer player)
 	{
 		if (player.isOnline()) // If the player is online, inform them about the invite!
-			player.sendColouredMessage(Config.userNotifyNewInviteMessage, clanID);
+			player.sendColouredMessage(Config.Message.Invite.userNotifyNew, clanID);
 	}
 
 	private void NotifyPendingInvites(IPlayer player, List<String> invites)
@@ -487,8 +487,8 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 		if (!player.isOnline())
 			return;
 
-		player.sendColouredMessage(Config.userNotifyInviteLine1Message, invites.size(), StringUtils.join(invites, ", "));
-		player.sendColouredMessage(Config.userNotifyInviteLine2Message);
+		player.sendColouredMessage(Config.Message.Invite.userNotifyLine1, invites.size(), StringUtils.join(invites, ", "));
+		player.sendColouredMessage(Config.Message.Invite.userNotifyLine2);
 	}
 
 	private void PurgeClan(String clanID)

@@ -32,33 +32,33 @@ public class CreateClan extends PlayerAsyncCommand
 
 		// Make sure the player is in the right universe.
 		if (!config.getClanUniverse().contains(executor.getUniverse().getName()))
-			return Config.wrongWorldMessage;
+			return Config.Message.wrongWorld;
 
 		// Check for clan names that shouldn't be displayed.
 		if (clanName.contains("%"))
-			return Config.censoredInvalidClanTagMessage;
+			return Config.Message.censoredInvalidClanTag;
 
 		// Check we have been given a valid clan name.
 		if (clanHandler.isInvalidClanName(clanName))
-			return String.format(Config.invalidClanTagMessage, clanName);
+			return String.format(Config.Message.invalidClanTag, clanName);
 
 		// Make sure there is not a clan with that name already existing.
 		if (clanHandler.clanExists(clanName))
-			return String.format(Config.clanAlreadyExistsMessage, clanName);
+			return String.format(Config.Message.clanAlreadyExists, clanName);
 
 		if (clanHandler.playerIsInClan(executor))
-			return Config.userAlreadyInClanMessage;
+			return Config.Message.userAlreadyInClan;
 
 		// Check if we need a charter to create this clan.
 		if (config.getMinClanSize() > 1)
 		{
 			charterHandler.givePlayerCharter(executor, clanName); // Give them a charter.
-			return Config.charterCreatedMessage;
+			return Config.Message.Charter.created;
 		}
 
 		clanHandler.createClan(clanName, executor); // Forge the clan!
 		clanHandler.addClanMember(clanName, executor); // Add the signing player to the clan.
-		return Config.clanFormMessage;
+		return Config.Message.Charter.clanForm;
 	}
 
 	private final ClanHandler clanHandler;
