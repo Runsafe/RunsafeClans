@@ -6,6 +6,7 @@ clanUniverse: survival
 chatTag: '[%s] '
 minClanSize: 2
 clanSize: 5
+clanStatTimeRange: '90D'
 message:
   invalidPlayer: '&cInvalid player!'
   error: '&cSomething went wrong.'

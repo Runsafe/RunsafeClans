@@ -3,6 +3,7 @@ package no.runsafe.clans;
 import no.runsafe.framework.api.IConfiguration;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -66,6 +67,7 @@ public class Config implements IConfigurationChanged
 
 		minClanSize = configuration.getConfigValueAsInt("minClanSize");
 		clanSize = configuration.getConfigValueAsInt("clanSize");
+		clanStatTimeRange = Duration.parse("P" + configuration.getConfigValueAsString("clanStatTimeRange"));
 
 		// Get all worlds in the clan universe.
 		clanUniverse.clear();
@@ -85,6 +87,11 @@ public class Config implements IConfigurationChanged
 	public List<String> getClanUniverse()
 	{
 		return clanUniverse;
+	}
+
+	public Duration getClanStatTimeRange()
+	{
+		return clanStatTimeRange;
 	}
 
 	public static final class Message
@@ -153,5 +160,6 @@ public class Config implements IConfigurationChanged
 
 	private int minClanSize;
 	private int clanSize;
+	private Duration clanStatTimeRange;
 	private final List<String> clanUniverse = new ArrayList<>(0);
 }
