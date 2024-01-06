@@ -19,17 +19,17 @@ public class ClanFlare extends PlayerCommand
 	public String OnExecute(IPlayer executor, IArgumentList parameters)
 	{
 		if (!handler.playerIsInClan(executor))
-			return Config.userNotInClanMessage;
+			return Config.Message.userNotInClan;
 
 		ILocation location = executor.getLocation();
 		if (location == null)
-			return Config.invalidLocationMessage;
+			return Config.Message.invalidLocation;
 
 		handler.clanChat(executor, String.format(
-				Config.assistanceRequiredMessage,
-				location.getBlockX(),
-				location.getBlockY(),
-				location.getBlockZ()
+			Config.Message.Info.assistanceRequired,
+			location.getBlockX(),
+			location.getBlockY(),
+			location.getBlockZ()
 		));
 		return null;
 	}

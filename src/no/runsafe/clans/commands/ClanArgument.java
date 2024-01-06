@@ -9,19 +9,12 @@ import no.runsafe.framework.api.command.argument.RequiredArgument;
 import no.runsafe.framework.api.player.IPlayer;
 
 import javax.annotation.Nullable;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 public class ClanArgument extends RequiredArgument implements ITabComplete, IValueExpander
 {
-	public ClanArgument(ClanHandler clanHandler)
-	{
-		super("clan");
-		this.clans = clanHandler.getClans().keySet();
-	}
-
 	public ClanArgument(String name, ClanHandler clanHandler)
 	{
 		super(name);
@@ -56,5 +49,5 @@ public class ClanArgument extends RequiredArgument implements ITabComplete, IVal
 		return "";
 	}
 
-	private  Set<String> clans = new HashSet<>();
+	private final Set<String> clans;
 }

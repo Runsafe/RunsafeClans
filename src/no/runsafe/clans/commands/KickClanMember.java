@@ -21,28 +21,28 @@ public class KickClanMember extends PlayerAsyncCommand
 	public String OnAsyncExecute(IPlayer executor, IArgumentList parameters)
 	{
 		if (!clanHandler.playerIsInClan(executor))
-			return Config.userNotInClanMessage;
+			return Config.Message.userNotInClan;
 
 		if (!clanHandler.playerIsClanLeader(executor))
-			return Config.userNotClanLeaderMessage;
+			return Config.Message.userNotClanLeader;
 
 		IPlayer targetPlayer = parameters.getValue("player");
 
 		if (targetPlayer == null)
-			return Config.invalidPlayerMessage;
+			return Config.Message.invalidPlayer;
 
 		if (targetPlayer.equals(executor))
-			return Config.userClanKickSelfFailMessage;
+			return Config.Message.userClanKickSelfFail;
 
 		Clan playerClan = clanHandler.getPlayerClan(executor); // Grab the players clan.
 
 		if (!clanHandler.playerIsInClan(targetPlayer, playerClan.getId()))
-			return Config.playerNotInUserClanMessage;
+			return Config.Message.playerNotInUserClan;
 
 		clanHandler.kickClanMember(targetPlayer, executor); // Kick the player.
 
 		if (targetPlayer.isOnline())
-			targetPlayer.sendColouredMessage(Config.userClanKickMessage);
+			targetPlayer.sendColouredMessage(Config.Message.userClanKick);
 
 		return null;
 	}

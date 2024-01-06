@@ -19,13 +19,13 @@ public class DisbandClan extends PlayerAsyncCommand
 	public String OnAsyncExecute(IPlayer player, IArgumentList parameters)
 	{
 		if (!clanHandler.playerIsInClan(player))
-			return Config.userNotInClanMessage;
+			return Config.Message.userNotInClan;
 
 		if (!clanHandler.playerIsClanLeader(player))
-			return Config.userNotClanLeaderMessage;
+			return Config.Message.userNotClanLeader;
 
 		clanHandler.disbandClan(clanHandler.getPlayerClan(player));
-		return Config.userClanDisbandedMessage;
+		return Config.Message.userClanDisbanded;
 	}
 
 	private final ClanHandler clanHandler;

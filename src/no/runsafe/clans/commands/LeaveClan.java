@@ -19,13 +19,13 @@ public class LeaveClan extends PlayerAsyncCommand
 	public String OnAsyncExecute(IPlayer executor, IArgumentList parameters)
 	{
 		if (!clanHandler.playerIsInClan(executor))
-			return Config.userNotInClanMessage;
+			return Config.Message.userNotInClan;
 
 		if (clanHandler.playerIsClanLeader(executor))
-			return Config.clanOwnerLeaveFailMessage;
+			return Config.Message.clanOwnerLeaveFail;
 
 		clanHandler.removeClanMember(executor);
-		return Config.userLeaveClanMessage;
+		return Config.Message.userLeaveClan;
 	}
 
 	private final ClanHandler clanHandler;

@@ -23,15 +23,15 @@ public class LookupClan extends AsyncCommand
 	{
 		IPlayer targetPlayer = parameters.getValue("player");
 		if (targetPlayer == null)
-			return Config.invalidPlayerMessage;
+			return Config.Message.invalidPlayer;
 
 		String returnMessage;
 		if (!clanHandler.playerIsInClan(targetPlayer))
-			returnMessage = Config.playerNotInClanMessage;
+			returnMessage = Config.Message.playerNotInClan;
 		else
 		{
 			Clan clan = clanHandler.getPlayerClan(targetPlayer);
-			returnMessage = String.format(Config.playerLookupMessage, targetPlayer.getPrettyName(),
+			returnMessage = String.format(Config.Message.Info.playerLookup, targetPlayer.getPrettyName(),
 				clan.getId(), clanHandler.getPlayerJoinString(targetPlayer)
 			);
 		}
@@ -40,7 +40,7 @@ public class LookupClan extends AsyncCommand
 		int clanKills = clanHandler.getPlayerClanKills(targetPlayer);
 		int clanDeaths = clanHandler.getPlayerClanDeaths(targetPlayer);
 		if (dergonKills != 0 || clanKills != 0 || clanDeaths != 0)
-			returnMessage += ("\n" + String.format(Config.playerStatsMessage, dergonKills, clanKills, clanDeaths));
+			returnMessage += ("\n" + String.format(Config.Message.Info.playerStats, dergonKills, clanKills, clanDeaths));
 
 		return returnMessage;
 	}

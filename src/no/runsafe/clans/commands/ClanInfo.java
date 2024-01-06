@@ -37,7 +37,7 @@ public class ClanInfo extends AsyncCommand
 		String clanName = parameters.getValue(CLAN);
 
 		if (!clanHandler.clanExists(clanName))
-			return String.format(Config.clanDoesntExistMessage, clanName);
+			return String.format(Config.Message.clanDoesntExist, clanName);
 
 		StringBuilder info = new StringBuilder("Clan information:");
 		Clan clan = clanHandler.getClan(clanName); // Grab the clan information

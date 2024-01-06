@@ -27,12 +27,11 @@ public class DeclineClan extends PlayerAsyncCommand
 	public String OnAsyncExecute(IPlayer executor, IArgumentList parameters)
 	{
 		String clanName = parameters.getValue(CLAN);
-		if (clanHandler.playerHasPendingInvite(clanName, executor))
-		{
-			clanHandler.removePendingInvite(executor, clanName);
-			return String.format(Config.invitationDeclinedMessage, clanName);
-		}
-		return Config.userNotInvitedMessage;
+		if (!clanHandler.playerHasPendingInvite(clanName, executor))
+			return Config.Message.Invite.userNotInvited;
+
+		clanHandler.removePendingInvite(executor, clanName);
+		return String.format(Config.Message.Invite.declined, clanName);
 	}
 
 	private final ClanHandler clanHandler;

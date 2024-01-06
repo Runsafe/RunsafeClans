@@ -42,9 +42,9 @@ public class RankingHandler implements IConfigurationChanged
 	{
 		List<Map.Entry<K,V>> entries = new LinkedList<>(map.entrySet());
 
-		Collections.sort(entries, (o1, o2) -> o1.getValue().compareTo(o2.getValue()));
+		entries.sort(Map.Entry.comparingByValue());
 
-		LinkedHashMap<K,V> sortedMap = new LinkedHashMap<K,V>();
+		LinkedHashMap<K,V> sortedMap = new LinkedHashMap<>();
 
 		for(Map.Entry<K,V> entry: entries)
 			sortedMap.put(entry.getKey(), entry.getValue());
