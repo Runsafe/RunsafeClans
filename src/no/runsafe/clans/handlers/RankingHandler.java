@@ -13,8 +13,12 @@ public class RankingHandler implements IConfigurationChanged
 		this.clanHandler = clanHandler;
 	}
 
-	public List<String> getRankingRoster()
+	public List<String> getRankingRoster(boolean recentStatistics)
 	{
+		if (recentStatistics)
+		{
+			return null; //TODO: not supported yet
+		}
 		Map<String, Clan> clanMap = clanHandler.getClans();
 		Map<String, Integer> roster = new HashMap<>(clanMap.size());
 

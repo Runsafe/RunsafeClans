@@ -55,7 +55,7 @@ public class ClanInfo extends AsyncCommand
 		int ranking = -1;
 		int currentRanking = 1;
 
-		List<String> roster = rankHandler.getRankingRoster();
+		List<String> roster = rankHandler.getRankingRoster(true);
 		for (String rosterClan : roster)
 		{
 			if (rosterClan.equals(clanName))

@@ -9,11 +9,11 @@ import no.runsafe.framework.api.command.argument.IArgumentList;
 
 import java.util.List;
 
-public class ClanRankings extends AsyncCommand
+public class ClanAllTimeRankings extends AsyncCommand
 {
-	public ClanRankings(IScheduler scheduler, RankingHandler rankingHandler, Config config)
+	public ClanAllTimeRankings(IScheduler scheduler, RankingHandler rankingHandler, Config config)
 	{
-		super("rankings", "View the clan rankings leaderboard", "runsafe.clans.rankings", scheduler);
+		super("alltimerankings", "View the clan rankings leaderboard", "runsafe.clans.rankings", scheduler);
 		this.rankingHandler = rankingHandler;
 		this.config = config;
 	}
@@ -21,8 +21,8 @@ public class ClanRankings extends AsyncCommand
 	@Override
 	public String OnAsyncExecute(ICommandExecutor executor, IArgumentList parameters)
 	{
-		StringBuilder data = new StringBuilder(Config.Message.Info.clanRankingsRecentLine1);
-		List<String> roster = rankingHandler.getRankingRoster(true);
+		StringBuilder data = new StringBuilder(Config.Message.Info.clanRankingsAllTimeLine1);
+		List<String> roster = rankingHandler.getRankingRoster(false);
 
 		int current = 1;
 		int listLength = config.getClanRankingListLength() + 1;
