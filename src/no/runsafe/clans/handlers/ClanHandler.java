@@ -3,6 +3,7 @@ package no.runsafe.clans.handlers;
 import no.runsafe.clans.Clan;
 import no.runsafe.clans.Config;
 import no.runsafe.clans.RunsafeClans;
+import no.runsafe.clans.TimeFormatter;
 import no.runsafe.clans.chat.ClanChannel;
 import no.runsafe.clans.database.*;
 import no.runsafe.clans.events.ClanEvent;
@@ -73,7 +74,7 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 
 	public String getPlayerJoinString(IPlayer player)
 	{
-		return formatTime(memberRepository.getClanMemberJoinDate(player));
+		return TimeFormatter.formatInstant(memberRepository.getClanMemberJoinDate(player));
 	}
 
 	@Override
@@ -368,16 +369,6 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 		IChatChannel clanChannel = channelManager.getChannelByName(id);
 		if (clanChannel != null)
 			clanChannel.Leave(player);
-	}
-
-	private String formatTime(Instant time)
-	{
-		if (time == null)
-			return "null";
-
-		return DurationFormatUtils.formatDurationWords(
-			Duration.between(time, Instant.now()).toMillis(), true, true
-		);
 	}
 
 	private void processClanMemberDisconnected(RunsafePlayerQuitEvent event)
