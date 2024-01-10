@@ -26,10 +26,7 @@ import no.runsafe.nchat.channel.IChannelManager;
 import no.runsafe.nchat.channel.IChatChannel;
 import no.runsafe.nchat.chat.InternalRealChatEvent;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.time.DurationFormatUtils;
 
-import java.time.Duration;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
