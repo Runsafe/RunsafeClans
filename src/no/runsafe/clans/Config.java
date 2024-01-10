@@ -64,10 +64,14 @@ public class Config implements IConfigurationChanged
 		Message.Info.playerLookup = configuration.getConfigValueAsString("message.info.playerLookup");
 		Message.Info.playerStats = configuration.getConfigValueAsString("message.info.playerStats");
 		Message.Info.dergonSlay = configuration.getConfigValueAsString("message.info.dergonSlay");
+		Message.Info.clanRankingsRecentLine1 = configuration.getConfigValueAsString("message.info.clanRankingsRecentLine1");
+		Message.Info.clanRankingsAllTimeLine1 = configuration.getConfigValueAsString("message.info.clanRankingsAllTimeLine1");
+		Message.Info.clanRankingsLineFormatting = configuration.getConfigValueAsString("message.info.clanRankingsLineFormatting");
 
 		minClanSize = configuration.getConfigValueAsInt("minClanSize");
 		clanSize = configuration.getConfigValueAsInt("clanSize");
 		clanStatTimeRangeDays = configuration.getConfigValueAsInt("clanStatTimeRangeDays");
+		clanRankingListLength = configuration.getConfigValueAsInt("clanRankingListLength");
 
 		// Get all worlds in the clan universe.
 		clanUniverse.clear();
@@ -92,6 +96,11 @@ public class Config implements IConfigurationChanged
 	public int getClanStatTimeRangeDays()
 	{
 		return clanStatTimeRangeDays;
+	}
+
+	public int getClanRankingListLength()
+	{
+		return clanRankingListLength;
 	}
 
 	public static final class Message
@@ -155,11 +164,15 @@ public class Config implements IConfigurationChanged
 			public static String playerLookup;
 			public static String playerStats;
 			public static String dergonSlay;
+			public static String clanRankingsRecentLine1;
+			public static String clanRankingsAllTimeLine1;
+			public static String clanRankingsLineFormatting;
 		}
 	}
 
 	private int minClanSize;
 	private int clanSize;
 	private int clanStatTimeRangeDays;
+	private int clanRankingListLength;
 	private final List<String> clanUniverse = new ArrayList<>(0);
 }

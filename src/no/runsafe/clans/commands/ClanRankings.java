@@ -1,5 +1,6 @@
 package no.runsafe.clans.commands;
 
+import no.runsafe.clans.Config;
 import no.runsafe.clans.handlers.RankingHandler;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.command.AsyncCommand;
@@ -10,22 +11,24 @@ import java.util.List;
 
 public class ClanRankings extends AsyncCommand
 {
-	public ClanRankings(IScheduler scheduler, RankingHandler rankingHandler)
+	public ClanRankings(IScheduler scheduler, RankingHandler rankingHandler, Config config)
 	{
 		super("rankings", "View the clan rankings leaderboard", "runsafe.clans.rankings", scheduler);
 		this.rankingHandler = rankingHandler;
+		this.config = config;
 	}
 
 	@Override
 	public String OnAsyncExecute(ICommandExecutor executor, IArgumentList parameters)
 	{
-		StringBuilder data = new StringBuilder("Current Top Clan Rankings");
+		StringBuilder data = new StringBuilder(Config.Message.Info.clanRankingsAllTimeLine1);
 		List<String> roster = rankingHandler.getRankingRoster();
 
 		int current = 1;
+		int listLength = config.getClanRankingListLength() + 1;
 		for (String clan : roster)
 		{
-			if (current == 4) break;
+			if (current == listLength) break;
 			data.append(formatLine(current, clan));
 			current += 1;
 		}
@@ -35,8 +38,9 @@ public class ClanRankings extends AsyncCommand
 
 	private String formatLine(Object key, Object value)
 	{
-		return "\n- &6" + key + ": &r" + value;
+		return String.format(Config.Message.Info.clanRankingsLineFormatting, key, value);
 	}
 
 	private final RankingHandler rankingHandler;
+	private final Config config;
 }

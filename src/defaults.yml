@@ -6,7 +6,8 @@ clanUniverse: survival
 chatTag: '[%s] '
 minClanSize: 2
 clanSize: 5
-clanStatTimeRange: '90D'
+clanStatTimeRangeDays: 90
+clanRankingListLength: 5
 message:
   invalidPlayer: '&cInvalid player!'
   error: '&cSomething went wrong.'
@@ -58,3 +59,6 @@ message:
     playerLookup: '%s&b has been a member of &r%s&b for &r%s&b.'
     playerStats: '&bDergon Kills: &r%d&b, Clan Kills: &r%d&b, Clan Deaths: &r%d&b.'
     dergonSlay: '&b[%s] has slain a dergon!'
+    clanRankingsRecentLine1: 'All Time Top Clan Rankings:'
+    clanRankingsAllTimeLine1: 'Recent Top Clan Rankings:'
+    clanRankingsLineFormatting: '\n- &6%s: &r%s'
