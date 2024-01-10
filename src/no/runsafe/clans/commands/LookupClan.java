@@ -14,7 +14,7 @@ public class LookupClan extends AsyncCommand
 {
 	public LookupClan(IScheduler scheduler, ClanHandler clanHandler)
 	{
-		super("lookup", "Lookup which clan a player is in", "runsafe.clans.lookup", scheduler, new Player().require());
+		super("lookupplayer", "Lookup which clan a player is in", "runsafe.clans.lookup", scheduler, new Player().require());
 		this.clanHandler = clanHandler;
 	}
 
