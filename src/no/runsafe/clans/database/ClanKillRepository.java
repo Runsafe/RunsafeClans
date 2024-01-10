@@ -64,4 +64,38 @@ public class ClanKillRepository extends Repository
 
 		return value;
 	}
+
+	public int getClanKills(String clanID, int daysAgo)
+	{
+		Integer value;
+		if (daysAgo < 1)
+			value = database.queryInteger("SELECT COUNT(*) FROM " + getTableName() + " WHERE killerClanID = ?;",  clanID);
+		else
+			value = database.queryInteger(
+				"SELECT COUNT(*) FROM " + getTableName() + " WHERE killerClanID = ? AND date >= now() - interval ? day;",
+				clanID, daysAgo
+			);
+
+		if (value == null)
+			return 0;
+
+		return value;
+	}
+
+	public int getClanDeaths(String clanID, int daysAgo)
+	{
+		Integer value;
+		if (daysAgo < 1)
+			value = database.queryInteger("SELECT COUNT(*) FROM " + getTableName() + " WHERE killedClanID = ?;",  clanID);
+		else
+			value = database.queryInteger(
+				"SELECT COUNT(*) FROM " + getTableName() + " WHERE killedClanID = ? AND date >= now() - interval ? day;",
+				clanID, daysAgo
+			);
+
+		if (value == null)
+			return 0;
+
+		return value;
+	}
 }

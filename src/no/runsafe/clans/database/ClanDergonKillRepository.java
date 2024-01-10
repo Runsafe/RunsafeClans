@@ -53,4 +53,21 @@ public class ClanDergonKillRepository extends Repository
 
 		return value;
 	}
+
+	public int getClanDergonKills(String clanID, int daysAgo)
+	{
+		Integer value;
+		if (daysAgo < 1)
+			value = database.queryInteger("SELECT COUNT(*) FROM " + getTableName() + " WHERE clanID = ?;",  clanID);
+		else
+			value = database.queryInteger(
+				"SELECT COUNT(*) FROM " + getTableName() + " WHERE clanID = ? AND date >= now() - interval ? day;",
+				clanID, daysAgo
+			);
+
+		if (value == null)
+			return 0;
+
+		return value;
+	}
 }
