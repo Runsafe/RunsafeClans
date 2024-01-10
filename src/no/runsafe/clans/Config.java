@@ -67,7 +67,7 @@ public class Config implements IConfigurationChanged
 
 		minClanSize = configuration.getConfigValueAsInt("minClanSize");
 		clanSize = configuration.getConfigValueAsInt("clanSize");
-		clanStatTimeRange = Duration.parse("P" + configuration.getConfigValueAsString("clanStatTimeRange"));
+		clanStatTimeRangeDays = configuration.getConfigValueAsInt("clanStatTimeRangeDays");
 
 		// Get all worlds in the clan universe.
 		clanUniverse.clear();
@@ -89,9 +89,9 @@ public class Config implements IConfigurationChanged
 		return clanUniverse;
 	}
 
-	public Duration getClanStatTimeRange()
+	public int getClanStatTimeRangeDays()
 	{
-		return clanStatTimeRange;
+		return clanStatTimeRangeDays;
 	}
 
 	public static final class Message
@@ -160,6 +160,6 @@ public class Config implements IConfigurationChanged
 
 	private int minClanSize;
 	private int clanSize;
-	private Duration clanStatTimeRange;
+	private int clanStatTimeRangeDays;
 	private final List<String> clanUniverse = new ArrayList<>(0);
 }
