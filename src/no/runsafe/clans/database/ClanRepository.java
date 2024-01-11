@@ -1,6 +1,7 @@
 package no.runsafe.clans.database;
 
 import no.runsafe.clans.Clan;
+import no.runsafe.clans.Config;
 import no.runsafe.framework.api.database.*;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.api.server.IPlayerProvider;
@@ -12,10 +13,15 @@ import java.util.UUID;
 
 public class ClanRepository extends Repository
 {
-	public ClanRepository(IDatabase database, IPlayerProvider playerProvider)
+	public ClanRepository(IDatabase database, IPlayerProvider playerProvider,
+		ClanDergonKillRepository dergonKillRepository, ClanKillRepository killRepository, Config config
+	)
 	{
 		this.database = database;
 		this.playerProvider = playerProvider;
+		this.dergonKillRepository = dergonKillRepository;
+		this.killRepository = killRepository;
+		this.config = config;
 	}
 
 	public Map<String, Clan> getClans()
@@ -29,6 +35,11 @@ public class ClanRepository extends Repository
 			clan.addClanKills(row.Integer("clanKills")); // Add in kills stat
 			clan.addClanDeaths(row.Integer("clanDeaths")); // Add in deaths stat
 			clan.addDergonKills(row.Integer("dergonKills")); // Add dergon kills.
+
+			clan.addRecentClanKills(killRepository.getClanKills(clanName, config.getClanStatTimeRangeDays()));
+			clan.addRecentClanDeaths(killRepository.getClanDeaths(clanName, config.getClanStatTimeRangeDays()));
+			clan.addRecentDergonKills(dergonKillRepository.getClanDergonKills(clanName, config.getClanStatTimeRangeDays()));
+
 			clanList.put(clanName, clan);
 		}
 		return clanList;
@@ -107,4 +118,7 @@ public class ClanRepository extends Repository
 	}
 
 	private final IPlayerProvider playerProvider;
+	private final ClanDergonKillRepository dergonKillRepository;
+	private final ClanKillRepository killRepository;
+	private final Config config;
 }

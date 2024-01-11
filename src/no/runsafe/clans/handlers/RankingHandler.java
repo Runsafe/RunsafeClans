@@ -15,20 +15,24 @@ public class RankingHandler implements IConfigurationChanged
 
 	public List<String> getRankingRoster(boolean recentStatistics)
 	{
-		if (recentStatistics)
-		{
-			return null; //TODO: not supported yet
-		}
 		Map<String, Clan> clanMap = clanHandler.getClans();
 		Map<String, Integer> roster = new HashMap<>(clanMap.size());
 
 		for (Map.Entry<String, Clan> clanNode : clanMap.entrySet())
 		{
 			Clan clan = clanNode.getValue();
-			int score = (clan.getMemberCount() * clanMemberScore)
-				+ (clan.getClanKills() * clanKillScore)
-				- (clan.getClanDeaths() * (clanKillScore / 2))
-				+ (clan.getDergonKills() * clanDergonKillScore);
+			int score;
+			if (recentStatistics) // Get score from recent statistics
+				score = (clan.getMemberCount() * clanMemberScore)
+					+ (clan.getRecentClanKills() * clanKillScore)
+					- (clan.getRecentClanDeaths() * (clanKillScore / 2))
+					+ (clan.getRecentDergonKills() * clanDergonKillScore);
+			else // Get all-time score
+				score = (clan.getMemberCount() * clanMemberScore)
+					+ (clan.getClanKills() * clanKillScore)
+					- (clan.getClanDeaths() * (clanKillScore / 2))
+					+ (clan.getDergonKills() * clanDergonKillScore);
+
 			roster.put(clan.getId(), score);
 		}
 

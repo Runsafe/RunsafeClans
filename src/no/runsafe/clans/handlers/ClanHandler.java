@@ -312,6 +312,7 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 		if (killerClan != null)
 		{
 			killerClan.addClanKills(1);
+			killerClan.addRecentClanKills(1);
 			clanRepository.updateStatistic(killerClan.getId(), "clanKills", killerClan.getClanKills());
 		}
 
@@ -319,6 +320,7 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 		if (killedClan != null)
 		{
 			killedClan.addClanDeaths(1);
+			killedClan.addRecentClanDeaths(1);
 			clanRepository.updateStatistic(killedClan.getId(), "clanDeaths", killedClan.getClanDeaths());
 		}
 
@@ -334,6 +336,7 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 		{
 			clanID = clan.getId();
 			clan.addDergonKills(1);
+			clan.addRecentDergonKills(1);
 			clanRepository.updateStatistic(clanID, "dergonKills", clan.getDergonKills());
 			RunsafeClans.server.broadcastMessage(String.format(Config.Message.Info.dergonSlay, clanID));
 		}

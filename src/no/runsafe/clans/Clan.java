@@ -74,6 +74,21 @@ public class Clan
 		dergonKills += amount;
 	}
 
+	public void addRecentClanKills(int amount)
+	{
+		recentClanKills = amount;
+	}
+
+	public void addRecentClanDeaths(int amount)
+	{
+		recentClanDeaths += amount;
+	}
+
+	public void addRecentDergonKills(int amount)
+	{
+		recentDergonKills += amount;
+	}
+
 	public int getClanKills()
 	{
 		return clanKills;
@@ -89,11 +104,29 @@ public class Clan
 		return dergonKills;
 	}
 
+	public int getRecentClanKills()
+	{
+		return recentClanKills;
+	}
+
+	public int getRecentClanDeaths()
+	{
+		return recentClanDeaths;
+	}
+
+	public int getRecentDergonKills()
+	{
+		return recentDergonKills;
+	}
+
 	private final String id;
 	private IPlayer leader;
 	private String motd;
 	private int clanKills = 0;
 	private int clanDeaths = 0;
 	private int dergonKills = 0;
+	private int recentClanKills = 0;
+	private int recentClanDeaths = 0;
+	private int recentDergonKills = 0;
 	private final List<IPlayer> members = new ArrayList<>(0);
 }
