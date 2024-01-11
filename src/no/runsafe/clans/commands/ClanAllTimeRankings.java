@@ -38,7 +38,7 @@ public class ClanAllTimeRankings extends AsyncCommand
 
 	private String formatLine(Object key, Object value)
 	{
-		return String.format(Config.Message.Info.clanRankingsLineFormatting, key, value);
+		return "\n" + String.format(Config.Message.Info.clanRankingsLineFormatting, key, value);
 	}
 
 	private final RankingHandler rankingHandler;

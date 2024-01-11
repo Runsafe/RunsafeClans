@@ -61,4 +61,4 @@ message:
     dergonSlay: '&b[%s] has slain a dergon!'
     clanRankingsRecentLine1: 'Recent Top Clan Rankings:'
     clanRankingsAllTimeLine1: 'All Time Top Clan Rankings:'
-    clanRankingsLineFormatting: '\n- &6%s: &r%s'
+    clanRankingsLineFormatting: '- &6%s: &r%s'
