@@ -3,6 +3,7 @@ package no.runsafe.clans.handlers;
 import no.runsafe.clans.Clan;
 import no.runsafe.clans.Config;
 import no.runsafe.clans.RunsafeClans;
+import no.runsafe.clans.TimeFormatter;
 import no.runsafe.clans.chat.ClanChannel;
 import no.runsafe.clans.database.*;
 import no.runsafe.clans.events.ClanEvent;
@@ -25,10 +26,7 @@ import no.runsafe.nchat.channel.IChannelManager;
 import no.runsafe.nchat.channel.IChatChannel;
 import no.runsafe.nchat.chat.InternalRealChatEvent;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.time.DurationFormatUtils;
 
-import java.time.Duration;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -73,7 +71,7 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 
 	public String getPlayerJoinString(IPlayer player)
 	{
-		return formatTime(memberRepository.getClanMemberJoinDate(player));
+		return TimeFormatter.formatInstant(memberRepository.getClanMemberJoinDate(player));
 	}
 
 	@Override
@@ -314,6 +312,7 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 		if (killerClan != null)
 		{
 			killerClan.addClanKills(1);
+			killerClan.addRecentClanKills(1);
 			clanRepository.updateStatistic(killerClan.getId(), "clanKills", killerClan.getClanKills());
 		}
 
@@ -321,6 +320,7 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 		if (killedClan != null)
 		{
 			killedClan.addClanDeaths(1);
+			killedClan.addRecentClanDeaths(1);
 			clanRepository.updateStatistic(killedClan.getId(), "clanDeaths", killedClan.getClanDeaths());
 		}
 
@@ -336,6 +336,7 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 		{
 			clanID = clan.getId();
 			clan.addDergonKills(1);
+			clan.addRecentDergonKills(1);
 			clanRepository.updateStatistic(clanID, "dergonKills", clan.getDergonKills());
 			RunsafeClans.server.broadcastMessage(String.format(Config.Message.Info.dergonSlay, clanID));
 		}
@@ -368,16 +369,6 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 		IChatChannel clanChannel = channelManager.getChannelByName(id);
 		if (clanChannel != null)
 			clanChannel.Leave(player);
-	}
-
-	private String formatTime(Instant time)
-	{
-		if (time == null)
-			return "null";
-
-		return DurationFormatUtils.formatDurationWords(
-			Duration.between(time, Instant.now()).toMillis(), true, true
-		);
 	}
 
 	private void processClanMemberDisconnected(RunsafePlayerQuitEvent event)

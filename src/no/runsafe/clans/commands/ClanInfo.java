@@ -48,14 +48,17 @@ public class ClanInfo extends AsyncCommand
 			"Members", "(" + clan.getMemberCount() + ") "
 			+ StringUtils.join(clan.getMembers().stream().map(IPlayer::getPrettyName).collect(Collectors.toList()), ", ")
 		));
-		info.append(formatLine("Enemy Clan Kills", clan.getClanKills()));
-		info.append(formatLine("Enemy Clan Deaths", clan.getClanDeaths()));
-		info.append(formatLine("Dergon Kills", clan.getDergonKills()));
+		info.append(formatLine("Recent Enemy Clan Kills", clan.getRecentClanKills()));
+		info.append(formatLine("Recent Enemy Clan Deaths", clan.getRecentClanDeaths()));
+		info.append(formatLine("Recent Dergon Kills", clan.getRecentDergonKills()));
+		info.append(formatLine("Total Enemy Clan Kills", clan.getClanKills()));
+		info.append(formatLine("Total Enemy Clan Deaths", clan.getClanDeaths()));
+		info.append(formatLine("Total Dergon Kills", clan.getDergonKills()));
 
 		int ranking = -1;
 		int currentRanking = 1;
 
-		List<String> roster = rankHandler.getRankingRoster();
+		List<String> roster = rankHandler.getRankingRoster(true);
 		for (String rosterClan : roster)
 		{
 			if (rosterClan.equals(clanName))

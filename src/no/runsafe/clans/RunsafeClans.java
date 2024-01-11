@@ -31,6 +31,7 @@ public class RunsafeClans extends RunsafeConfigurablePlugin
 		// Plugin components
 		addComponent(Config.class);
 		addComponent(ClanArgument.class);
+		addComponent(TimeFormatter.class);
 
 		// Database
 		addComponent(ClanRepository.class);
@@ -63,6 +64,7 @@ public class RunsafeClans extends RunsafeConfigurablePlugin
 		clans.addSubCommand(getInstance(LookupClan.class));
 		clans.addSubCommand(getInstance(SetMotd.class));
 		clans.addSubCommand(getInstance(ClanRankings.class));
+		clans.addSubCommand(getInstance(ClanAllTimeRankings.class));
 		clans.addSubCommand(getInstance(ListClans.class));
 		clans.addSubCommand(getInstance(ClanFlare.class));
 	}
