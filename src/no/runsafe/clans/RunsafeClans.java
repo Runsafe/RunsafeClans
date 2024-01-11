@@ -31,7 +31,6 @@ public class RunsafeClans extends RunsafeConfigurablePlugin
 		// Plugin components
 		addComponent(Config.class);
 		addComponent(ClanArgument.class);
-		addComponent(TimeFormatter.class);
 
 		// Database
 		addComponent(ClanRepository.class);
