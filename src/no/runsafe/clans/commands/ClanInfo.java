@@ -51,9 +51,6 @@ public class ClanInfo extends AsyncCommand
 		info.append(formatLine("Recent Enemy Clan Kills", clan.getRecentClanKills()));
 		info.append(formatLine("Recent Enemy Clan Deaths", clan.getRecentClanDeaths()));
 		info.append(formatLine("Recent Dergon Kills", clan.getRecentDergonKills()));
-		info.append(formatLine("Total Enemy Clan Kills", clan.getClanKills()));
-		info.append(formatLine("Total Enemy Clan Deaths", clan.getClanDeaths()));
-		info.append(formatLine("Total Dergon Kills", clan.getDergonKills()));
 
 		int ranking = -1;
 		int currentRanking = 1;
@@ -70,6 +67,10 @@ public class ClanInfo extends AsyncCommand
 		}
 
 		info.append(formatLine("Ranking", ranking > -1 ? ranking : "No rank"));
+
+		info.append(formatLine("Total Enemy Clan Kills", clan.getClanKills()));
+		info.append(formatLine("Total Enemy Clan Deaths", clan.getClanDeaths()));
+		info.append(formatLine("Total Dergon Kills", clan.getDergonKills()));
 
 		return info.toString();
 	}
