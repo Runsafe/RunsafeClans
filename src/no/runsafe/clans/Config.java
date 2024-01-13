@@ -66,6 +66,7 @@ public class Config implements IConfigurationChanged
 		Message.Info.clanRankingsRecentLine1 = configuration.getConfigValueAsString("message.info.clanRankingsRecentLine1");
 		Message.Info.clanRankingsAllTimeLine1 = configuration.getConfigValueAsString("message.info.clanRankingsAllTimeLine1");
 		Message.Info.clanRankingsLineFormatting = configuration.getConfigValueAsString("message.info.clanRankingsLineFormatting");
+		Message.Info.clanRankingsHoverText = configuration.getConfigValueAsString("message.info.clanRankingsHoverText");
 
 		minClanSize = configuration.getConfigValueAsInt("minClanSize");
 		clanSize = configuration.getConfigValueAsInt("clanSize");
@@ -166,6 +167,7 @@ public class Config implements IConfigurationChanged
 			public static String clanRankingsRecentLine1;
 			public static String clanRankingsAllTimeLine1;
 			public static String clanRankingsLineFormatting;
+			public static String clanRankingsHoverText;
 		}
 	}
 

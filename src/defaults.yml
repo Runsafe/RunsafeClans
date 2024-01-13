@@ -62,3 +62,4 @@ message:
     clanRankingsRecentLine1: 'Recent Top Clan Rankings:'
     clanRankingsAllTimeLine1: 'All Time Top Clan Rankings:'
     clanRankingsLineFormatting: '- &6%s: &r%s'
+    clanRankingsHoverText: '&bDergon Kills: &r%d&b, Clan Kills: &r%d&b, Clan Deaths: &r%d&b, Clan Members: &r%s&f'
