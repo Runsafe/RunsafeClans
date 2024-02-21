@@ -21,17 +21,7 @@ public class RankingHandler implements IConfigurationChanged
 		for (Map.Entry<String, Clan> clanNode : clanMap.entrySet())
 		{
 			Clan clan = clanNode.getValue();
-			int score;
-			if (recentStatistics) // Get score from recent statistics
-				score = (clan.getMemberCount() * clanMemberScore)
-					+ (clan.getRecentClanKills() * clanKillScore)
-					- (clan.getRecentClanDeaths() * (clanKillScore / 2))
-					+ (clan.getRecentDergonKills() * clanDergonKillScore);
-			else // Get all-time score
-				score = (clan.getMemberCount() * clanMemberScore)
-					+ (clan.getClanKills() * clanKillScore)
-					- (clan.getClanDeaths() * (clanKillScore / 2))
-					+ (clan.getDergonKills() * clanDergonKillScore);
+			int score = getScore(recentStatistics, clan);
 
 			roster.put(clan.getId(), score);
 		}
@@ -46,6 +36,23 @@ public class RankingHandler implements IConfigurationChanged
 		return ordered;
 	}
 
+	private int getScore(boolean recentStatistics, Clan clan)
+	{
+		int score;
+		if (recentStatistics) // Get score from recent statistics
+			score = (clan.getMemberCount() * clanMemberScore)
+				+ (clan.getRecentClanKills() * clanKillScore)
+				- (clan.getRecentClanDeaths() * (clanKillScore / 2))
+				+ (clan.getRecentDergonKills() * clanDergonKillScore);
+		else // Get all-time score
+			score = (clan.getMemberCount() * clanMemberScore)
+				+ (clan.getClanKills() * clanKillScore)
+				- (clan.getClanDeaths() * (clanKillScore / 2))
+				+ (clan.getDergonKills() * clanDergonKillScore);
+		return score;
+	}
+
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	public static <K extends Comparable,V extends Comparable> LinkedHashMap<K,V> sortByValues(Map<K,V> map)
 	{
 		List<Map.Entry<K,V>> entries = new LinkedList<>(map.entrySet());

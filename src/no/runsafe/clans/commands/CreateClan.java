@@ -4,6 +4,7 @@ import no.runsafe.clans.Config;
 import no.runsafe.clans.handlers.CharterHandler;
 import no.runsafe.clans.handlers.ClanHandler;
 import no.runsafe.framework.api.IScheduler;
+import no.runsafe.framework.api.IUniverse;
 import no.runsafe.framework.api.command.argument.IArgumentList;
 import no.runsafe.framework.api.command.argument.RequiredArgument;
 import no.runsafe.framework.api.command.player.PlayerAsyncCommand;
@@ -31,7 +32,8 @@ public class CreateClan extends PlayerAsyncCommand
 		String clanName = parameters.getRequired("clanTag");
 
 		// Make sure the player is in the right universe.
-		if (!config.getClanUniverse().contains(executor.getUniverse().getName()))
+		IUniverse universe = executor.getUniverse();
+		if (universe == null || !config.getClanUniverse().contains(universe.getName()))
 			return Config.Message.wrongWorld;
 
 		// Check for clan names that shouldn't be displayed.
