@@ -20,7 +20,7 @@ public class PassLeadership extends PlayerAsyncCommand
 	@Override
 	public String OnAsyncExecute(IPlayer executor, IArgumentList parameters)
 	{
-		if (!clanHandler.playerIsInClan(executor))
+		if (clanHandler.isNotInAnyClan(executor))
 			return Config.Message.userNotInClan;
 
 		if (!clanHandler.playerIsClanLeader(executor))
@@ -31,7 +31,7 @@ public class PassLeadership extends PlayerAsyncCommand
 			return Config.Message.invalidPlayer;
 
 		Clan playerClan = clanHandler.getPlayerClan(executor); // The clan of the player.
-		if (!clanHandler.playerIsInClan(targetPlayer, playerClan.getId()))
+		if (clanHandler.isNotInClan(targetPlayer, playerClan.getId()))
 			return Config.Message.playerNotInUserClan;
 
 		clanHandler.changeClanLeader(playerClan.getId(), targetPlayer); // Change the leader.

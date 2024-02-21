@@ -48,7 +48,7 @@ public class CreateClan extends PlayerAsyncCommand
 		if (clanHandler.clanExists(clanName))
 			return String.format(Config.Message.clanAlreadyExists, clanName);
 
-		if (clanHandler.playerIsInClan(executor))
+		if (!clanHandler.isNotInAnyClan(executor))
 			return Config.Message.userAlreadyInClan;
 
 		// Check if we need a charter to create this clan.

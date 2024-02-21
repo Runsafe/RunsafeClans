@@ -113,14 +113,14 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 		if (playerInvites.containsKey(player))
 			processPendingInvites(player);
 
-		if (playerIsInClan(player))
+		if (!isNotInAnyClan(player))
 			processClanMemberConnected(player);
 	}
 
 	@Override
 	public void OnPlayerQuit(RunsafePlayerQuitEvent event)
 	{
-		if (!event.isFake() && playerIsInClan(event.getPlayer()))
+		if (!event.isFake() && !isNotInAnyClan(event.getPlayer()))
 			processClanMemberDisconnected(event);
 	}
 
@@ -190,14 +190,14 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 		sendMessageToClan(clanID, String.format(Config.Message.newPlayerGivenClanLeadership, newLeader.getPrettyName()));
 	}
 
-	public boolean playerIsInClan(IPlayer player)
+	public boolean isNotInAnyClan(IPlayer player)
 	{
-		return playerClanIndex.containsKey(player);
+		return !playerClanIndex.containsKey(player);
 	}
 
-	public boolean playerIsInClan(IPlayer player, String clanID)
+	public boolean isNotInClan(IPlayer player, String clanID)
 	{
-		return playerClanIndex.containsKey(player) && playerClanIndex.get(player).equals(clanID);
+		return !playerClanIndex.containsKey(player) || !playerClanIndex.get(player).equals(clanID);
 	}
 
 	public Clan getPlayerClan(IPlayer player)

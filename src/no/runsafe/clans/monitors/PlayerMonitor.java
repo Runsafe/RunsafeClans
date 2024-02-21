@@ -46,7 +46,7 @@ public class PlayerMonitor implements IPlayerRightClick
 		if (universe == null || !config.getClanUniverse().contains(universe.getName()))
 			return false;
 
-		if (clanHandler.playerIsInClan(player))
+		if (!clanHandler.isNotInAnyClan(player))
 		{
 			player.sendColouredMessage(Config.Message.Charter.userAlreadyInClan);
 			player.closeInventory();
@@ -92,7 +92,7 @@ public class PlayerMonitor implements IPlayerRightClick
 		// Make sure all signs are valid.
 		for (IPlayer signedPlayer : charterSigns)
 		{
-			if (!clanHandler.playerIsInClan(signedPlayer))
+			if (clanHandler.isNotInAnyClan(signedPlayer))
 				continue;
 
 			player.sendColouredMessage(Config.Message.Charter.invalidSignatures);
@@ -100,7 +100,7 @@ public class PlayerMonitor implements IPlayerRightClick
 			return false;
 		}
 
-		if (clanHandler.playerIsInClan(player))
+		if (!clanHandler.isNotInAnyClan(player))
 		{
 			player.sendColouredMessage(Config.Message.userAlreadyInClan);
 			player.closeInventory();
@@ -111,7 +111,7 @@ public class PlayerMonitor implements IPlayerRightClick
 
 		// Add all players on the charter to the clan if they are not already in a clan.
 		for (IPlayer signedPlayer : charterSigns)
-			if (!clanHandler.playerIsInClan(signedPlayer))
+			if (clanHandler.isNotInAnyClan(signedPlayer))
 				clanHandler.addClanMember(clanName, signedPlayer);
 
 		clanHandler.addClanMember(clanName, player); // Add the signing player to the clan.

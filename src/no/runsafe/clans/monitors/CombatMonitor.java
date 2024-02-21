@@ -33,15 +33,15 @@ public class CombatMonitor implements IEntityDamageByEntityEvent, IPlayerDeathEv
 		IPlayer deadPlayer = event.getEntity();
 
 		// Check we tracked the player getting hit and they are in a clan!
-		if (!track.containsKey(deadPlayer) || !clanHandler.playerIsInClan(deadPlayer))
+		if (!track.containsKey(deadPlayer) || clanHandler.isNotInAnyClan(deadPlayer))
 			return;
 
 		IPlayer killer = track.get(deadPlayer).getAttacker(); // Grab the name of the last player to hit them.
-		if (!clanHandler.playerIsInClan(killer))
+		if (clanHandler.isNotInAnyClan(killer))
 			return;
 
 		Clan deadPlayerClan = clanHandler.getPlayerClan(deadPlayer); // Dead players clan.
-		if (!clanHandler.playerIsInClan(killer, deadPlayerClan.getId()))
+		if (clanHandler.isNotInClan(killer, deadPlayerClan.getId()))
 		{
 			clanHandler.addClanKill(killer, deadPlayer); // Stat the kill / death
 			return;

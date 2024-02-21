@@ -42,20 +42,15 @@ public class CharterHandler
 
 	public String getClanName(RunsafeMeta charter)
 	{
-		return getCharterValue(charter.getLore(), 0);
+		List<String> lore = charter.getLore();
+		if (lore == null)
+			return "INVALID";
+		return lore.get(0).split("\\s")[1];
 	}
 
 	public IPlayer getLeader(RunsafeMeta charter)
 	{
 		return getCharterSigns(charter).get(0);
-	}
-
-	private String getCharterValue(List<String> values, int index)
-	{
-		if (values == null)
-			return "INVALID"; // This should never happen.
-
-		return values.get(index).split("\\s")[1];
 	}
 
 	public List<IPlayer> getCharterSigns(RunsafeMeta item)

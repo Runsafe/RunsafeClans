@@ -18,7 +18,7 @@ public class LeaveClan extends PlayerAsyncCommand
 	@Override
 	public String OnAsyncExecute(IPlayer executor, IArgumentList parameters)
 	{
-		if (!clanHandler.playerIsInClan(executor))
+		if (clanHandler.isNotInAnyClan(executor))
 			return Config.Message.userNotInClan;
 
 		if (clanHandler.playerIsClanLeader(executor))

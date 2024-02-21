@@ -26,7 +26,7 @@ public class LookupClan extends AsyncCommand
 			return Config.Message.invalidPlayer;
 
 		String returnMessage;
-		if (!clanHandler.playerIsInClan(targetPlayer))
+		if (clanHandler.isNotInAnyClan(targetPlayer))
 			returnMessage = Config.Message.playerNotInClan;
 		else
 		{

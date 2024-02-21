@@ -18,7 +18,7 @@ public class ClanFlare extends PlayerCommand
 	@Override
 	public String OnExecute(IPlayer executor, IArgumentList parameters)
 	{
-		if (!handler.playerIsInClan(executor))
+		if (handler.isNotInAnyClan(executor))
 			return Config.Message.userNotInClan;
 
 		ILocation location = executor.getLocation();

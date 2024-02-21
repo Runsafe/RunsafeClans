@@ -20,7 +20,7 @@ public class KickClanMember extends PlayerAsyncCommand
 	@Override
 	public String OnAsyncExecute(IPlayer executor, IArgumentList parameters)
 	{
-		if (!clanHandler.playerIsInClan(executor))
+		if (clanHandler.isNotInAnyClan(executor))
 			return Config.Message.userNotInClan;
 
 		if (!clanHandler.playerIsClanLeader(executor))
@@ -36,7 +36,7 @@ public class KickClanMember extends PlayerAsyncCommand
 
 		Clan playerClan = clanHandler.getPlayerClan(executor); // Grab the players clan.
 
-		if (!clanHandler.playerIsInClan(targetPlayer, playerClan.getId()))
+		if (clanHandler.isNotInClan(targetPlayer, playerClan.getId()))
 			return Config.Message.playerNotInUserClan;
 
 		clanHandler.kickClanMember(targetPlayer, executor); // Kick the player.

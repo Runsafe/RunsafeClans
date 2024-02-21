@@ -21,7 +21,7 @@ public class InviteMember extends PlayerAsyncCommand
 	@Override
 	public String OnAsyncExecute(IPlayer executor, IArgumentList parameters)
 	{
-		if (!clanHandler.playerIsInClan(executor))
+		if (clanHandler.isNotInAnyClan(executor))
 			return Config.Message.userNotInClan;
 
 		if (!clanHandler.playerIsClanLeader(executor))
@@ -31,7 +31,7 @@ public class InviteMember extends PlayerAsyncCommand
 		if (targetPlayer == null)
 			return Config.Message.invalidPlayer;
 
-		if (clanHandler.playerIsInClan(targetPlayer))
+		if (!clanHandler.isNotInAnyClan(targetPlayer))
 			return Config.Message.playerAlreadyInClan;
 
 		Clan clan = clanHandler.getPlayerClan(executor); // Grab the players clan.
