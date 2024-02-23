@@ -34,7 +34,7 @@ public class InviteMember extends PlayerAsyncCommand
 		if (!clanHandler.isNotInAnyClan(targetPlayer))
 			return Config.Message.playerAlreadyInClan;
 
-		Clan clan = clanHandler.getPlayerClan(executor); // Grab the players clan.
+		Clan clan = clanHandler.getPlayerClan(executor); // Grab the players' clan.
 
 		if (clan.getMemberCount() >= config.getClanSize())
 			return Config.Message.Invite.failClanFull;

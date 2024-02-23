@@ -34,7 +34,7 @@ public class KickClanMember extends PlayerAsyncCommand
 		if (targetPlayer.equals(executor))
 			return Config.Message.userClanKickSelfFail;
 
-		Clan playerClan = clanHandler.getPlayerClan(executor); // Grab the players clan.
+		Clan playerClan = clanHandler.getPlayerClan(executor); // Grab the players' clan.
 
 		if (clanHandler.isNotInClan(targetPlayer, playerClan.getId()))
 			return Config.Message.playerNotInUserClan;
