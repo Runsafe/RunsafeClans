@@ -16,6 +16,7 @@ import no.runsafe.framework.api.event.player.IPlayerJoinEvent;
 import no.runsafe.framework.api.event.player.IPlayerQuitEvent;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.api.hook.IPlayerDataProvider;
+import no.runsafe.framework.api.hook.PlayerData;
 import no.runsafe.framework.api.log.IConsole;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.tools.TimeFormatter;
@@ -27,10 +28,7 @@ import no.runsafe.nchat.channel.IChatChannel;
 import no.runsafe.nchat.chat.InternalRealChatEvent;
 import org.apache.commons.lang.StringUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
@@ -60,13 +58,17 @@ public class ClanHandler implements IConfigurationChanged, IPlayerDataProvider, 
 	}
 
 	@Override
-	public Map<String, String> GetPlayerData(IPlayer player)
+	public void GetPlayerData(PlayerData data)
 	{
-		Map<String, String> data = new HashMap<>(1);
-		Clan playerClan = getPlayerClan(player);
-		data.put("runsafe.clans.clan", playerClan == null ? "None" : playerClan.getId());
-		data.put("runsafe.clans.joined", getPlayerJoinString(player));
-		return data;
+		data.addData(
+			"runsafe.clans.clan",
+			() ->
+			{
+				Clan playerClan = getPlayerClan(data.getPlayer());
+				return playerClan == null ? "None" : playerClan.getId();
+			}
+		);
+		data.addData("runsafe.clans.joined", () -> getPlayerJoinString(data.getPlayer()));
 	}
 
 	public String getPlayerJoinString(IPlayer player)
